@@ -55,6 +55,7 @@ From the above example, the response object that is returned when calling chess.
 
 ##### move Object
 The move object contains a collection of properties and an undo function pointer. The five properties of the move object are:
+
 * capturedPiece - If a piece was captured during the move, it will be represented here.
 * castle - If the move was a castle, this will be set to true, otherwise false.
 * enPassant - If the move was en passant, this will be set to true, otherwise false.
@@ -100,6 +101,7 @@ The status object is as follows (abbreviated in parts to improve readability):
 
 ##### status
 The status object returned via the getStatus() function call contains several Object properties:
+
 * board - The underlying board Object which contains the collection of squares.
 * isCheck - If the status of the board is check, this will be true.
 * isCheckmate - If the status of the board is checkmate, this will be true. Additionally, the notatedMoves property will be empty.
@@ -109,6 +111,7 @@ The status object returned via the getStatus() function call contains several Ob
 
 ##### status.notatedMoves
 Each object within the notatedMoves hash represents a possible move. The key to the hash is the algebraic notation of the move. The value for each key in the hash has two properties:
+
 * src - The starting square (which contains a piece) of the move
 * dest - The destination square of the move
 
