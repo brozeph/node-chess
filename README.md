@@ -1,5 +1,4 @@
 # node-chess - algebraic chess engine
-
 node-chess is an algebraic notation driven chess engine that can validate board position and produce a list of viable moves (notated).
 
 ## Features
@@ -34,12 +33,15 @@ node-chess is an algebraic notation driven chess engine that can validate board 
 	// make a move
 	m = gc.move('a4');
 
-#### m
+	// look at the status again after the move to see
+	// the opposing side's available moves
+	status = gc.getStatus();
 
+#### chess.move() Function
 From the above example, the response object that is returned when calling chess.move() looks like the following:
 
 	{ move :
-		{	capturedPiece : null, // the captured piece (if capture occured)
+		{	capturedPiece : null, // the captured piece (if capture occurred)
 			castle : false, // was the move a castle?
 			enPassant : false, // was the move en passant?
 			postSquare : { file: 'a', rank: 4, piece: {
@@ -51,13 +53,21 @@ From the above example, the response object that is returned when calling chess.
 			prevSquare : { file: 'a', rank: 2, piece: null } },
 	  undo : __function__ } // undo() can be used to back out the previous move
 
-To back out the move from above:
+##### move Object
+The move object contains a collection of properties and an undo function pointer. The five properties of the move object are:
+* capturedPiece - If a piece was captured during the move, it will be represented here.
+* castle - If the move was a castle, this will be set to true, otherwise false.
+* enPassant - If the move was en passant, this will be set to true, otherwise false.
+* postSquare - The destination square object for the move.
+* prevSquare - The square object from which the move was originated.
+
+##### undo() Function
+To back out the move:
 
 	m.undo();
 
-#### chess.getStatus()
-
-The status object is as follows:
+#### chess.getStatus() Function
+The status object is as follows (abbreviated in parts to improve readability):
 
 	{ board: // this is the top level board
 		{ squares: // an array of all squares on the board
@@ -88,8 +98,34 @@ The status object is as follows:
 		  }
 	}
 
-#### Example usage
+##### status
+The status object returned via the getStatus() function call contains several Object properties:
+* board - The underlying board Object which contains the collection of squares.
+* isCheck - If the status of the board is check, this will be true.
+* isCheckmate - If the status of the board is checkmate, this will be true. Additionally, the notatedMoves property will be empty.
+* isRepetition - If 3-fold repetition has occurred, this will be true. The notatedMoves property will not be empty as the game can technically continue.
+* isStalemate - If the board is in stalemate, this will be set to true.
+* notatedMoves - A hash containing all available moves on the board.
 
+##### status.notatedMoves
+Each object within the notatedMoves hash represents a possible move. The key to the hash is the algebraic notation of the move. The value for each key in the hash has two properties:
+* src - The starting square (which contains a piece) of the move
+* dest - The destination square of the move
+
+The following code is an example of how to iterate the available notated moves for the game.
+
+	var gc = chess.create(),
+		i = 0,
+		key = '',
+		status = gc.getStatus();
+	
+	for (; i < Object.keys(status.notatedMoves).length; i++) {
+		key = Object.keys(status.notatedMoves)[i];
+
+		console.log(status.notatedMoves[key]);
+	}
+
+#### Example usage
 The following usage of the code is playing out the 3rd game in the series between Fischer and Petrosian in Buenos Aires, 1971. The game ended a draw due to 3 fold repetition.
 
 	var chess = require('chess'),
@@ -201,6 +237,7 @@ The following usage of the code is playing out the 3rd game in the series betwee
 
 	console.log(util.inspect(gc.getStatus(), false, 7));
 
+##### Output
 The above code produces the following output:
 
 	{ board: 
