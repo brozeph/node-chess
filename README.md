@@ -1,3 +1,33 @@
+# node-chess - algebraic chess engine
+
+node-chess is an algebraic notation driven chess engine that can validate board position and produce a list of viable moves (notated).
+
+* * *
+
+## Features
+* Accepts moves in algebraic notation
+* Lists valid moves in algebraic notation
+* Fuzzy algebraic notation parsing
+* En Passant validation
+* 3-fold repetition detection
+* Stalemate detection
+* Check detection
+* Checkmate detection
+* Undo moves easily
+* Easily readable object structure
+* High unit test coverage
+
+## Installation
+	npm install chess
+
+## Public API
+
+### Create a new game
+	var chess = require('chess');
+
+	var gc = chess.create();
+
+
 var chess = require('./lib/algebraicGameClient');
 
 var gc = chess.create();
