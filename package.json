@@ -8,5 +8,5 @@
         "type": "git",
         "url": "http://github.com/brozeph/node-chess.git" },
     "keywords": ["chess", "algebraic notation"],
-    "main": "./lib/algebraicGameClient.js"
+    "main": "./lib/main.js"
 }

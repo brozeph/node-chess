@@ -1,8 +1,5 @@
 var assert = require('assert'),
 	piece = require('../lib/piece.js'),
-	board = require('../lib/board.js'),
-	game = require('../lib/game.js'),
-	gameValidation = require('../lib/gameValidation.js'),
 	algebraicGameClient = require('../lib/algebraicGameClient.js');
 
 // test create and getStatus
@@ -171,7 +168,7 @@ module.exports.testAlgebraicGameClient_BlackKing_Parse_CastleRight = function() 
 // test pawn promotion
 module.exports.testAlgebraicGameClient_WhitePawn_Promotion = function() {
 	var gc = algebraicGameClient.create(),
-		m = null
+		m = null,
 		r = null;
 
 	gc.game.board.getSquare('a7').piece = null;
@@ -203,15 +200,15 @@ module.exports.testAlgebraicGameClient_Move_AmbiguousNotation = function() {
 	gc.move('Ra3');
 	gc.move('Ra6');
 
-	assert.throws(function() { gc.move('Rh3') }); // could be Rhh3 or Rah3
+	assert.throws(function() { gc.move('Rh3'); }); // could be Rhh3 or Rah3
 };
 
 // test invalid notation
 module.exports.testAlgebraicGameClient_Move_FailNotation = function() {
 	var gc = algebraicGameClient.create();
 
-	assert.throws(function() { gc.move('h6') });
-	assert.throws(function() { gc.move('z9') });
+	assert.throws(function() { gc.move('h6'); });
+	assert.throws(function() { gc.move('z9'); });
 };
 
 // test overly specified notation
