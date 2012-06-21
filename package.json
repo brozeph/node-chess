@@ -8,5 +8,11 @@
         "type": "git",
         "url": "http://github.com/brozeph/node-chess.git" },
     "keywords": ["chess", "algebraic notation"],
-    "main": "./lib/main.js"
+    "main": "./lib/main.js",
+		"scripts": {
+			"test": "expresso test/*.js"
+		},
+		"devDependencies": {
+			"expresso": ">= 0.9.0"
+		}
 }
