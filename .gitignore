@@ -36,3 +36,4 @@ Thumbs.db
 # Everything else    #
 ######################
 node-chess.tmproj #textmate project file
+node_modules
