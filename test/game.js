@@ -76,4 +76,30 @@ module.exports.testGame_MoveHistory_HashMatchesBoardPosition = function() {
 	assert.strictEqual(g1.moveHistory[1].hashCode, g2.moveHistory[1].hashCode);
 };
 
+// Issue #1 - Ensure no phantom pawns appear after sequence of moves
+module.exports.testBoard_MovePiece_KnightCaptureByBishop = function() {
+	var g = game.create(),
+		b = g.board,
+		r = null;
+
+	b.move(b.getSquare('e', 2), b.getSquare('e', 4));
+	b.move(b.getSquare('e', 7), b.getSquare('e', 5));
+
+	b.move(b.getSquare('g', 1), b.getSquare('f', 3));
+	b.move(b.getSquare('b', 8), b.getSquare('c', 6));
+
+	b.move(b.getSquare('f', 1), b.getSquare('b', 5));
+	b.move(b.getSquare('g', 8), b.getSquare('f', 6));
+
+	b.move(b.getSquare('e', 1), b.getSquare('g', 1));
+	b.move(b.getSquare('f', 6), b.getSquare('e', 4));
+
+	b.move(b.getSquare('d', 2), b.getSquare('d', 4));
+	b.move(b.getSquare('e', 4), b.getSquare('d', 6));
+
+	r = b.move(b.getSquare('b', 5), b.getSquare('c', 6));
+
+	assert.ok(b.getSquare('c5').piece === null);
+};
+
 // ensure load from moveHistory results in board in appropriate state

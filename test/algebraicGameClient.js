@@ -223,3 +223,37 @@ module.exports.testAlgebraicGameClient_Move_OverNotation = function() {
 	assert.strictEqual(m.move.postSquare.rank, 3);
 	assert.strictEqual(m.move.postSquare.piece.type, piece.PieceType.Knight);
 };
+
+// Issue #1 - Ensure no phantom pawns appear after sequence of moves in AlgebraicGameClient
+module.exports.testAlgebraicGameClient_DefectFix_SpontaneousPawn = function() {
+	var gc = algebraicGameClient.create(),
+		m = null,
+		s = gc.game.board.getSquare('c5');
+
+	// turn 1
+	gc.move('e4');
+	gc.move('e5');
+
+	// turn 2
+	gc.move('Nf3');
+	gc.move('Nc6');
+
+	// turn 3
+	gc.move('Bb5');
+	gc.move('Nf6');
+
+	// turn 4
+	gc.move('O-O');
+	gc.move('Nxe4');
+
+	// turn 5
+	gc.move('d4');
+	gc.move('Nd6');
+
+	assert.ok(s.piece === null, 'Phantom piece appears prior to Bxc6');
+
+	// turn 6
+	m = gc.move('Bxc6');
+
+	assert.ok(s.piece === null, 'Phantom piece appears after Bxc6');
+};

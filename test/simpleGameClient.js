@@ -39,3 +39,28 @@ module.exports.testSimpleGameClient_Move_Fail = function() {
 	assert.throws(function() { gc.move('e2', 'z9'); });
 	assert.throws(function() { gc.move('e2', 'e5'); });
 };
+
+// Issue #1 - Ensure no phantom pawns appear after sequence of moves in SimpleGameClient
+module.exports.testSimpleGameClient_DefectFix_SpontaneousPawn = function() {
+	var gc = simpleGameClient.create(),
+		b = gc.game.board;
+
+	gc.move('e2', 'e4');
+	gc.move('e7', 'e5');
+
+	gc.move('g1', 'f3');
+	gc.move('b8', 'c6');
+
+	gc.move('f1', 'b5');
+	gc.move('g8', 'f6');
+
+	gc.move('e1', 'g1');
+	gc.move('f6', 'e4');
+
+	gc.move('d2', 'd4');
+	gc.move('e4', 'd6');
+
+	gc.move('b5', 'c6');
+
+	assert.ok(b.getSquare('c5').piece === null, 'Phantom piece appears after move from c5 to c6');
+};
