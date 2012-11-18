@@ -10,9 +10,7 @@ describe('Board', function() {
 			assert.strictEqual(b.squares.length, 64);
 		});
 	});
-});
 
-describe('Board', function() {
 	describe('#getSquare()', function() {
 		// ensure squares retrieved via getSquare are correct
 		it('should be square a1', function() {
@@ -90,9 +88,7 @@ describe('Board', function() {
 			assert.equal(b.getSquare('a', 1), null);
 		});
 	});
-});
 
-describe('Board', function() {
 	describe('#getSquare().piece', function() {
 		// ensure pieces are placed properly on squares
 		it('should be White King on e1', function() {
@@ -122,9 +118,7 @@ describe('Board', function() {
 			assert.strictEqual(p.moveCount, 0);
 		});
 	});
-});
 
-describe('Board', function() {
 	describe('#getSquares(piece.SideType)', function() {
 		// validate getSquares(piece.SideType) works correctly
 		it('should return all White squares', function() {
@@ -172,9 +166,7 @@ describe('Board', function() {
 			assert.strictEqual(kingCount, 1);
 		});
 	});
-});
 
-describe('Board', function() {
 	describe('#getNeighborSquare(board.NeighborType)', function() {
 		// validate getSquares(piece.SideType) works correctly
 		it('should return square e3 when going above e2', function() {
@@ -292,9 +284,7 @@ describe('Board', function() {
 			assert.strictEqual(sq2, null);
 		});
 	});
-});
 
-describe('Board', function() {
 	describe('#move()', function() {
 		// verify that moving a piece actually results in the piece being moved
 		it('should have pieces on the correct squares after moving', function() {
