@@ -124,7 +124,7 @@ The following code is an example of how to iterate the available notated moves f
 		key = '',
 		status = gc.getStatus();
 	
-	for (; i < Object.keys(status.notatedMoves).length; i++) {
+	for (i = 0; i < Object.keys(status.notatedMoves).length; i++) {
 		key = Object.keys(status.notatedMoves)[i];
 
 		console.log(status.notatedMoves[key]);
