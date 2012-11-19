@@ -1,7 +1,7 @@
 # node-chess - algebraic chess engine
 node-chess is an algebraic notation driven chess engine that can validate board position and produce a list of viable moves (notated).
 
-[![Build Status](https://secure.travis-ci.org/brozeph/node-chess.png)](http://travis-ci.org/brozeph/node-chess)
+[![Build Status](https://secure.travis-ci.org/brozeph/node-chess.png?branch=master)](http://travis-ci.org/brozeph/node-chess?branch=master)
 
 ## Features
 * Accepts moves in algebraic notation
