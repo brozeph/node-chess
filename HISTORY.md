@@ -13,3 +13,9 @@
 
 	* adding jslint
 	* switching to mocha for testing
+
+0.1.5 / 2013-06-15
+==================
+
+	* adding coveralls.io unit test data
+	* converting to jshint from jslint

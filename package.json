@@ -1,7 +1,7 @@
 {
 	"name" : "chess",
 	"description" : "An algebraic notation driven chess engine that can validate board position and produce a list of viable moves (notated).",
-	"version" : "0.1.4",
+	"version" : "0.1.5",
 	"author" : "Joshua Thomas <joshua.thomas@gmail.com>",
 	"engine" : "node >= 0.4.1",
 	"repository" : {
@@ -10,11 +10,15 @@
 	"keywords" : ["chess", "algebraic notation"],
 	"main" : "./lib/main.js",
 	"scripts" : {
-		"pretest" : "jslint --plusplus ./lib/*.js",
-		"test" : "mocha"
+		"pretest" : "jslint --plusplus ./lib/*.js ; rm -rf lib-cov ; jscoverage lib lib-cov",
+		"test" : "./node_modules/.bin/mocha ./test/lib",
+		"posttest" : "NODE_CHESS_COVERAGE=true ./node_modules/.bin/mocha ./test/lib -R mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js"
 	},
 	"devDependencies" : {
+		"coveralls" : "*",
+		"jscoverage" : "*",
 		"mocha" : "1.7.x",
+		"mocha-lcov-reporter" : "*",
 		"jslint" : "0.1.x"
 	}
 }
