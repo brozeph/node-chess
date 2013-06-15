@@ -1,6 +1,6 @@
 var assert = require('assert'),
-	piece = require('../lib/piece.js'),
-	simpleGameClient = require('../lib/simpleGameClient.js');
+	piece = requireWithCoverage('piece'),
+	simpleGameClient = requireWithCoverage('simpleGameClient');
 
 describe('SimpleGameClient', function() {
 

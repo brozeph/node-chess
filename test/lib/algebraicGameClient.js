@@ -1,6 +1,6 @@
 var assert = require('assert'),
-	piece = require('../lib/piece.js'),
-	algebraicGameClient = require('../lib/algebraicGameClient.js');
+	piece = requireWithCoverage('piece'),
+	algebraicGameClient = requireWithCoverage('algebraicGameClient');
 
 describe('AlgebraicGameClient', function() {
 

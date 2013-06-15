@@ -1,16 +1,16 @@
 var assert = require('assert'),
-	piece = require('../lib/piece.js'),
-	board = require('../lib/board.js'),
-	game = require('../lib/game.js'),
-	pieceValidation = require('../lib/pieceValidation.js'),
-	boardValidation = require('../lib/boardValidation.js');
+	piece = requireWithCoverage('piece'),
+	board = requireWithCoverage('board'),
+	game = requireWithCoverage('game'),
+	pieceValidation = requireWithCoverage('pieceValidation'),
+	boardValidation = requireWithCoverage('boardValidation');
 
 var getValidSquares = function(sq, validMoves) {
 	var i = 0;
 
 	for (; i < validMoves.length; i++) {
 		if (validMoves[i].src === sq) {
-			return validMoves[i].squares;	
+			return validMoves[i].squares;
 		}
 	}
 };
@@ -86,7 +86,7 @@ describe('BoardValidation', function() {
 		b.move(b.getSquare('d', 7), b.getSquare('d', 5));
 		b.move(b.getSquare('c', 1), b.getSquare('g', 5));
 
-		assert.strictEqual(bv.isSquareAttacked(b.getSquare('e', 7)), true);	
+		assert.strictEqual(bv.isSquareAttacked(b.getSquare('e', 7)), true);
 	});
 
 	// ensure is square attacked accurately tracks king being attacked
@@ -224,10 +224,10 @@ describe('BoardValidation', function() {
 		bv.start(function(err, validMoves) {
 			squares = getValidSquares(queenSquare, validMoves);
 			assert.strictEqual(squares.length, 1);
-		
+
 			squares = getValidSquares(bishopSquare, validMoves);
 			assert.strictEqual(squares.length, 1);
-		
+
 			squares = getValidSquares(knightSquare, validMoves);
 			assert.strictEqual(squares.length, 1);
 
@@ -245,7 +245,7 @@ describe('BoardValidation', function() {
 		// clear squares between king and rook
 		b.getSquare('f', 1).piece = null;
 		b.getSquare('g', 1).piece = null;
-	
+
 		// put king in check
 		b.getSquare('e', 2).piece = null;
 		b.getSquare('e', 7).piece = null;
@@ -269,7 +269,7 @@ describe('BoardValidation', function() {
 		// clear squares between king and rook
 		b.getSquare('f', 1).piece = null;
 		b.getSquare('g', 1).piece = null;
-	
+
 		// put attacker in castle path
 		b.getSquare('f', 2).piece = null;
 		b.getSquare('e', 7).piece = null;

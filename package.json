@@ -11,13 +11,14 @@
 	"main" : "./lib/main.js",
 	"scripts" : {
 		"pretest" : "jslint --plusplus ./lib/*.js ; rm -rf lib-cov ; jscoverage lib lib-cov",
-		"test" : "./node_modules/.bin/mocha ./test/lib",
-		"posttest" : "NODE_CHESS_COVERAGE=true ./node_modules/.bin/mocha ./test/lib -R mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js"
+		"test" : "./node_modules/.bin/mocha --check-leaks -R spec -r ./test/common.js ./test/lib",
+		"posttest" : "NODE_CHESS_COVERAGE=true ./node_modules/.bin/mocha --check-leaks -R mocha-lcov-reporter -r ./test/common.js ./test/lib | ./node_modules/coveralls/bin/coveralls.js"
 	},
 	"devDependencies" : {
+		"chai" : "*",
 		"coveralls" : "*",
 		"jscoverage" : "*",
-		"mocha" : "1.7.x",
+		"mocha" : "*",
 		"mocha-lcov-reporter" : "*",
 		"jslint" : "0.1.x"
 	}

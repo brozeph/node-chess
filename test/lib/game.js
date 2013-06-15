@@ -1,7 +1,7 @@
 var assert = require('assert'),
-	piece = require('../lib/piece.js'),
-	board = require('../lib/board.js'),
-	game = require('../lib/game.js');
+	piece = requireWithCoverage('piece'),
+	board = requireWithCoverage('board'),
+	game = requireWithCoverage('game');
 
 describe('Game', function() {
 
@@ -32,7 +32,7 @@ describe('Game', function() {
 		assert.strictEqual(g.moveHistory.length, 0);
 
 		r.undo();
-	
+
 		assert.strictEqual(g.moveHistory.length, 0);
 	});
 
@@ -70,7 +70,7 @@ describe('Game', function() {
 
 		b1.move(b1.getSquare('d', 2), b1.getSquare('d', 4));
 		b1.move(b1.getSquare('d', 7), b1.getSquare('d', 5));
-	
+
 		b2.move(b2.getSquare('d', 2), b2.getSquare('d', 4));
 		b2.move(b2.getSquare('d', 7), b2.getSquare('d', 5));
 

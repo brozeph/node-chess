@@ -1,6 +1,6 @@
 var assert = require('assert'),
-	board = require('../lib/board.js'),
-	piece = require('../lib/piece.js');
+	board = requireWithCoverage('board'),
+	piece = requireWithCoverage('piece');
 
 describe('Board', function() {
 	describe('#create()', function() {
@@ -69,14 +69,14 @@ describe('Board', function() {
 		// ensure squares requested with invalid data are null
 		it('should be null square (invalid rank)', function() {
 			var b = board.create();
-	
+
 			assert.equal(b.getSquare('a', 0), null);
 		});
 
 		// ensure squares requested with invalid data are null
 		it('should be null square (invalid file)', function() {
 			var b = board.create();
-	
+
 			assert.equal(b.getSquare('i', 1), null);
 		});
 
@@ -84,7 +84,7 @@ describe('Board', function() {
 		it('should be null square (corrupted board)', function() {
 			var b = board.create();
 			b.squares = [];
-	
+
 			assert.equal(b.getSquare('a', 1), null);
 		});
 	});
@@ -103,7 +103,7 @@ describe('Board', function() {
 		it('should be Black Queen on d8', function() {
 			var b = board.create(),
 				p = b.getSquare('d', 8).piece;
-	
+
 			assert.strictEqual(p.type, piece.PieceType.Queen);
 			assert.strictEqual(p.side, piece.SideType.Black);
 		});
@@ -112,7 +112,7 @@ describe('Board', function() {
 		it('should be White Pawn with move count of 0', function() {
 			var b = board.create(),
 				p = b.getSquare('d', 2).piece;
-	
+
 			assert.strictEqual(p.type, piece.PieceType.Pawn);
 			assert.strictEqual(p.side, piece.SideType.White);
 			assert.strictEqual(p.moveCount, 0);
@@ -138,7 +138,7 @@ describe('Board', function() {
 					kingCount++;
 				}
 			}
-	
+
 			assert.strictEqual(pawnCount, 8);
 			assert.strictEqual(kingCount, 1);
 		});
@@ -153,7 +153,7 @@ describe('Board', function() {
 
 			assert.strictEqual(squares.length, 16);
 			assert.strictEqual(squares[i].piece.side, piece.SideType.Black);
-	
+
 			for (; i < squares.length; i++) {
 				if (squares[i].piece.type === piece.PieceType.Pawn) {
 					pawnCount++;
@@ -161,7 +161,7 @@ describe('Board', function() {
 					kingCount++;
 				}
 			}
-	
+
 			assert.strictEqual(pawnCount, 8);
 			assert.strictEqual(kingCount, 1);
 		});
@@ -317,7 +317,7 @@ describe('Board', function() {
 			assert.strictEqual(b.getSquare('e', 4).piece.type, piece.PieceType.Pawn);
 
 			r.undo();
-	
+
 			assert.strictEqual(b.getSquare('e', 4).piece, null);
 			assert.strictEqual(b.getSquare('e', 2).piece.type, piece.PieceType.Pawn);
 		});

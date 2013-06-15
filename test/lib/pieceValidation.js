@@ -1,7 +1,7 @@
 var assert = require('assert'),
-	board = require('../lib/board.js'),
-	piece = require('../lib/piece.js'),
-	pieceValidation = require('../lib/pieceValidation.js');
+	board = requireWithCoverage('board'),
+	piece = requireWithCoverage('piece'),
+	pieceValidation = requireWithCoverage('pieceValidation');
 
 checkForSquare = function(f, r, s) {
 	var i = 0;
@@ -25,7 +25,7 @@ describe('PieceValidation', function() {
 		pv.start(b.getSquare('a', 2), function(err, squares) {
 			assert.strictEqual(err, 'piece is invalid');
 		});
-	
+
 		pv.start(null, function(err, squares) {
 			assert.strictEqual(err, 'piece is invalid');
 		});
@@ -45,7 +45,7 @@ describe('PieceValidation', function() {
 	it('should properly represent bishop moves when blocked', function() {
 		var b = board.create(),
 			pv = pieceValidation.create(piece.PieceType.Bishop, b);
-	
+
 		pv.start(b.getSquare('c', 1), function(err, squares) {
 			assert.strictEqual(err, null);
 			assert.strictEqual(squares.length, 0);
@@ -90,7 +90,7 @@ describe('PieceValidation', function() {
 	it('should properly create king validation', function() {
 		var b = board.create(),
 			pv = pieceValidation.create(piece.PieceType.King, b);
-	
+
 		assert.strictEqual(pv.allowForward, true);
 		assert.strictEqual(pv.allowBackward, true);
 		assert.strictEqual(pv.allowHorizontal, true);
@@ -156,7 +156,7 @@ describe('PieceValidation', function() {
 	it('should properly create pawn validation', function() {
 		var b = board.create(),
 			pv = pieceValidation.create(piece.PieceType.Pawn, b);
-	
+
 		assert.strictEqual(pv.allowForward, true);
 		assert.strictEqual(pv.type, piece.PieceType.Pawn);
 		assert.strictEqual(pv.repeat, 1);
@@ -166,7 +166,7 @@ describe('PieceValidation', function() {
 	it('should properly represent white pawn first moves', function() {
 		var b = board.create(),
 			pv = pieceValidation.create(piece.PieceType.Pawn, b);
-	
+
 		pv.start(b.getSquare('a', 2), function(err, squares) {
 			assert.strictEqual(err, null);
 			assert.strictEqual(squares.length, 2);
@@ -178,9 +178,9 @@ describe('PieceValidation', function() {
 	it('should properly represent white pawn second move', function() {
 		var b = board.create(),
 			pv = pieceValidation.create(piece.PieceType.Pawn, b);
-	
+
 		b.move(b.getSquare('a', 2), b.getSquare('a', 3));
-	
+
 		pv.start(b.getSquare('a', 3), function(err, squares) {
 			assert.strictEqual(squares.length, 1);
 			assert.strictEqual(squares[0].rank, 4);
@@ -191,7 +191,7 @@ describe('PieceValidation', function() {
 	it('should properly represent black pawn first moves', function() {
 		var b = board.create(),
 			pv = pieceValidation.create(piece.PieceType.Pawn, b);
-	
+
 		pv.start(b.getSquare('a', 7), function(err, squares) {
 			assert.strictEqual(squares.length, 2);
 			assert.strictEqual(squares[1].rank, 5);
@@ -202,9 +202,9 @@ describe('PieceValidation', function() {
 	it('should properly represent black pawn second move', function() {
 		var b = board.create(),
 			pv = pieceValidation.create(piece.PieceType.Pawn, b);
-	
+
 		b.move(b.getSquare('a', 7), b.getSquare('a', 6));
-	
+
 		pv.start(b.getSquare('a', 6), function(err, squares) {
 			assert.strictEqual(squares.length, 1);
 			assert.strictEqual(squares[0].rank, 5);
@@ -278,7 +278,7 @@ describe('PieceValidation', function() {
 	it('should properly create queen validation', function() {
 		var b = board.create(),
 			pv = pieceValidation.create(piece.PieceType.Queen, b);
-	
+
 		assert.strictEqual(pv.allowForward, true);
 		assert.strictEqual(pv.allowBackward, true);
 		assert.strictEqual(pv.allowHorizontal, true);
@@ -301,14 +301,14 @@ describe('PieceValidation', function() {
 			assert.strictEqual(checkForSquare('f', 7, squares), true, 'Qf7');
 			assert.strictEqual(checkForSquare('b', 7, squares), true, 'Qb7');
 			assert.strictEqual(checkForSquare('h', 3, squares), true, 'Qh3');
-		});	
+		});
 	});
 
 	// test rook validation create
 	it('should properly create rook validation', function() {
 		var b = board.create(),
 			pv = pieceValidation.create(piece.PieceType.Rook, b);
-	
+
 		assert.strictEqual(pv.allowForward, true);
 		assert.strictEqual(pv.allowBackward, true);
 		assert.strictEqual(pv.allowHorizontal, true);
@@ -320,7 +320,7 @@ describe('PieceValidation', function() {
 	it('should properly represent blocked white rook moves', function() {
 		var b = board.create(),
 			pv = pieceValidation.create(piece.PieceType.Rook, b);
-	
+
 		pv.start(b.getSquare('a', 1), function(err, squares) {
 			assert.strictEqual(err, null);
 			assert.strictEqual(squares.length, 0);
@@ -334,18 +334,18 @@ describe('PieceValidation', function() {
 
 		b.move(b.getSquare('a', 2), b.getSquare('a', 4));
 		b.move(b.getSquare('a', 1), b.getSquare('a', 3));
-		
+
 		pv.start(b.getSquare('a', 3), function(err, squares) {
 			assert.strictEqual(err, null);
 			assert.strictEqual(squares.length, 9);
-			
+
 			var i = 0,
 				files = '';
 
 			for (; i < squares.length; i++) {
 				files += squares[i].file;
 			}
-			
+
 			assert.strictEqual(files, 'aabcdefgh');
 		});
 	});
@@ -357,18 +357,18 @@ describe('PieceValidation', function() {
 
 			b.move(b.getSquare('a', 7), b.getSquare('a', 5));
 			b.move(b.getSquare('a', 8), b.getSquare('a', 6));
-		
+
 		pv.start(b.getSquare('a', 6), function(err, squares) {
 			assert.strictEqual(err, null);
 			assert.strictEqual(squares.length, 9);
-			
+
 			var i = 0,
 				files = '';
 
 			for (; i < squares.length; i++) {
 				files += squares[i].file;
 			}
-			
+
 			assert.strictEqual(files, 'aabcdefgh');
 		});
 	});
@@ -384,14 +384,14 @@ describe('PieceValidation', function() {
 		pv.start(b.getSquare('a', 1), function(err, squares) {
 			assert.strictEqual(err, null);
 			assert.strictEqual(squares.length, 6);
-			
+
 			var i = 0,
 				sumRanks = 0;
 
 			for (; i < squares.length; i++) {
 				sumRanks += squares[i].rank;
 			}
-			
+
 			assert.strictEqual(sumRanks, 2+3+4+5+6+7);
 		});
 	});
