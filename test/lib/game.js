@@ -1,4 +1,4 @@
-var assert = require('assert'),
+var
 	piece = requireWithCoverage('piece'),
 	board = requireWithCoverage('board'),
 	game = requireWithCoverage('game');

@@ -1,7 +1,7 @@
 # node-chess - algebraic chess engine
 node-chess is an algebraic notation driven chess engine that can validate board position and produce a list of viable moves (notated).
 
-[![Build Status](https://secure.travis-ci.org/brozeph/node-chess.png?branch=master)](http://travis-ci.org/brozeph/node-chess?branch=master)
+[![Build Status](https://secure.travis-ci.org/brozeph/node-chess.png?branch=master)](http://travis-ci.org/brozeph/node-chess?branch=master) [![Coverage Status](https://coveralls.io/repos/brozeph/node-chess/badge.png?branch=master)](https://coveralls.io/r/brozeph/node-chess?branch=master)
 
 ## Features
 * Accepts moves in algebraic notation
@@ -87,7 +87,7 @@ The status object is as follows (abbreviated in parts to improve readability):
 	   isRepetition: false, // has 3-fold repetition occurred?
 	   isStalemate: false, // is the board in stalemate?
 	   notatedMoves: // all possible moves (notated) with details for each move
-	     { a3: 
+	     { a3:
 		    { src:
 			   { file: 'a'
 			     rank: 2,
@@ -123,7 +123,7 @@ The following code is an example of how to iterate the available notated moves f
 		i = 0,
 		key = '',
 		status = gc.getStatus();
-	
+
 	for (i = 0; i < Object.keys(status.notatedMoves).length; i++) {
 		key = Object.keys(status.notatedMoves)[i];
 
@@ -157,44 +157,44 @@ The following usage of the code is playing out the 3rd game in the series betwee
 	gc.move('Bxf6');
 	gc.move('gxf6');
 	// 7. g3 f5
-	gc.move('g3');	
-	gc.move('f5'); 
+	gc.move('g3');
+	gc.move('f5');
 	// 8. Nc3 Bf6
 	gc.move('Nc3');
-	gc.move('Bf6'); 
+	gc.move('Bf6');
 	// 9. Nge2 Nc6
 	gc.move('Nge2');
 	gc.move('Nc6');
 	// 10. d5 exd5
 	gc.move('d5');
-	gc.move('exd5'); 
+	gc.move('exd5');
 	// 11. Nxd5 Bxb2
 	gc.move('Nxd5');
 	gc.move('Bxb2');
 	// 12. Bg2 O-O
 	gc.move('Bg2');
-	gc.move('0-0'); 
+	gc.move('0-0');
 	// 13. O-O Bh8
 	gc.move('0-0');
-	gc.move('Bh8'); 
+	gc.move('Bh8');
 	// 14. Nef4 Ne5
 	gc.move('Nef4');
-	gc.move('Ne5'); 
+	gc.move('Ne5');
 	// 15. Qh5 Ng6
 	gc.move('Qh5');
-	gc.move('Ng6'); 
+	gc.move('Ng6');
 	// 16. Rad1 c6
 	gc.move('Rad1');
 	gc.move('c6');
 	// 17. Ne3 Qf6
 	gc.move('Ne3');
-	gc.move('Qf6'); 
+	gc.move('Qf6');
 	// 18. Kh1 Bg7
 	gc.move('Kh1');
-	gc.move('Bg7'); 
+	gc.move('Bg7');
 	// 19. Bh3 Ne7
 	gc.move('Bh3');
-	gc.move('Ne7'); 
+	gc.move('Ne7');
 	// 20. Rd3 Be6
 	gc.move('Rd3');
 	gc.move('Be6');
@@ -203,40 +203,40 @@ The following usage of the code is playing out the 3rd game in the series betwee
 	gc.move('Bh6');
 	// 22. Rd4 Bxf4
 	gc.move('Rd4');
-	gc.move('Bxf4'); 
+	gc.move('Bxf4');
 	// 23. Rxf4 Rad8
 	gc.move('Rxf4');
-	gc.move('Rad8'); 
+	gc.move('Rad8');
 	// 24. Rxd8 Rxd8
 	gc.move('Rxd8');
-	gc.move('Rxd8'); 
+	gc.move('Rxd8');
 	// 25. Bxf5 Nxf5
 	gc.move('Bxf5');
 	gc.move('Nxf5');
 	// 26. Nxf5 Rd5
 	gc.move('Nxf5');
-	gc.move('Rd5'); 
+	gc.move('Rd5');
 	// 27. g4 Bxf5
 	gc.move('g4');
-	gc.move('Bxf5'); 
+	gc.move('Bxf5');
 	// 28. gxf5 h6
 	gc.move('gxf5');
-	gc.move('h6'); 
+	gc.move('h6');
 	// 29. h3 Kh7
 	gc.move('h3');
-	gc.move('Kh7'); 
+	gc.move('Kh7');
 	// 30. Qe2 Qe5
 	gc.move('Qe2');
 	gc.move('Qe5');
 	// 31. Qh5 Qf6
 	gc.move('Qh5');
-	gc.move('Qf6'); 
+	gc.move('Qf6');
 	// 32. Qe2 Re5
 	gc.move('Qe2');
-	gc.move('Re5'); 
+	gc.move('Re5');
 	// 33. Qd3 Rd5
 	gc.move('Qd3');
-	gc.move('Rd5'); 
+	gc.move('Rd5');
 	// 34. Qe2
 	gc.move('Qe2');
 
@@ -245,8 +245,8 @@ The following usage of the code is playing out the 3rd game in the series betwee
 ##### Output
 The above code produces the following output:
 
-	{ board: 
-	   { squares: 
+	{ board:
+	   { squares:
 	      [ { file: 'a', rank: 1, piece: null },
 	        { file: 'b', rank: 1, piece: null },
 	        { file: 'c', rank: 1, piece: null },
@@ -256,14 +256,14 @@ The above code produces the following output:
 	        { file: 'g', rank: 1, piece: null },
 	        { file: 'h',
 	          rank: 1,
-	          piece: 
+	          piece:
 	           { moveCount: 2,
 	             side: { name: 'white' },
 	             type: 'king',
 	             notation: 'K' } },
 	        { file: 'a',
 	          rank: 2,
-	          piece: 
+	          piece:
 	           { moveCount: 0,
 	             side: { name: 'white' },
 	             type: 'pawn',
@@ -271,7 +271,7 @@ The above code produces the following output:
 	        { file: 'b', rank: 2, piece: null },
 	        { file: 'c',
 	          rank: 2,
-	          piece: 
+	          piece:
 	           { moveCount: 0,
 	             side: { name: 'white' },
 	             type: 'pawn',
@@ -279,14 +279,14 @@ The above code produces the following output:
 	        { file: 'd', rank: 2, piece: null },
 	        { file: 'e',
 	          rank: 2,
-	          piece: 
+	          piece:
 	           { moveCount: 6,
 	             side: { name: 'white' },
 	             type: 'queen',
 	             notation: 'Q' } },
 	        { file: 'f',
 	          rank: 2,
-	          piece: 
+	          piece:
 	           { moveCount: 0,
 	             side: { name: 'white' },
 	             type: 'pawn',
@@ -302,7 +302,7 @@ The above code produces the following output:
 	        { file: 'g', rank: 3, piece: null },
 	        { file: 'h',
 	          rank: 3,
-	          piece: 
+	          piece:
 	           { moveCount: 1,
 	             side: { name: 'white' },
 	             type: 'pawn',
@@ -314,7 +314,7 @@ The above code produces the following output:
 	        { file: 'e', rank: 4, piece: null },
 	        { file: 'f',
 	          rank: 4,
-	          piece: 
+	          piece:
 	           { moveCount: 4,
 	             side: { name: 'white' },
 	             type: 'rook',
@@ -326,7 +326,7 @@ The above code produces the following output:
 	        { file: 'c', rank: 5, piece: null },
 	        { file: 'd',
 	          rank: 5,
-	          piece: 
+	          piece:
 	           { moveCount: 4,
 	             side: { name: 'black' },
 	             type: 'rook',
@@ -334,7 +334,7 @@ The above code produces the following output:
 	        { file: 'e', rank: 5, piece: null },
 	        { file: 'f',
 	          rank: 5,
-	          piece: 
+	          piece:
 	           { moveCount: 3,
 	             side: { name: 'white' },
 	             type: 'pawn',
@@ -345,7 +345,7 @@ The above code produces the following output:
 	        { file: 'b', rank: 6, piece: null },
 	        { file: 'c',
 	          rank: 6,
-	          piece: 
+	          piece:
 	           { moveCount: 1,
 	             side: { name: 'black' },
 	             type: 'pawn',
@@ -354,7 +354,7 @@ The above code produces the following output:
 	        { file: 'e', rank: 6, piece: null },
 	        { file: 'f',
 	          rank: 6,
-	          piece: 
+	          piece:
 	           { moveCount: 3,
 	             side: { name: 'black' },
 	             type: 'queen',
@@ -362,21 +362,21 @@ The above code produces the following output:
 	        { file: 'g', rank: 6, piece: null },
 	        { file: 'h',
 	          rank: 6,
-	          piece: 
+	          piece:
 	           { moveCount: 1,
 	             side: { name: 'black' },
 	             type: 'pawn',
 	             notation: '' } },
 	        { file: 'a',
 	          rank: 7,
-	          piece: 
+	          piece:
 	           { moveCount: 0,
 	             side: { name: 'black' },
 	             type: 'pawn',
 	             notation: '' } },
 	        { file: 'b',
 	          rank: 7,
-	          piece: 
+	          piece:
 	           { moveCount: 0,
 	             side: { name: 'black' },
 	             type: 'pawn',
@@ -386,7 +386,7 @@ The above code produces the following output:
 	        { file: 'e', rank: 7, piece: null },
 	        { file: 'f',
 	          rank: 7,
-	          piece: 
+	          piece:
 	           { moveCount: 0,
 	             side: { name: 'black' },
 	             type: 'pawn',
@@ -394,7 +394,7 @@ The above code produces the following output:
 	        { file: 'g', rank: 7, piece: null },
 	        { file: 'h',
 	          rank: 7,
-	          piece: 
+	          piece:
 	           { moveCount: 2,
 	             side: { name: 'black' },
 	             type: 'king',
@@ -412,376 +412,376 @@ The above code produces the following output:
 	  isCheckmate: false,
 	  isRepetition: true,
 	  isStalemate: false,
-	  notatedMoves: 
-	   { Rd4: 
-	      { src: 
+	  notatedMoves:
+	   { Rd4:
+	      { src:
 	         { file: 'd',
 	           rank: 5,
-	           piece: 
+	           piece:
 	            { moveCount: 4,
 	              side: { name: 'black' },
 	              type: 'rook',
 	              notation: 'R' } },
 	        dest: { file: 'd', rank: 4, piece: null } },
-	     Rd3: 
-	      { src: 
+	     Rd3:
+	      { src:
 	         { file: 'd',
 	           rank: 5,
-	           piece: 
+	           piece:
 	            { moveCount: 4,
 	              side: { name: 'black' },
 	              type: 'rook',
 	              notation: 'R' } },
 	        dest: { file: 'd', rank: 3, piece: null } },
-	     Rd2: 
-	      { src: 
+	     Rd2:
+	      { src:
 	         { file: 'd',
 	           rank: 5,
-	           piece: 
+	           piece:
 	            { moveCount: 4,
 	              side: { name: 'black' },
 	              type: 'rook',
 	              notation: 'R' } },
 	        dest: { file: 'd', rank: 2, piece: null } },
-	     Rd1: 
-	      { src: 
+	     Rd1:
+	      { src:
 	         { file: 'd',
 	           rank: 5,
-	           piece: 
+	           piece:
 	            { moveCount: 4,
 	              side: { name: 'black' },
 	              type: 'rook',
 	              notation: 'R' } },
 	        dest: { file: 'd', rank: 1, piece: null } },
-	     Rd6: 
-	      { src: 
+	     Rd6:
+	      { src:
 	         { file: 'd',
 	           rank: 5,
-	           piece: 
+	           piece:
 	            { moveCount: 4,
 	              side: { name: 'black' },
 	              type: 'rook',
 	              notation: 'R' } },
 	        dest: { file: 'd', rank: 6, piece: null } },
-	     Rd7: 
-	      { src: 
+	     Rd7:
+	      { src:
 	         { file: 'd',
 	           rank: 5,
-	           piece: 
+	           piece:
 	            { moveCount: 4,
 	              side: { name: 'black' },
 	              type: 'rook',
 	              notation: 'R' } },
 	        dest: { file: 'd', rank: 7, piece: null } },
-	     Rd8: 
-	      { src: 
+	     Rd8:
+	      { src:
 	         { file: 'd',
 	           rank: 5,
-	           piece: 
+	           piece:
 	            { moveCount: 4,
 	              side: { name: 'black' },
 	              type: 'rook',
 	              notation: 'R' } },
 	        dest: { file: 'd', rank: 8, piece: null } },
-	     Rc5: 
-	      { src: 
+	     Rc5:
+	      { src:
 	         { file: 'd',
 	           rank: 5,
-	           piece: 
+	           piece:
 	            { moveCount: 4,
 	              side: { name: 'black' },
 	              type: 'rook',
 	              notation: 'R' } },
 	        dest: { file: 'c', rank: 5, piece: null } },
-	     Rb5: 
-	      { src: 
+	     Rb5:
+	      { src:
 	         { file: 'd',
 	           rank: 5,
-	           piece: 
+	           piece:
 	            { moveCount: 4,
 	              side: { name: 'black' },
 	              type: 'rook',
 	              notation: 'R' } },
 	        dest: { file: 'b', rank: 5, piece: null } },
-	     Ra5: 
-	      { src: 
+	     Ra5:
+	      { src:
 	         { file: 'd',
 	           rank: 5,
-	           piece: 
+	           piece:
 	            { moveCount: 4,
 	              side: { name: 'black' },
 	              type: 'rook',
 	              notation: 'R' } },
 	        dest: { file: 'a', rank: 5, piece: null } },
-	     Re5: 
-	      { src: 
+	     Re5:
+	      { src:
 	         { file: 'd',
 	           rank: 5,
-	           piece: 
+	           piece:
 	            { moveCount: 4,
 	              side: { name: 'black' },
 	              type: 'rook',
 	              notation: 'R' } },
 	        dest: { file: 'e', rank: 5, piece: null } },
-	     Rxf5: 
-	      { src: 
+	     Rxf5:
+	      { src:
 	         { file: 'd',
 	           rank: 5,
-	           piece: 
+	           piece:
 	            { moveCount: 4,
 	              side: { name: 'black' },
 	              type: 'rook',
 	              notation: 'R' } },
-	        dest: 
+	        dest:
 	         { file: 'f',
 	           rank: 5,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'white' },
 	              type: 'pawn',
 	              notation: '' } } },
-	     c5: 
-	      { src: 
+	     c5:
+	      { src:
 	         { file: 'c',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 1,
 	              side: { name: 'black' },
 	              type: 'pawn',
 	              notation: '' } },
 	        dest: { file: 'c', rank: 5, piece: null } },
-	     Qxf5: 
-	      { src: 
+	     Qxf5:
+	      { src:
 	         { file: 'f',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'black' },
 	              type: 'queen',
 	              notation: 'Q' } },
-	        dest: 
+	        dest:
 	         { file: 'f',
 	           rank: 5,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'white' },
 	              type: 'pawn',
 	              notation: '' } } },
-	     Qe6: 
-	      { src: 
+	     Qe6:
+	      { src:
 	         { file: 'f',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'black' },
 	              type: 'queen',
 	              notation: 'Q' } },
 	        dest: { file: 'e', rank: 6, piece: null } },
-	     Qd6: 
-	      { src: 
+	     Qd6:
+	      { src:
 	         { file: 'f',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'black' },
 	              type: 'queen',
 	              notation: 'Q' } },
 	        dest: { file: 'd', rank: 6, piece: null } },
-	     Qg6: 
-	      { src: 
+	     Qg6:
+	      { src:
 	         { file: 'f',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'black' },
 	              type: 'queen',
 	              notation: 'Q' } },
 	        dest: { file: 'g', rank: 6, piece: null } },
-	     Qe7: 
-	      { src: 
+	     Qe7:
+	      { src:
 	         { file: 'f',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'black' },
 	              type: 'queen',
 	              notation: 'Q' } },
 	        dest: { file: 'e', rank: 7, piece: null } },
-	     Qd8: 
-	      { src: 
+	     Qd8:
+	      { src:
 	         { file: 'f',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'black' },
 	              type: 'queen',
 	              notation: 'Q' } },
 	        dest: { file: 'd', rank: 8, piece: null } },
-	     Qg5: 
-	      { src: 
+	     Qg5:
+	      { src:
 	         { file: 'f',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'black' },
 	              type: 'queen',
 	              notation: 'Q' } },
 	        dest: { file: 'g', rank: 5, piece: null } },
-	     Qh4: 
-	      { src: 
+	     Qh4:
+	      { src:
 	         { file: 'f',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'black' },
 	              type: 'queen',
 	              notation: 'Q' } },
 	        dest: { file: 'h', rank: 4, piece: null } },
-	     Qe5: 
-	      { src: 
+	     Qe5:
+	      { src:
 	         { file: 'f',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'black' },
 	              type: 'queen',
 	              notation: 'Q' } },
 	        dest: { file: 'e', rank: 5, piece: null } },
-	     Qd4: 
-	      { src: 
+	     Qd4:
+	      { src:
 	         { file: 'f',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'black' },
 	              type: 'queen',
 	              notation: 'Q' } },
 	        dest: { file: 'd', rank: 4, piece: null } },
-	     Qc3: 
-	      { src: 
+	     Qc3:
+	      { src:
 	         { file: 'f',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'black' },
 	              type: 'queen',
 	              notation: 'Q' } },
 	        dest: { file: 'c', rank: 3, piece: null } },
-	     Qb2: 
-	      { src: 
+	     Qb2:
+	      { src:
 	         { file: 'f',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'black' },
 	              type: 'queen',
 	              notation: 'Q' } },
 	        dest: { file: 'b', rank: 2, piece: null } },
-	     Qa1: 
-	      { src: 
+	     Qa1:
+	      { src:
 	         { file: 'f',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'black' },
 	              type: 'queen',
 	              notation: 'Q' } },
 	        dest: { file: 'a', rank: 1, piece: null } },
-	     Qg7: 
-	      { src: 
+	     Qg7:
+	      { src:
 	         { file: 'f',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'black' },
 	              type: 'queen',
 	              notation: 'Q' } },
 	        dest: { file: 'g', rank: 7, piece: null } },
-	     Qh8: 
-	      { src: 
+	     Qh8:
+	      { src:
 	         { file: 'f',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 3,
 	              side: { name: 'black' },
 	              type: 'queen',
 	              notation: 'Q' } },
 	        dest: { file: 'h', rank: 8, piece: null } },
-	     h5: 
-	      { src: 
+	     h5:
+	      { src:
 	         { file: 'h',
 	           rank: 6,
-	           piece: 
+	           piece:
 	            { moveCount: 1,
 	              side: { name: 'black' },
 	              type: 'pawn',
 	              notation: '' } },
 	        dest: { file: 'h', rank: 5, piece: null } },
-	     a6: 
-	      { src: 
+	     a6:
+	      { src:
 	         { file: 'a',
 	           rank: 7,
-	           piece: 
+	           piece:
 	            { moveCount: 0,
 	              side: { name: 'black' },
 	              type: 'pawn',
 	              notation: '' } },
 	        dest: { file: 'a', rank: 6, piece: null } },
-	     a5: 
-	      { src: 
+	     a5:
+	      { src:
 	         { file: 'a',
 	           rank: 7,
-	           piece: 
+	           piece:
 	            { moveCount: 0,
 	              side: { name: 'black' },
 	              type: 'pawn',
 	              notation: '' } },
 	        dest: { file: 'a', rank: 5, piece: null } },
-	     b6: 
-	      { src: 
+	     b6:
+	      { src:
 	         { file: 'b',
 	           rank: 7,
-	           piece: 
+	           piece:
 	            { moveCount: 0,
 	              side: { name: 'black' },
 	              type: 'pawn',
 	              notation: '' } },
 	        dest: { file: 'b', rank: 6, piece: null } },
-	     b5: 
-	      { src: 
+	     b5:
+	      { src:
 	         { file: 'b',
 	           rank: 7,
-	           piece: 
+	           piece:
 	            { moveCount: 0,
 	              side: { name: 'black' },
 	              type: 'pawn',
 	              notation: '' } },
 	        dest: { file: 'b', rank: 5, piece: null } },
-	     Kh8: 
-	      { src: 
+	     Kh8:
+	      { src:
 	         { file: 'h',
 	           rank: 7,
-	           piece: 
+	           piece:
 	            { moveCount: 2,
 	              side: { name: 'black' },
 	              type: 'king',
 	              notation: 'K' } },
 	        dest: { file: 'h', rank: 8, piece: null } },
-	     Kg7: 
-	      { src: 
+	     Kg7:
+	      { src:
 	         { file: 'h',
 	           rank: 7,
-	           piece: 
+	           piece:
 	            { moveCount: 2,
 	              side: { name: 'black' },
 	              type: 'king',
 	              notation: 'K' } },
 	        dest: { file: 'g', rank: 7, piece: null } },
-	     Kg8: 
-	      { src: 
+	     Kg8:
+	      { src:
 	         { file: 'h',
 	           rank: 7,
-	           piece: 
+	           piece:
 	            { moveCount: 2,
 	              side: { name: 'black' },
 	              type: 'king',
