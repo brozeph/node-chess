@@ -230,8 +230,11 @@ describe('PieceValidation', function() {
 		var b = board.create(),
 			pv = pieceValidation.create(piece.PieceType.Pawn, b);
 
+		// turn 1
 		b.move(b.getSquare('e', 2), b.getSquare('e', 4));
 		b.move(b.getSquare('e', 7), b.getSquare('e', 6));
+
+		// turn 2
 		b.move(b.getSquare('e', 4), b.getSquare('e', 5));
 		b.move(b.getSquare('f', 7), b.getSquare('f', 5));
 
@@ -239,6 +242,28 @@ describe('PieceValidation', function() {
 			assert.strictEqual(squares.length, 1);
 			assert.strictEqual(squares[0].rank, 6);
 			assert.strictEqual(squares[0].file, 'f');
+		});
+	});
+
+	// verify en-passant (issue #3)
+	it('should properly not allow en-passant as available move', function() {
+		var b = board.create(),
+			pv = pieceValidation.create(piece.PieceType.Pawn, b);
+
+		// turn 1
+		b.move(b.getSquare('e', 2), b.getSquare('e', 4));
+		b.move(b.getSquare('e', 7), b.getSquare('e', 6));
+
+		// turn 2
+		b.move(b.getSquare('e', 4), b.getSquare('e', 5));
+		b.move(b.getSquare('f', 7), b.getSquare('f', 5));
+
+		// turn 3
+		b.move(b.getSquare('a', 2), b.getSquare('a', 3));
+		b.move(b.getSquare('a', 7), b.getSquare('a', 6));
+
+		pv.start(b.getSquare('e', 5), function(err, squares) {
+			assert.strictEqual(squares.length, 0);
 		});
 	});
 

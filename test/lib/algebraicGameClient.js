@@ -3,7 +3,6 @@ var
 	algebraicGameClient = requireWithCoverage('algebraicGameClient');
 
 describe('AlgebraicGameClient', function() {
-
 	// test create and getStatus
 	it('should have proper status once board is created', function() {
 		var gc = algebraicGameClient.create(),
@@ -258,6 +257,126 @@ describe('AlgebraicGameClient', function() {
 		m = gc.move('Bxc6');
 
 		assert.ok(s.piece === null, 'Phantom piece appears after Bxc6');
+	});
+
+	// Issue #3 - Ensure no phantom pawns appear after sequence of moves
+	it ('should not have a random Black Pawn appear on the board (bug fix test)', function () {
+		var gc = algebraicGameClient.create(),
+			m = null,
+			s = gc.game.board.getSquare('a6');
+
+		// turn 1
+		gc.move('e4');
+		gc.move('e5');
+
+		// turn 2
+		gc.move('d3');
+		gc.move('Nc6');
+
+		// turn 3
+		gc.move('Nf3');
+		gc.move('Bb4');
+
+		// turn 4
+		gc.move('Nfd2');
+		gc.move('d6');
+
+		// turn 5
+		gc.move('a3');
+		gc.move('Bc5');
+
+		// turn 6
+		gc.move('Be2');
+		gc.move('Qf6');
+
+		// turn 7
+		gc.move('0-0');
+		gc.move('Bxf2');
+
+		// turn 8
+		gc.move('Rxf2');
+		gc.move('Qe6');
+
+		// turn 9
+		gc.move('Nc4');
+		gc.move('Nd4');
+
+		// turn 10
+		gc.move('Bf1');
+		gc.move('Bd7');
+
+		// turn 11
+		gc.move('c3');
+		gc.move('Nb3');
+
+		// turn 12
+		gc.move('Ra2');
+		gc.move('Ba4');
+
+		// turn 13
+		gc.move('Qc2');
+		gc.move('Nh6');
+
+		// turn 14
+		gc.move('d4');
+		gc.move('Ng4');
+
+		// turn 15
+		gc.move('Rf3');
+		gc.move('b5');
+
+		// turn 16
+		gc.move('Nxe5');
+		gc.move('Nxc1');
+
+		// turn 17
+		gc.move('Qxc1');
+		gc.move('dxe5');
+
+		// turn 18
+		gc.move('Ra1');
+		gc.move('Rb8');
+
+		// turn 19
+		gc.move('h3');
+		gc.move('Rb6');
+
+		// turn 20
+		gc.move('hxg4');
+		gc.move('Qxg4');
+
+		// turn 21
+		gc.move('Nd2');
+		gc.move('a5');
+
+		// turn 22
+		gc.move('dxe5');
+		gc.move('Rc6');
+
+		// turn 23
+		gc.move('c4');
+		gc.move('h5');
+
+		// turn 24
+		gc.move('Rb1');
+		gc.move('Rhh6');
+
+		// turn 25
+		gc.move('Ra1');
+		gc.move('Rce6');
+
+		// turn 26
+		gc.move('Bd3');
+		gc.move('Rxe5');
+
+		// turn 27
+		gc.move('cxb5');
+
+		assert.ok(s.piece === null, 'Phantom piece appears prior to Rg6');
+
+		m = gc.move('Rg6');
+
+		assert.ok(s.piece === null, 'Phantom piece appears after Rg6');
 	});
 
 });
