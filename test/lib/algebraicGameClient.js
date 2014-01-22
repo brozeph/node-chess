@@ -379,4 +379,117 @@ describe('AlgebraicGameClient', function() {
 		assert.ok(s.piece === null, 'Phantom piece appears after Rg6');
 	});
 
+	// Issue #4 - Ensure proper checkmate detection with Knight
+	it ('should properly detect checkmate', function () {
+		var gc = algebraicGameClient.create(),
+			m = null,
+			s = gc.game.board.getSquare('a6'),
+			status = null;
+
+		gc.move('e4');
+		gc.move('e5');
+
+
+		gc.move('Nc3');
+		gc.move('d6');
+
+
+		gc.move('Bc4');
+		gc.move('Be6');
+
+
+		gc.move('Bb3');
+		gc.move('Nf6');
+
+
+		gc.move('Nge2');
+		gc.move('Nh5');
+
+
+		gc.move('Bxe6');
+		gc.move('fxe6');
+
+
+		gc.move('d4');
+		gc.move('Be7');
+
+
+		gc.move('dxe5');
+		gc.move('dxe5');
+
+
+		gc.move('Qxd8');
+		gc.move('Bxd8');
+
+
+		gc.move('Be3');
+		gc.move('0-0');
+
+
+		gc.move('0-0-0');
+		gc.move('Nc6');
+
+
+		gc.move('Rhf1');
+		gc.move('Bh4');
+
+
+		gc.move('Nb5');
+		gc.move('Rac8');
+
+
+		gc.move('f3');
+		gc.move('a6');
+
+
+		gc.move('Nbc3');
+		gc.move('Nb4');
+
+
+		gc.move('Bc5');
+		gc.move('Nxa2');
+
+
+		gc.move('Nxa2');
+		gc.move('b6');
+
+
+		gc.move('Bxf8');
+		gc.move('Rxf8');
+
+
+		gc.move('Nb4');
+		gc.move('a5');
+
+
+		gc.move('Nc6');
+		gc.move('Ra8');
+
+
+		gc.move('Nxe5');
+		gc.move('c5');
+
+
+		gc.move('Rd6');
+		gc.move('Rc8');
+
+
+		gc.move('Rxb6');
+		gc.move('c4');
+
+
+		gc.move('f4');
+		gc.move('c3');
+
+
+		gc.move('Nxc3');
+		gc.move('Rxc3');
+
+
+		gc.move('Rb8');
+
+		status = gc.getStatus();
+		assert.strictEqual(status.notatedMoves['Kf7'], undefined);
+	});
+
 });

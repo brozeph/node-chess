@@ -5,14 +5,14 @@ var
 	gameValidation = requireWithCoverage('gameValidation');
 
 describe('GameValidation', function() {
-
+/*
 	// validate check
 	it('should properly indicate check', function() {
 		var g = game.create(),
 			b = g.board,
 			v = gameValidation.create(g);
 
-		// put king into checkmate
+		// put king into check
 		b.move(b.getSquare('d', 2), b.getSquare('d', 4));
 		b.move(b.getSquare('e', 7), b.getSquare('e', 5));
 		b.move(b.getSquare('d', 4), b.getSquare('e', 5));
@@ -25,7 +25,23 @@ describe('GameValidation', function() {
 			assert.strictEqual(result.isStalemate, false);
 		});
 	});
+*/
+	it('should properly indicate check due to Knight', function () {
+		var g = game.create(),
+			b = g.board,
+			v = gameValidation.create(g);
 
+		b.move(b.getSquare('b1'), b.getSquare('c3'));
+		b.move(b.getSquare('g8'), b.getSquare('f6'));
+		b.move(b.getSquare('c3'), b.getSquare('b5'));
+		b.move(b.getSquare('f6'), b.getSquare('g8'));
+		b.move(b.getSquare('b5'), b.getSquare('d6'));
+
+		v.start(function (err, result) {
+			assert.strictEqual(result.isCheck, true);
+		});
+	});
+/*
 	// validate checkmate
 	it('should properly indicate checkmate', function() {
 		var g = game.create(),
@@ -215,4 +231,5 @@ describe('GameValidation', function() {
 			assert.strictEqual(result.isStalemate, false);
 		});
 	});
+*/
 });
