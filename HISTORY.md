@@ -1,3 +1,8 @@
+0.1.8 / 2014-01-22
+==================
+
+	* additional verification of Knight check related to issue #4
+
 0.1.7 / 2014-01-21
 ==================
 

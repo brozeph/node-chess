@@ -5,7 +5,6 @@ var
 	gameValidation = requireWithCoverage('gameValidation');
 
 describe('GameValidation', function() {
-/*
 	// validate check
 	it('should properly indicate check', function() {
 		var g = game.create(),
@@ -25,8 +24,22 @@ describe('GameValidation', function() {
 			assert.strictEqual(result.isStalemate, false);
 		});
 	});
-*/
-	it('should properly indicate check due to Knight', function () {
+
+	// validate Knight check (part 1)
+	it('should properly indicate check due to Knight (part 1)', function () {
+		var g = game.create(),
+			b = g.board,
+			v = gameValidation.create(g);
+
+		b.move(b.getSquare('b1'), b.getSquare('c7'));
+
+		v.start(function (err, result) {
+			assert.strictEqual(result.isCheck, true);
+		});
+	});
+
+	// validate Knight check (part 2)
+	it('should properly indicate check due to Knight (part 2)', function () {
 		var g = game.create(),
 			b = g.board,
 			v = gameValidation.create(g);
@@ -41,7 +54,7 @@ describe('GameValidation', function() {
 			assert.strictEqual(result.isCheck, true);
 		});
 	});
-/*
+
 	// validate checkmate
 	it('should properly indicate checkmate', function() {
 		var g = game.create(),
@@ -231,5 +244,4 @@ describe('GameValidation', function() {
 			assert.strictEqual(result.isStalemate, false);
 		});
 	});
-*/
 });
