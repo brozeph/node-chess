@@ -787,3 +787,7 @@ The above code produces the following output:
 	              type: 'king',
 	              notation: 'K' } },
 	        dest: { file: 'g', rank: 8, piece: null } } } }
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/brozeph/node-chess/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
