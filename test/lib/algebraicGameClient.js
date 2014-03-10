@@ -167,6 +167,30 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// test pawn promotion
+	// adding for issue #6
+	it('should properly show valid Pawn promotions', function() {
+		var gc = algebraicGameClient.create(),
+			m = null,
+			r = null;
+
+		gc.game.board.getSquare('a7').piece = null;
+		gc.game.board.getSquare('a8').piece = null;
+		gc.game.board.getSquare('b8').piece = null;
+		gc.game.board.getSquare('c8').piece = null;
+		gc.game.board.getSquare('d8').piece = null;
+		gc.game.board.getSquare('a2').piece = null;
+		gc.game.board.getSquare('a7').piece = piece.createPawn(piece.SideType.White);
+		gc.game.board.getSquare('a7').piece.moveCount = 1;
+
+		r = gc.getStatus(true);
+
+		assert.isDefined(r.notatedMoves['a8R'], 'pawn promotion to rook');
+		assert.isDefined(r.notatedMoves['a8N'], 'pawn promotion to Knight');
+		assert.isDefined(r.notatedMoves['a8B'], 'pawn promotion to Bishop');
+		assert.isDefined(r.notatedMoves['a8Q'], 'pawn promotion to Queen');
+	});
+
+	// test pawn promotion
 	it('should properly recognize Pawn promotion to Rook', function() {
 		var gc = algebraicGameClient.create(),
 			m = null,
