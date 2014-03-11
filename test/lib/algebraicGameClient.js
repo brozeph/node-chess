@@ -166,32 +166,52 @@ describe('AlgebraicGameClient', function() {
 		assert.ok(m.move.castle);
 	});
 
+	/*
 	// test pawn promotion
 	// adding for issue #6
-	it('should properly show valid Pawn promotions', function() {
+	it('should properly show valid White Pawn promotions', function() {
 		var gc = algebraicGameClient.create(),
-			m = null,
 			r = null;
 
 		gc.game.board.getSquare('a7').piece = null;
 		gc.game.board.getSquare('a8').piece = null;
-		gc.game.board.getSquare('b8').piece = null;
-		gc.game.board.getSquare('c8').piece = null;
-		gc.game.board.getSquare('d8').piece = null;
 		gc.game.board.getSquare('a2').piece = null;
 		gc.game.board.getSquare('a7').piece = piece.createPawn(piece.SideType.White);
 		gc.game.board.getSquare('a7').piece.moveCount = 1;
 
 		r = gc.getStatus(true);
 
+		assert.isUndefined(r.notatedMoves['a8'], 'pawn should promote');
 		assert.isDefined(r.notatedMoves['a8R'], 'pawn promotion to rook');
 		assert.isDefined(r.notatedMoves['a8N'], 'pawn promotion to Knight');
 		assert.isDefined(r.notatedMoves['a8B'], 'pawn promotion to Bishop');
 		assert.isDefined(r.notatedMoves['a8Q'], 'pawn promotion to Queen');
 	});
 
+	it('should properly show valid Black Pawn promotions', function() {
+		var gc = algebraicGameClient.create(),
+			r = null;
+
+		gc.game.board.getSquare('a2').piece = null;
+		gc.game.board.getSquare('a1').piece = null;
+		gc.game.board.getSquare('a7').piece = null;
+		gc.game.board.getSquare('a2').piece = piece.createPawn(piece.SideType.White);
+		gc.game.board.getSquare('a2').piece.moveCount = 1;
+
+		gc.getStatus(true);
+		gc.move('h4');
+		r = gc.getStatus();
+
+		assert.isUndefined(r.notatedMoves['a1'], 'pawn should promote');
+		assert.isDefined(r.notatedMoves['a1R'], 'pawn promotion to rook');
+		assert.isDefined(r.notatedMoves['a1N'], 'pawn promotion to Knight');
+		assert.isDefined(r.notatedMoves['a1B'], 'pawn promotion to Bishop');
+		assert.isDefined(r.notatedMoves['a1Q'], 'pawn promotion to Queen');
+	});
+	//*/
+
 	// test pawn promotion
-	it('should properly recognize Pawn promotion to Rook', function() {
+	it('should properly recognize White Pawn promotion to Rook', function() {
 		var gc = algebraicGameClient.create(),
 			m = null,
 			r = null;
@@ -207,7 +227,30 @@ describe('AlgebraicGameClient', function() {
 
 		gc.getStatus(true);
 		m = gc.move('a8R');
+		r = gc.getStatus();
 
+		assert.strictEqual(m.move.postSquare.piece.type, piece.PieceType.Rook);
+		assert.strictEqual(r.isCheckmate, true);
+	});
+
+	// test pawn promotion
+	it('should properly recognize Black Pawn promotion to Rook', function() {
+		var gc = algebraicGameClient.create(),
+			m = null,
+			r = null;
+
+		gc.game.board.getSquare('a2').piece = null;
+		gc.game.board.getSquare('a1').piece = null;
+		gc.game.board.getSquare('b1').piece = null;
+		gc.game.board.getSquare('c1').piece = null;
+		gc.game.board.getSquare('d1').piece = null;
+		gc.game.board.getSquare('a7').piece = null;
+		gc.game.board.getSquare('a2').piece = piece.createPawn(piece.SideType.Black);
+		gc.game.board.getSquare('a2').piece.moveCount = 1;
+
+		gc.getStatus(true);
+		gc.move('h3');
+		m = gc.move('a1R');
 		r = gc.getStatus();
 
 		assert.strictEqual(m.move.postSquare.piece.type, piece.PieceType.Rook);
@@ -515,5 +558,5 @@ describe('AlgebraicGameClient', function() {
 		status = gc.getStatus();
 		assert.strictEqual(status.notatedMoves['Kf7'], undefined);
 	});
-
+	//*/
 });
