@@ -1,0 +1,928 @@
+<!doctype html>
+<html lang="en" ng-app>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Node Chess</title>
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css" />
+		<link rel="stylesheet" href="public/css/gh-fork-ribbon.css" />
+		<!--[if lt IE 9]>
+				<link rel="stylesheet" href="public/css/gh-fork-ribbon.ie.css">
+		<![endif]-->
+		<link rel="stylesheet" href="public/css/node-chess.css" />
+	</head>
+	<body>
+
+		<div class="github-fork-ribbon-wrapper right">
+			<div class="github-fork-ribbon">
+				<a href="https://github.com/brozeph/node-chess">Fork me on GitHub</a>
+			</div>
+		</div>
+
+		<div class="container">
+
+			<div class="masthead">
+				<h1><small>Node Chess</small></h1>
+			</div>
+
+			<div class="jumbotron text-center">
+				<h2>A simple node.js library for parsing and validating chess board position with an algebraic move parser</h2>
+				<p class="lead">Node Chess is an algebraic notation driven chess engine for validating board position and understanding viable moves.</p>
+			</div>
+
+
+			<div class="row">
+				<div class="col-md-12"><h3>Featuring...</h3></div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<ul>
+						<li>Lists valid moves in algebraic</li>
+						<li>Accepts moves in algebraic</li>
+						<li>Friendly algebraic parsing</li>
+						<li>Undo previous move easily</li>
+					</ul>
+				</div>
+				<div class="col-md-4">
+					<ul>
+						<li>3-fold repetition detection</li>
+						<li>Stalemate detection</li>
+						<li>Check &amp; Checkmate detection</li>
+						<li>Pawn promotion</li>
+					</ul>
+				</div>
+				<div class="col-md-4">
+					<ul>
+						<li>Alternate simple client available</li>
+						<li>High unit test coverage</li>
+						<li>Simple API</li>
+						<li>Easily readable object graph</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="quickstart">
+				<div class="row">
+					<div class="col-md-12"><h3>Getting Started...</h3></div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<h4>1. Install</h4>
+						<p>Node chess is available via <code>npm</code>:</p>
+<pre>
+$ npm install chess
+</pre>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<h4>2. Create a game</h4>
+						<h5>Algebraic Game Client</h5>
+						<p>To create a client that lists valid moves in algebraic notation:</p>
+<pre class="prettyprint">
+var
+  chess = require('chess'),
+  game = chess.create();
+</pre>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<h4>3. Determine available moves</h4>
+						<p>To get available moves, simply call the method <code>getStatus()</code>:</p>
+<pre class="prettyprint">
+var
+  status = game.getStatus(),
+  validMoves = status.notatedMoves;
+
+Object.keys(client.notatedMoves).forEach(function (notation) {
+  console.log(notation);
+});
+</pre>
+						<p>Each valid move is represented as a hash in the <code>notatedMoves</code> property where the key of the hash is the notation itself. The following is an example of the details available for each move:</p>
+<pre class="prettyprint">
+{
+  "Na3": {
+    "src": {
+      "file": "b",
+      "rank": 1,
+      "piece": {
+        "moveCount": 0,
+        "side": {
+          "name": "white"
+        },
+        "type": "knight",
+        "notation": "N"
+      }
+    },
+    "dest": {
+      "file": "a",
+      "rank": 3,
+      "piece": null
+    }
+  },
+  // ... results abbreviated
+</pre>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<h4>4. Make a move</h4>
+						<p>Making a move is as simple as calling the <code>move()</code> function with the proper notation:</p>
+<pre class="prettyprint">
+var
+  chess = require('chess'),
+  game = chess.create();
+
+// move the White Pawn located on square a2 forward two squares
+var move = game.move('a4');
+</pre>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="details">
+				<div class="row">
+					<div class="col-md-12"><h3>Diving Deeper</h3></div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<h4>.move() function</h4>
+						<p>The move function returns an object that helps further understand state. This object also contains a method to undo the move.</p>
+						<dl class="dl-horizontal">
+							<dt><code>move.capturedPiece</code></dt>
+								<dd>If a piece was captured as a result of the move, it will be reflected here as a piece object.</dd>
+							<dt><code>move.castle</code></dt>
+								<dd>If a castle occurred as a result of the move, this will be set to true.</dd>
+							<dt><code>move.enPassant</code></dt>
+								<dd>If the move involved en passant, this will be set to true.</dd>
+							<dt><code>move.postSquare</code></dt>
+								<dd>The square the piece was moved to...</dd>
+							<dt><code>move.prevSquare</code></dt>
+								<dd>The square that the piece moved from...</dd>
+							<dt><code>undo()</code></dt>
+								<dd>A function pointer that allows for the move to be backed-out.</dd>
+						</dl>
+						<p>Here is the serialized output (with description) of the return object from <code>move()</code>:</p>
+<pre class="prettyprint">
+{ move :
+  { capturedPiece : null, // the captured piece (if capture occurred)
+    castle : false, // was the move a castle?
+    enPassant : false, // was the move en passant?
+    postSquare : { file: 'a', rank: 4, piece: {
+      moveCount: 1,
+      side: { name: 'white' },
+      type: 'pawn',
+      notation: ''
+    } },
+    prevSquare : { file: 'a', rank: 2, piece: null } },
+  undo : __function__ } // undo() can be used to back out the previous move
+</pre>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<h4>.getStatus() function</h4>
+						<p>The getStatus function returns the current state of the board, all valid moves and an object graph with all the squares of the board (with pieces).</p>
+						<dl class="dl-horizontal">
+							<dt><code>board</code></dt>
+								<dd>The underlying board object which contains a collection of squares and the pieces upon each.</dd>
+							<dt><code>isCheck</code></dt>
+								<dd>If either the Black or White King is in check on the board, this property will be set to true.</dd>
+							<dt><code>isCheckmate</code></dt>
+								<dd>If either the Black or White King is in checkmate on the board, this property will be set to true.</dd>
+							<dt><code>isRepetition</code></dt>
+								<dd>When 3-fold repetition has been observed, this property will be set to true. The game can technically continue, so the <code>notatedMoves</code> may contain valid moves.</dd>
+							<dt><code>isStalemate</code></dt>
+								<dd>In the event that the board is in stalemate, this property will be set to true.</dd>
+							<dt><code>notatedMoves</code></dt>
+								<dd>This is a hash that contains all valid moves for the board with the algebraic notation as the hash key.</dd>
+						</dl>
+						<p>Here is the serialized output (with description) of the return object from <code>getStatus()</code>:</p>
+<pre class="prettyprint">
+{ board: // this is the top level board
+  { squares: // an array of all squares on the board
+    [ { file: 'a', rank: 1, piece: { // the file, rank and piece on the square
+      moveCount: 0,
+      side: { name: 'white' },
+      type: 'rook',
+      notation: 'R'
+    } },
+    /* the rest of the squares... */
+    ]},
+ isCheck: false, // is the King currently in check?
+ isCheckmate: false, // is the King currently in checkmate?
+ isRepetition: false, // has 3-fold repetition occurred?
+ isStalemate: false, // is the board in stalemate?
+ notatedMoves: // all possible moves (notated) with details for each move
+   { a3:
+    { src:
+     { file: 'a'
+       rank: 2,
+       piece:
+        { moveCount: 0,
+          side: {name: 'white' },
+          type: 'pawn',
+          notation: '' } },
+      dest: { file: 'a', rank: 3, piece: null } },
+      /* the rest of the available moves... */
+    }
+}
+</pre>
+					</div>
+				</div>
+			</div>
+
+			<div class="details">
+				<div class="row">
+					<div class="col-md-12"><h3>Verbose Example</h3></div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<h4>Fischer vs Petrosian / Buenos Aires, 1971</h4>
+						<p>This game is quite interesting as it resulted in a draw due to 3-fold repetition!</p>
+<pre class="prettyprint">
+var
+  chess = require('chess'),
+  game = chess.create();
+
+// 1. e4 e6
+game.move('e4');
+game.move('e6');
+// 2. d4 d5
+game.move('d4');
+game.move('d5');
+// 3. Nc3 Nf6
+game.move('Nc3');
+game.move('Nf6');
+// 4. Bg5 dxe4
+game.move('Bg5');
+game.move('dxe4');
+// 5. Nxe4 Be7
+game.move('Nxe4');
+game.move('Be7');
+// 6. Bxf6 gxf6
+game.move('Bxf6');
+game.move('gxf6');
+// 7. g3 f5
+game.move('g3');
+game.move('f5');
+// 8. Nc3 Bf6
+game.move('Nc3');
+game.move('Bf6');
+// 9. Nge2 Nc6
+game.move('Nge2');
+game.move('Nc6');
+// 10. d5 exd5
+game.move('d5');
+game.move('exd5');
+// 11. Nxd5 Bxb2
+game.move('Nxd5');
+game.move('Bxb2');
+// 12. Bg2 O-O
+game.move('Bg2');
+game.move('0-0');
+// 13. O-O Bh8
+game.move('0-0');
+game.move('Bh8');
+// 14. Nef4 Ne5
+game.move('Nef4');
+game.move('Ne5');
+// 15. Qh5 Ng6
+game.move('Qh5');
+game.move('Ng6');
+// 16. Rad1 c6
+game.move('Rad1');
+game.move('c6');
+// 17. Ne3 Qf6
+game.move('Ne3');
+game.move('Qf6');
+// 18. Kh1 Bg7
+game.move('Kh1');
+game.move('Bg7');
+// 19. Bh3 Ne7
+game.move('Bh3');
+game.move('Ne7');
+// 20. Rd3 Be6
+game.move('Rd3');
+game.move('Be6');
+// 21. Rfd1 Bh6
+game.move('Rfd1');
+game.move('Bh6');
+// 22. Rd4 Bxf4
+game.move('Rd4');
+game.move('Bxf4');
+// 23. Rxf4 Rad8
+game.move('Rxf4');
+game.move('Rad8');
+// 24. Rxd8 Rxd8
+game.move('Rxd8');
+game.move('Rxd8');
+// 25. Bxf5 Nxf5
+game.move('Bxf5');
+game.move('Nxf5');
+// 26. Nxf5 Rd5
+game.move('Nxf5');
+game.move('Rd5');
+// 27. g4 Bxf5
+game.move('g4');
+game.move('Bxf5');
+// 28. gxf5 h6
+game.move('gxf5');
+game.move('h6');
+// 29. h3 Kh7
+game.move('h3');
+game.move('Kh7');
+// 30. Qe2 Qe5
+game.move('Qe2');
+game.move('Qe5');
+// 31. Qh5 Qf6
+game.move('Qh5');
+game.move('Qf6');
+// 32. Qe2 Re5
+game.move('Qe2');
+game.move('Re5');
+// 33. Qd3 Rd5
+game.move('Qd3');
+game.move('Rd5');
+// 34. Qe2
+game.move('Qe2');
+
+console.log(JSON.stringify(game.getStatus(), 0, 2));
+</pre>
+						<p>The above code will output the following:</p>
+<pre class="prettyprint">
+{ board:
+   { squares:
+      [ { file: 'a', rank: 1, piece: null },
+        { file: 'b', rank: 1, piece: null },
+        { file: 'c', rank: 1, piece: null },
+        { file: 'd', rank: 1, piece: null },
+        { file: 'e', rank: 1, piece: null },
+        { file: 'f', rank: 1, piece: null },
+        { file: 'g', rank: 1, piece: null },
+        { file: 'h',
+          rank: 1,
+          piece:
+           { moveCount: 2,
+             side: { name: 'white' },
+             type: 'king',
+             notation: 'K' } },
+        { file: 'a',
+          rank: 2,
+          piece:
+           { moveCount: 0,
+             side: { name: 'white' },
+             type: 'pawn',
+             notation: '' } },
+        { file: 'b', rank: 2, piece: null },
+        { file: 'c',
+          rank: 2,
+          piece:
+           { moveCount: 0,
+             side: { name: 'white' },
+             type: 'pawn',
+             notation: '' } },
+        { file: 'd', rank: 2, piece: null },
+        { file: 'e',
+          rank: 2,
+          piece:
+           { moveCount: 6,
+             side: { name: 'white' },
+             type: 'queen',
+             notation: 'Q' } },
+        { file: 'f',
+          rank: 2,
+          piece:
+           { moveCount: 0,
+             side: { name: 'white' },
+             type: 'pawn',
+             notation: '' } },
+        { file: 'g', rank: 2, piece: null },
+        { file: 'h', rank: 2, piece: null },
+        { file: 'a', rank: 3, piece: null },
+        { file: 'b', rank: 3, piece: null },
+        { file: 'c', rank: 3, piece: null },
+        { file: 'd', rank: 3, piece: null },
+        { file: 'e', rank: 3, piece: null },
+        { file: 'f', rank: 3, piece: null },
+        { file: 'g', rank: 3, piece: null },
+        { file: 'h',
+          rank: 3,
+          piece:
+           { moveCount: 1,
+             side: { name: 'white' },
+             type: 'pawn',
+             notation: '' } },
+        { file: 'a', rank: 4, piece: null },
+        { file: 'b', rank: 4, piece: null },
+        { file: 'c', rank: 4, piece: null },
+        { file: 'd', rank: 4, piece: null },
+        { file: 'e', rank: 4, piece: null },
+        { file: 'f',
+          rank: 4,
+          piece:
+           { moveCount: 4,
+             side: { name: 'white' },
+             type: 'rook',
+             notation: 'R' } },
+        { file: 'g', rank: 4, piece: null },
+        { file: 'h', rank: 4, piece: null },
+        { file: 'a', rank: 5, piece: null },
+        { file: 'b', rank: 5, piece: null },
+        { file: 'c', rank: 5, piece: null },
+        { file: 'd',
+          rank: 5,
+          piece:
+           { moveCount: 4,
+             side: { name: 'black' },
+             type: 'rook',
+             notation: 'R' } },
+        { file: 'e', rank: 5, piece: null },
+        { file: 'f',
+          rank: 5,
+          piece:
+           { moveCount: 3,
+             side: { name: 'white' },
+             type: 'pawn',
+             notation: '' } },
+        { file: 'g', rank: 5, piece: null },
+        { file: 'h', rank: 5, piece: null },
+        { file: 'a', rank: 6, piece: null },
+        { file: 'b', rank: 6, piece: null },
+        { file: 'c',
+          rank: 6,
+          piece:
+           { moveCount: 1,
+             side: { name: 'black' },
+             type: 'pawn',
+             notation: '' } },
+        { file: 'd', rank: 6, piece: null },
+        { file: 'e', rank: 6, piece: null },
+        { file: 'f',
+          rank: 6,
+          piece:
+           { moveCount: 3,
+             side: { name: 'black' },
+             type: 'queen',
+             notation: 'Q' } },
+        { file: 'g', rank: 6, piece: null },
+        { file: 'h',
+          rank: 6,
+          piece:
+           { moveCount: 1,
+             side: { name: 'black' },
+             type: 'pawn',
+             notation: '' } },
+        { file: 'a',
+          rank: 7,
+          piece:
+           { moveCount: 0,
+             side: { name: 'black' },
+             type: 'pawn',
+             notation: '' } },
+        { file: 'b',
+          rank: 7,
+          piece:
+           { moveCount: 0,
+             side: { name: 'black' },
+             type: 'pawn',
+             notation: '' } },
+        { file: 'c', rank: 7, piece: null },
+        { file: 'd', rank: 7, piece: null },
+        { file: 'e', rank: 7, piece: null },
+        { file: 'f',
+          rank: 7,
+          piece:
+           { moveCount: 0,
+             side: { name: 'black' },
+             type: 'pawn',
+             notation: '' } },
+        { file: 'g', rank: 7, piece: null },
+        { file: 'h',
+          rank: 7,
+          piece:
+           { moveCount: 2,
+             side: { name: 'black' },
+             type: 'king',
+             notation: 'K' } },
+        { file: 'a', rank: 8, piece: null },
+        { file: 'b', rank: 8, piece: null },
+        { file: 'c', rank: 8, piece: null },
+        { file: 'd', rank: 8, piece: null },
+        { file: 'e', rank: 8, piece: null },
+        { file: 'f', rank: 8, piece: null },
+        { file: 'g', rank: 8, piece: null },
+        { file: 'h', rank: 8, piece: null } ],
+     _events: { move: [Function] } },
+  isCheck: false,
+  isCheckmate: false,
+  isRepetition: true,
+  isStalemate: false,
+  notatedMoves:
+   { Rd4:
+      { src:
+         { file: 'd',
+           rank: 5,
+           piece:
+            { moveCount: 4,
+              side: { name: 'black' },
+              type: 'rook',
+              notation: 'R' } },
+        dest: { file: 'd', rank: 4, piece: null } },
+     Rd3:
+      { src:
+         { file: 'd',
+           rank: 5,
+           piece:
+            { moveCount: 4,
+              side: { name: 'black' },
+              type: 'rook',
+              notation: 'R' } },
+        dest: { file: 'd', rank: 3, piece: null } },
+     Rd2:
+      { src:
+         { file: 'd',
+           rank: 5,
+           piece:
+            { moveCount: 4,
+              side: { name: 'black' },
+              type: 'rook',
+              notation: 'R' } },
+        dest: { file: 'd', rank: 2, piece: null } },
+     Rd1:
+      { src:
+         { file: 'd',
+           rank: 5,
+           piece:
+            { moveCount: 4,
+              side: { name: 'black' },
+              type: 'rook',
+              notation: 'R' } },
+        dest: { file: 'd', rank: 1, piece: null } },
+     Rd6:
+      { src:
+         { file: 'd',
+           rank: 5,
+           piece:
+            { moveCount: 4,
+              side: { name: 'black' },
+              type: 'rook',
+              notation: 'R' } },
+        dest: { file: 'd', rank: 6, piece: null } },
+     Rd7:
+      { src:
+         { file: 'd',
+           rank: 5,
+           piece:
+            { moveCount: 4,
+              side: { name: 'black' },
+              type: 'rook',
+              notation: 'R' } },
+        dest: { file: 'd', rank: 7, piece: null } },
+     Rd8:
+      { src:
+         { file: 'd',
+           rank: 5,
+           piece:
+            { moveCount: 4,
+              side: { name: 'black' },
+              type: 'rook',
+              notation: 'R' } },
+        dest: { file: 'd', rank: 8, piece: null } },
+     Rc5:
+      { src:
+         { file: 'd',
+           rank: 5,
+           piece:
+            { moveCount: 4,
+              side: { name: 'black' },
+              type: 'rook',
+              notation: 'R' } },
+        dest: { file: 'c', rank: 5, piece: null } },
+     Rb5:
+      { src:
+         { file: 'd',
+           rank: 5,
+           piece:
+            { moveCount: 4,
+              side: { name: 'black' },
+              type: 'rook',
+              notation: 'R' } },
+        dest: { file: 'b', rank: 5, piece: null } },
+     Ra5:
+      { src:
+         { file: 'd',
+           rank: 5,
+           piece:
+            { moveCount: 4,
+              side: { name: 'black' },
+              type: 'rook',
+              notation: 'R' } },
+        dest: { file: 'a', rank: 5, piece: null } },
+     Re5:
+      { src:
+         { file: 'd',
+           rank: 5,
+           piece:
+            { moveCount: 4,
+              side: { name: 'black' },
+              type: 'rook',
+              notation: 'R' } },
+        dest: { file: 'e', rank: 5, piece: null } },
+     Rxf5:
+      { src:
+         { file: 'd',
+           rank: 5,
+           piece:
+            { moveCount: 4,
+              side: { name: 'black' },
+              type: 'rook',
+              notation: 'R' } },
+        dest:
+         { file: 'f',
+           rank: 5,
+           piece:
+            { moveCount: 3,
+              side: { name: 'white' },
+              type: 'pawn',
+              notation: '' } } },
+     c5:
+      { src:
+         { file: 'c',
+           rank: 6,
+           piece:
+            { moveCount: 1,
+              side: { name: 'black' },
+              type: 'pawn',
+              notation: '' } },
+        dest: { file: 'c', rank: 5, piece: null } },
+     Qxf5:
+      { src:
+         { file: 'f',
+           rank: 6,
+           piece:
+            { moveCount: 3,
+              side: { name: 'black' },
+              type: 'queen',
+              notation: 'Q' } },
+        dest:
+         { file: 'f',
+           rank: 5,
+           piece:
+            { moveCount: 3,
+              side: { name: 'white' },
+              type: 'pawn',
+              notation: '' } } },
+     Qe6:
+      { src:
+         { file: 'f',
+           rank: 6,
+           piece:
+            { moveCount: 3,
+              side: { name: 'black' },
+              type: 'queen',
+              notation: 'Q' } },
+        dest: { file: 'e', rank: 6, piece: null } },
+     Qd6:
+      { src:
+         { file: 'f',
+           rank: 6,
+           piece:
+            { moveCount: 3,
+              side: { name: 'black' },
+              type: 'queen',
+              notation: 'Q' } },
+        dest: { file: 'd', rank: 6, piece: null } },
+     Qg6:
+      { src:
+         { file: 'f',
+           rank: 6,
+           piece:
+            { moveCount: 3,
+              side: { name: 'black' },
+              type: 'queen',
+              notation: 'Q' } },
+        dest: { file: 'g', rank: 6, piece: null } },
+     Qe7:
+      { src:
+         { file: 'f',
+           rank: 6,
+           piece:
+            { moveCount: 3,
+              side: { name: 'black' },
+              type: 'queen',
+              notation: 'Q' } },
+        dest: { file: 'e', rank: 7, piece: null } },
+     Qd8:
+      { src:
+         { file: 'f',
+           rank: 6,
+           piece:
+            { moveCount: 3,
+              side: { name: 'black' },
+              type: 'queen',
+              notation: 'Q' } },
+        dest: { file: 'd', rank: 8, piece: null } },
+     Qg5:
+      { src:
+         { file: 'f',
+           rank: 6,
+           piece:
+            { moveCount: 3,
+              side: { name: 'black' },
+              type: 'queen',
+              notation: 'Q' } },
+        dest: { file: 'g', rank: 5, piece: null } },
+     Qh4:
+      { src:
+         { file: 'f',
+           rank: 6,
+           piece:
+            { moveCount: 3,
+              side: { name: 'black' },
+              type: 'queen',
+              notation: 'Q' } },
+        dest: { file: 'h', rank: 4, piece: null } },
+     Qe5:
+      { src:
+         { file: 'f',
+           rank: 6,
+           piece:
+            { moveCount: 3,
+              side: { name: 'black' },
+              type: 'queen',
+              notation: 'Q' } },
+        dest: { file: 'e', rank: 5, piece: null } },
+     Qd4:
+      { src:
+         { file: 'f',
+           rank: 6,
+           piece:
+            { moveCount: 3,
+              side: { name: 'black' },
+              type: 'queen',
+              notation: 'Q' } },
+        dest: { file: 'd', rank: 4, piece: null } },
+     Qc3:
+      { src:
+         { file: 'f',
+           rank: 6,
+           piece:
+            { moveCount: 3,
+              side: { name: 'black' },
+              type: 'queen',
+              notation: 'Q' } },
+        dest: { file: 'c', rank: 3, piece: null } },
+     Qb2:
+      { src:
+         { file: 'f',
+           rank: 6,
+           piece:
+            { moveCount: 3,
+              side: { name: 'black' },
+              type: 'queen',
+              notation: 'Q' } },
+        dest: { file: 'b', rank: 2, piece: null } },
+     Qa1:
+      { src:
+         { file: 'f',
+           rank: 6,
+           piece:
+            { moveCount: 3,
+              side: { name: 'black' },
+              type: 'queen',
+              notation: 'Q' } },
+        dest: { file: 'a', rank: 1, piece: null } },
+     Qg7:
+      { src:
+         { file: 'f',
+           rank: 6,
+           piece:
+            { moveCount: 3,
+              side: { name: 'black' },
+              type: 'queen',
+              notation: 'Q' } },
+        dest: { file: 'g', rank: 7, piece: null } },
+     Qh8:
+      { src:
+         { file: 'f',
+           rank: 6,
+           piece:
+            { moveCount: 3,
+              side: { name: 'black' },
+              type: 'queen',
+              notation: 'Q' } },
+        dest: { file: 'h', rank: 8, piece: null } },
+     h5:
+      { src:
+         { file: 'h',
+           rank: 6,
+           piece:
+            { moveCount: 1,
+              side: { name: 'black' },
+              type: 'pawn',
+              notation: '' } },
+        dest: { file: 'h', rank: 5, piece: null } },
+     a6:
+      { src:
+         { file: 'a',
+           rank: 7,
+           piece:
+            { moveCount: 0,
+              side: { name: 'black' },
+              type: 'pawn',
+              notation: '' } },
+        dest: { file: 'a', rank: 6, piece: null } },
+     a5:
+      { src:
+         { file: 'a',
+           rank: 7,
+           piece:
+            { moveCount: 0,
+              side: { name: 'black' },
+              type: 'pawn',
+              notation: '' } },
+        dest: { file: 'a', rank: 5, piece: null } },
+     b6:
+      { src:
+         { file: 'b',
+           rank: 7,
+           piece:
+            { moveCount: 0,
+              side: { name: 'black' },
+              type: 'pawn',
+              notation: '' } },
+        dest: { file: 'b', rank: 6, piece: null } },
+     b5:
+      { src:
+         { file: 'b',
+           rank: 7,
+           piece:
+            { moveCount: 0,
+              side: { name: 'black' },
+              type: 'pawn',
+              notation: '' } },
+        dest: { file: 'b', rank: 5, piece: null } },
+     Kh8:
+      { src:
+         { file: 'h',
+           rank: 7,
+           piece:
+            { moveCount: 2,
+              side: { name: 'black' },
+              type: 'king',
+              notation: 'K' } },
+        dest: { file: 'h', rank: 8, piece: null } },
+     Kg7:
+      { src:
+         { file: 'h',
+           rank: 7,
+           piece:
+            { moveCount: 2,
+              side: { name: 'black' },
+              type: 'king',
+              notation: 'K' } },
+        dest: { file: 'g', rank: 7, piece: null } },
+     Kg8:
+      { src:
+         { file: 'h',
+           rank: 7,
+           piece:
+            { moveCount: 2,
+              side: { name: 'black' },
+              type: 'king',
+              notation: 'K' } },
+        dest: { file: 'g', rank: 8, piece: null } } } }
+</pre>
+					</div>
+				</div>
+			</div>
+
+			<div class="footer">
+				<p>
+					&copy; 2013 Joshua Thomas &nbsp; Node Chess is licensed under the
+					<a href="http://opensource.org/licenses/MIT">MIT license</a>.
+				</p>
+			</div>
+
+		</div>
+
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+		<script src="public/js/node-chess.js"></script>
+
+	</body>
+</html>

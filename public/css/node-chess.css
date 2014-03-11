@@ -1,0 +1,13 @@
+.github-fork-ribbon {
+	background-color: #333;
+}
+
+.quickstart h4,
+.details h4 {
+	margin-top: 22px;
+}
+
+pre.prettyprint {
+	border-color: #ccc;
+	padding: 9.5px;
+}
