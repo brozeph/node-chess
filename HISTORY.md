@@ -1,3 +1,9 @@
+0.2.0 / 2014-03-11
+==================
+
+	* added proper pawn promotion notation to the algebraicGameClient
+		* example: `gc.getStatus().notatedMoves` will now contain entries for `a1R`, `a1N`, `a1B` and `a1Q` instead of `a1`
+
 0.1.8 / 2014-01-22
 ==================
 
