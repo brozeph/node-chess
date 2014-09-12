@@ -1,3 +1,8 @@
+0.2.2 / 2014-09-12
+==================
+
+	* introducing fix for phantom black Pawn spawn (issue #8)
+
 0.2.1 / 2014-03-11
 ==================
 
