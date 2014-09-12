@@ -450,7 +450,6 @@ describe('AlgebraicGameClient', function() {
 	it ('should properly detect checkmate', function () {
 		var gc = algebraicGameClient.create(),
 			m = null,
-			s = gc.game.board.getSquare('a6'),
 			status = null;
 
 		gc.move('e4');
@@ -558,5 +557,23 @@ describe('AlgebraicGameClient', function() {
 		status = gc.getStatus();
 		assert.strictEqual(status.notatedMoves['Kf7'], undefined);
 	});
-	//*/
+
+	// Issue #8 - Ensure no extraneous Black Pawn
+	it ('should properly detect checkmate', function () {
+		var gc = algebraicGameClient.create(),
+			m = null,
+			s = gc.game.board.getSquare('e6');
+
+		gc.move('d4');
+		gc.move('a6');
+
+
+		gc.move('d5');
+
+		assert.ok(s.piece === null, 'phantom piece appears before e5');
+
+		gc.move('e5');
+
+		assert.ok(s.piece === null, 'phantom piece appears after e5');
+	});
 });
