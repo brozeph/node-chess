@@ -166,7 +166,6 @@ describe('AlgebraicGameClient', function() {
 		assert.ok(m.move.castle);
 	});
 
-	/*
 	// test pawn promotion
 	// adding for issue #6
 	it('should properly show valid White Pawn promotions', function() {
@@ -195,12 +194,12 @@ describe('AlgebraicGameClient', function() {
 		gc.game.board.getSquare('a2').piece = null;
 		gc.game.board.getSquare('a1').piece = null;
 		gc.game.board.getSquare('a7').piece = null;
-		gc.game.board.getSquare('a2').piece = piece.createPawn(piece.SideType.White);
+		gc.game.board.getSquare('a2').piece = piece.createPawn(piece.SideType.Black);
 		gc.game.board.getSquare('a2').piece.moveCount = 1;
 
 		gc.getStatus(true);
 		gc.move('h4');
-		r = gc.getStatus();
+		r = gc.getStatus(true);
 
 		assert.isUndefined(r.notatedMoves['a1'], 'pawn should promote');
 		assert.isDefined(r.notatedMoves['a1R'], 'pawn promotion to rook');
@@ -208,7 +207,6 @@ describe('AlgebraicGameClient', function() {
 		assert.isDefined(r.notatedMoves['a1B'], 'pawn promotion to Bishop');
 		assert.isDefined(r.notatedMoves['a1Q'], 'pawn promotion to Queen');
 	});
-	//*/
 
 	// test pawn promotion
 	it('should properly recognize White Pawn promotion to Rook', function() {
@@ -559,7 +557,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// Issue #8 - Ensure no extraneous Black Pawn
-	it ('should properly detect checkmate', function () {
+	it ('should not have a random Black Pawn appear on the board (bug fix test)', function () {
 		var gc = algebraicGameClient.create(),
 			m = null,
 			s = gc.game.board.getSquare('e6');
