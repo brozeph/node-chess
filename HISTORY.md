@@ -1,3 +1,8 @@
+0.2.3 / 2014-09-16
+==================
+
+	* adding `algebraic` property to `game.moveHistory` when supplied
+
 0.2.2 / 2014-09-12
 ==================
 
