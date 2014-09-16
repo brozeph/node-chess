@@ -44,6 +44,17 @@ describe('AlgebraicGameClient', function() {
 		assert.strictEqual(r.move.capturedPiece.type, piece.PieceType.Pawn);
 	});
 
+	// test notation in history
+	it('should properly record notation in history', function() {
+		var gc = algebraicGameClient.create();
+
+		gc.move('e4');
+		gc.move('d5');
+		gc.move('exd5');
+
+		assert.strictEqual(gc.game.moveHistory[2].algebraic, 'exd5');
+	});
+
 	// test 2 face pieces with same square destination on different rank and file
 	it('should properly notate two Knights that can occupy same square for their respective moves', function() {
 		var gc = algebraicGameClient.create(),

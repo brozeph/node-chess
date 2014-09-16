@@ -61,6 +61,24 @@ describe('Game', function() {
 		assert.strictEqual(g.moveHistory[5].hashCode, g.moveHistory[9].hashCode);
 	});
 
+	it('should properly have notation in move history after move when supplied', function () {
+		var g = game.create(),
+			b = g.board;
+
+		b.move('d2', 'd4', 'd4');
+		assert.strictEqual(g.moveHistory.length, 1);
+		assert.ok(g.moveHistory[0].algebraic === 'd4');
+	});
+
+	it('should not have notation in move history after move when omitted', function () {
+		var g = game.create(),
+			b = g.board;
+
+		b.move('d2', 'd4');
+		assert.strictEqual(g.moveHistory.length, 1);
+		assert.ok(g.moveHistory[0].algebraic === undefined);
+	});
+
 	// ensure board position hash is accurate across games
 	it('should have consistent board hash across different game objects with same move histories', function() {
 		var g1 = game.create(),

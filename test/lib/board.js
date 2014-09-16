@@ -462,5 +462,25 @@ describe('Board', function() {
 
 			assert.ok(b.getSquare('d4').piece !== null, 'pawn disappears during the undo');
 		});
+
+		it('should properly return notation when supplied', function () {
+			var b = board.create(),
+				r = null;
+
+			r = b.move('e2', 'e4', 'e4');
+
+			console.log(r.move);
+
+			assert.ok(r.move.algebraic === 'e4', 'notation properly noted');
+		});
+
+		it('should not return notation when omitted', function () {
+			var b = board.create(),
+				r = null;
+
+			r = b.move('e2', 'e4');
+
+			assert.ok(typeof r.move.algebraic === 'undefined', 'notation improperly present');
+		});
 	});
 });
