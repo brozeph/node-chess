@@ -469,8 +469,6 @@ describe('Board', function() {
 
 			r = b.move('e2', 'e4', 'e4');
 
-			console.log(r.move);
-
 			assert.ok(r.move.algebraic === 'e4', 'notation properly noted');
 		});
 
