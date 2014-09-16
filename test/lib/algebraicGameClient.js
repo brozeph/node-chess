@@ -265,7 +265,7 @@ describe('AlgebraicGameClient', function() {
 
 		assert.strictEqual(m.move.postSquare.piece.type, piece.PieceType.Rook);
 		assert.strictEqual(r.isCheckmate, true);
-		assert.ok(typeof gc.game.moveHistory[0].promotion === 'undefined');
+		assert.strictEqual(gc.game.moveHistory[0].promotion, false);
 		assert.strictEqual(gc.game.moveHistory[1].promotion, true);
 	});
 
