@@ -1,3 +1,8 @@
+0.2.4 / 2014-09-16
+==================
+
+	* adding `promotion` property to `game.moveHistory` which is set to true when Pawn promotion occurs
+
 0.2.3 / 2014-09-16
 ==================
 
