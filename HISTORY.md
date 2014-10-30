@@ -1,3 +1,8 @@
+0.2.5 / 2014-10-30
+==================
+
+	* adding support for `PGN` (Portable Game Notation) when creating algebraic game client
+
 0.2.4 / 2014-09-16
 ==================
 
