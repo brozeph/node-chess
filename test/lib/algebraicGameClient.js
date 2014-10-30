@@ -133,6 +133,20 @@ describe('AlgebraicGameClient', function() {
 		assert.ok(typeof s.notatedMoves['0-0-0'] !== 'undefined', '0-0-0');
 	});
 
+	// test castle left
+	it('should properly notate white King castle left as letters when PGN is true', function() {
+		var gc = algebraicGameClient.create({ PGN : true }),
+			s = null;
+
+		gc.game.board.getSquare('b1').piece = null;
+		gc.game.board.getSquare('c1').piece = null;
+		gc.game.board.getSquare('d1').piece = null;
+
+		s = gc.getStatus(true);
+
+		assert.ok(typeof s.notatedMoves['O-O-O'] !== 'undefined', 'O-O-O');
+	});
+
 	// test castle right
 	it('should properly notate black King castle right', function() {
 		var gc = algebraicGameClient.create(),
@@ -145,6 +159,20 @@ describe('AlgebraicGameClient', function() {
 		s = gc.getStatus();
 
 		assert.ok(typeof s.notatedMoves['0-0'] !== 'undefined', '0-0');
+	});
+
+	// test castle right
+	it('should properly notate black King castle right as letters when PGN is true', function() {
+		var gc = algebraicGameClient.create({ PGN : true }),
+			s = null;
+
+		gc.game.board.getSquare('f8').piece = null;
+		gc.game.board.getSquare('g8').piece = null;
+		gc.getStatus(true);
+		gc.move('a4');
+		s = gc.getStatus();
+
+		assert.ok(typeof s.notatedMoves['O-O'] !== 'undefined', 'O-O');
 	});
 
 	// validate parse notation with O-O-O
@@ -162,6 +190,21 @@ describe('AlgebraicGameClient', function() {
 		assert.ok(m.move.castle);
 	});
 
+	// validate parse notation with O-O-O
+	it('should properly recognize white King castle left notation when PGN is true', function() {
+		var gc = algebraicGameClient.create({ PGN : true }),
+			m = null;
+
+		gc.game.board.getSquare('b1').piece = null;
+		gc.game.board.getSquare('c1').piece = null;
+		gc.game.board.getSquare('d1').piece = null;
+		gc.getStatus(true);
+		m = gc.move('0-0-0');
+
+		assert.ok(m !== null, 'parse 0-0-0');
+		assert.ok(m.move.castle);
+	});
+
 	// validate parse notation with O-O
 	it('should properly recognize black King castle right notation', function() {
 		var gc = algebraicGameClient.create(),
@@ -174,6 +217,21 @@ describe('AlgebraicGameClient', function() {
 		m = gc.move('O-O');
 
 		assert.ok(m !== null, 'parse O-O');
+		assert.ok(m.move.castle);
+	});
+
+	// validate parse notation with O-O
+	it('should properly recognize black King castle right notation when PGN is true', function() {
+		var gc = algebraicGameClient.create(),
+			m = null;
+
+		gc.game.board.getSquare('f8').piece = null;
+		gc.game.board.getSquare('g8').piece = null;
+		gc.getStatus(true);
+		gc.move('a4');
+		m = gc.move('0-0');
+
+		assert.ok(m !== null, 'parse 0-0');
 		assert.ok(m.move.castle);
 	});
 

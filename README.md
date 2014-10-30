@@ -39,6 +39,27 @@ node-chess is an algebraic notation driven chess engine that can validate board 
 	// the opposing side's available moves
 	status = gc.getStatus();
 
+#### PGN (Portable Game Format) Algebraic Game Client
+
+To ensure the notation returned is safe for PGN, you must supply PGN as an option in the call to `create`:
+
+	var chess = require('chess');
+
+	// create a game client
+	var gc = chess.create({ PGN : true }),
+	    m = null,
+	    status = null;
+
+	// look at the valid moves
+	status = gc.getStatus();
+
+	// make a move
+	m = gc.move('a4');
+
+	// look at the status again after the move to see
+	// the opposing side's available moves
+	status = gc.getStatus();
+
 #### chess.move() Function
 From the above example, the response object that is returned when calling chess.move() looks like the following:
 
