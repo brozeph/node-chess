@@ -2,6 +2,7 @@
 ==================
 
 	* adding Node v0.12 build target for Travis-CI
+	* enhanced jshint coverage for entire project
 	* fixing issue where Pawn double-square move was incorrectly restricted in some scenarios where capture would have been evaded
 
 0.2.5 / 2014-10-30
