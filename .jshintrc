@@ -1,11 +1,11 @@
 {
 	"bitwise" : true,
-	"camelcase" : false,
+	"camelcase" : true,
 	"curly" : true,
 	"eqeqeq" : true,
 	"forin" : true,
 	"immed" : true,
-	"indent" : false,
+	"indent" : true,
 	"latedef" : true,
 	"maxdepth" : 5,
 	"maxparams" : 5,
@@ -14,8 +14,8 @@
 	"noempty" : true,
 	"node" : true,
 	"nonew" : true,
-	"strict" : false,
+	"strict" : true,
 	"trailing" : true,
 	"undef" : true,
-	"unused" : false
+	"unused" : true
 }
