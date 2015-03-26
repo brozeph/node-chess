@@ -1,8 +1,12 @@
+/* jshint sub : true */
+
 var
 	piece = requireWithCoverage('piece'),
 	algebraicGameClient = requireWithCoverage('algebraicGameClient');
 
 describe('AlgebraicGameClient', function() {
+	'use strict';
+
 	// test create and getStatus
 	it('should have proper status once board is created', function() {
 		var gc = algebraicGameClient.create(),
@@ -519,7 +523,6 @@ describe('AlgebraicGameClient', function() {
 	// Issue #4 - Ensure proper checkmate detection with Knight
 	it ('should properly detect checkmate', function () {
 		var gc = algebraicGameClient.create(),
-			m = null,
 			status = null;
 
 		gc.move('e4');
@@ -631,7 +634,6 @@ describe('AlgebraicGameClient', function() {
 	// Issue #8 - Ensure no extraneous Black Pawn
 	it ('should not have a random Black Pawn appear on the board (bug fix test)', function () {
 		var gc = algebraicGameClient.create(),
-			m = null,
 			s = gc.game.board.getSquare('e6');
 
 		gc.move('d4');
@@ -645,5 +647,20 @@ describe('AlgebraicGameClient', function() {
 		gc.move('e5');
 
 		assert.ok(s.piece === null, 'phantom piece appears after e5');
+	});
+
+	// Issue #15 - Ensure Pawn can move two spaces correctly on the first move
+	it ('should not block first move of two squares by Pawns incorrectly (bug fix test)', function () {
+		var gc = algebraicGameClient.create(),
+			status;
+
+		gc.move('e4');
+		gc.move('a5');
+
+		gc.move('Ba6');
+
+		status = gc.getStatus();
+
+		assert.isDefined(status.notatedMoves['b5'], 'Pawn able to advance two squares');
 	});
 });

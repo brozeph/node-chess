@@ -3,6 +3,8 @@ var
 	piece = requireWithCoverage('piece');
 
 describe('Board', function() {
+	'use strict';
+
 	describe('#create()', function() {
 		// ensure 64 squares
 		it('should return 64 squares', function() {

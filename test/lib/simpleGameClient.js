@@ -1,8 +1,8 @@
 var
-	piece = requireWithCoverage('piece'),
 	simpleGameClient = requireWithCoverage('simpleGameClient');
 
 describe('SimpleGameClient', function() {
+	'use strict';
 
 	// test create and getStatus
 	it('should properly create simple game client', function() {

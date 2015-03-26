@@ -1,9 +1,8 @@
 var
-	piece = requireWithCoverage('piece'),
-	board = requireWithCoverage('board'),
 	game = requireWithCoverage('game');
 
 describe('Game', function() {
+	'use strict';
 
 	// make sure there is no move history when game is created
 	it('should have no move history when game is created', function() {

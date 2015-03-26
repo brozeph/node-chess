@@ -3,30 +3,31 @@ var
 	piece = requireWithCoverage('piece'),
 	pieceValidation = requireWithCoverage('pieceValidation');
 
-checkForSquare = function(f, r, s) {
-	var i = 0;
-
-	for (; i < s.length; i++) {
-		if (s[i].file === f && s[i].rank === r) {
-			return true;
-		}
-	}
-
-	return false;
-};
-
 describe('PieceValidation', function() {
+	'use strict';
+
+	function checkForSquare (f, r, s) {
+		var i = 0;
+
+		for (; i < s.length; i++) {
+			if (s[i].file === f && s[i].rank === r) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 	// ensure invalid piece error is returned
 	it('should throw exception if validation is created for wrong piece', function() {
 		var b = board.create(),
 			pv = pieceValidation.create(piece.PieceType.Bishop, b);
 
-		pv.start(b.getSquare('a', 2), function(err, squares) {
+		pv.start(b.getSquare('a', 2), function(err) {
 			assert.strictEqual(err, 'piece is invalid');
 		});
 
-		pv.start(null, function(err, squares) {
+		pv.start(null, function(err) {
 			assert.strictEqual(err, 'piece is invalid');
 		});
 	});

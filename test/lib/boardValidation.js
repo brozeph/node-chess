@@ -1,21 +1,20 @@
 var
-	piece = requireWithCoverage('piece'),
-	board = requireWithCoverage('board'),
 	game = requireWithCoverage('game'),
-	pieceValidation = requireWithCoverage('pieceValidation'),
 	boardValidation = requireWithCoverage('boardValidation');
 
-var getValidSquares = function(sq, validMoves) {
-	var i = 0;
-
-	for (; i < validMoves.length; i++) {
-		if (validMoves[i].src === sq) {
-			return validMoves[i].squares;
-		}
-	}
-};
-
 describe('BoardValidation', function() {
+	'use strict';
+
+	var getValidSquares = function(sq, validMoves) {
+		var i = 0;
+
+		for (; i < validMoves.length; i++) {
+			if (validMoves[i].src === sq) {
+				return validMoves[i].squares;
+			}
+		}
+	};
+
 	// validate error creating BoardValidation when board is null
 	it('should fail if validation object is created without a valid board', function() {
 		var bv = boardValidation.create(null);
@@ -333,13 +332,13 @@ describe('BoardValidation', function() {
 		b.move('d2', 'd4');
 		b.move('d7', 'd5');
 
-		bv.start(function(err, validMoves) {
+		bv.start(function() {
 			assert.ok(b.getSquare('d4').piece !== null);
 		});
 
 		b.move('b1', 'c3');
 
-		bv.start(function(err, validMoves) {
+		bv.start(function() {
 			assert.ok(b.getSquare('d4').piece !== null, 'pawn has disappeared during validation');
 		});
 	});
