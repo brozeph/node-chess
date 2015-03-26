@@ -651,13 +651,16 @@ describe('AlgebraicGameClient', function() {
 
 	// Issue #15 - Ensure Pawn can move two spaces correctly on the first move
 	it ('should not block first move of two squares by Pawns incorrectly (bug fix test)', function () {
-		var gc = algebraicGameClient.create();
+		var gc = algebraicGameClient.create(),
+			status;
 
-		gc.move('e2');
+		gc.move('e4');
 		gc.move('a5');
 
-		console.log(gc.getStatus());
+		gc.move('Ba6');
 
-		//gc.move('Ba6');
+		status = gc.getStatus();
+
+		assert.isDefined(status.notatedMoves['b5'], 'Pawn able to advance two squares');
 	});
 });
