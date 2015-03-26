@@ -17,5 +17,13 @@
 	"strict" : true,
 	"trailing" : true,
 	"undef" : true,
-	"unused" : true
+	"unused" : true,
+	"globals" : {
+		"after" : true,
+		"before" : true,
+		"assert" : true,
+		"describe" : true,
+		"it" : true,
+		"requireWithCoverage": true
+	}
 }

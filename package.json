@@ -17,7 +17,7 @@
   ],
   "main": "./lib/main.js",
   "scripts": {
-    "pretest": "jshint ./lib/*.js ; rm -rf lib-cov ; jscoverage lib lib-cov",
+    "pretest": "jshint ./lib/*.js ; jshint ./test/**/*.js ; rm -rf lib-cov ; jscoverage lib lib-cov",
     "test": "./node_modules/.bin/mocha --check-leaks -R spec -r ./test/common.js ./test/lib",
     "posttest": "NODE_CHESS_COVERAGE=true ./node_modules/.bin/mocha --check-leaks -R mocha-lcov-reporter -r ./test/common.js ./test/lib | ./node_modules/coveralls/bin/coveralls.js"
   },

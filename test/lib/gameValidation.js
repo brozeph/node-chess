@@ -1,10 +1,10 @@
 var
-	piece = requireWithCoverage('piece'),
-	board = requireWithCoverage('board'),
 	game = requireWithCoverage('game'),
 	gameValidation = requireWithCoverage('gameValidation');
 
 describe('GameValidation', function() {
+	'use strict';
+
 	// validate check
 	it('should properly indicate check', function() {
 		var g = game.create(),
