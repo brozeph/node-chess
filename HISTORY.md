@@ -1,3 +1,9 @@
+0.2.6 / 2015-03-26
+==================
+
+	* adding Node v0.12 build target for Travis-CI
+	* fixing issue where Pawn double-square move was incorrectly restricted in some scenarios where capture would have been evaded
+
 0.2.5 / 2014-10-30
 ==================
 
