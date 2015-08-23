@@ -663,4 +663,55 @@ describe('AlgebraicGameClient', function() {
 
 		assert.isDefined(status.notatedMoves['b5'], 'Pawn able to advance two squares');
 	});
+
+	// Issue #17 - Move pawn to promotion, other pieces of same color should not have promotion
+	it ('should properly notate future promotions after the first promotion (bug fix test)', function () {
+		var gc = algebraicGameClient.create(),
+			r = null;
+
+		gc.game.board.getSquare('c7').piece = null;
+		gc.game.board.getSquare('c8').piece = null;
+		gc.game.board.getSquare('c2').piece = null;
+		gc.game.board.getSquare('c7').piece = piece.createPawn(piece.SideType.White);
+		gc.game.board.getSquare('c7').piece.moveCount = 1;
+		gc.game.board.getSquare('h7').piece = null;
+		gc.game.board.getSquare('h7').piece = piece.createBishop(piece.SideType.White);
+		gc.game.board.getSquare('h7').piece.moveCount = 1;
+
+		// force recalculation of board position
+		r = gc.getStatus(true);
+
+		// make sure only Pawns can be promoted
+		assert.isDefined(r.notatedMoves['cxb8R'], 'pawn promotion to rook');
+		assert.isDefined(r.notatedMoves['cxb8N'], 'pawn promotion to Knight');
+		assert.isDefined(r.notatedMoves['cxb8B'], 'pawn promotion to Bishop');
+		assert.isDefined(r.notatedMoves['cxb8Q'], 'pawn promotion to Queen');
+		assert.isDefined(r.notatedMoves['cxd8R'], 'pawn promotion to rook');
+		assert.isDefined(r.notatedMoves['cxd8N'], 'pawn promotion to Knight');
+		assert.isDefined(r.notatedMoves['cxd8B'], 'pawn promotion to Bishop');
+		assert.isDefined(r.notatedMoves['cxd8Q'], 'pawn promotion to Queen');
+		assert.isUndefined(r.notatedMoves['Bxg8R'], 'Bishop should not promote');
+	});
+
+	// Issue #18 - Missing Pawn promotion moves
+	it ('should properly notate future promotions after the first promotion (bug fix test)', function () {
+		var gc = algebraicGameClient.create(),
+			r = null;
+
+		// position the board for a promotion next move
+		gc.game.board.getSquare('c7').piece = null;
+		gc.game.board.getSquare('c2').piece = null;
+		gc.game.board.getSquare('c7').piece = piece.createPawn(piece.SideType.White);
+		gc.game.board.getSquare('c7').piece.moveCount = 1;
+
+		// force recalculation of board position
+		r = gc.getStatus(true);
+
+		// make sure Pawn promotions are present
+		assert.isUndefined(r.notatedMoves['cxb8'], 'pawn should promote');
+		assert.isDefined(r.notatedMoves['cxb8Q'], 'should allow promote to queen');
+		assert.isDefined(r.notatedMoves['cxb8R'], 'should allow promote to rook');
+		assert.isDefined(r.notatedMoves['cxb8B'], 'should allow promote to bishop');
+		assert.isDefined(r.notatedMoves['cxb8N'], 'should allow promote to knight');
+	});
 });

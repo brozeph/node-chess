@@ -1,3 +1,9 @@
+0.2.7 / 2015-08-23
+==================
+
+	* fixing an issue where Pawn promotion was not always properly available as a notated move option
+	* fixing an issue where, in some circumstances, non-Pawn pieces improperly allowed for promotion
+
 0.2.6 / 2015-03-26
 ==================
 
