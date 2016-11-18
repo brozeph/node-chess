@@ -1,3 +1,8 @@
+0.2.8 / 2016-11-18
+==================
+
+	* adding a new public function to the `game` object (`getHashCode`) that generates and returns the hash that is used for the move history 
+
 0.2.7 / 2015-08-23
 ==================
 
