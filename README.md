@@ -72,26 +72,19 @@ status = gameClient.getStatus();
 
 From the above example, the response object that is returned when calling chess.move() looks like the following:
 
-```json
-{
-  move: {
-    capturedPiece: null, // the captured piece (if capture occurred)
-    castle: false, // was the move a castle?
-    enPassant: false, // was the move en passant?
-    postSquare: {
-      file: 'a',
-      rank: 4,
-      piece: {
+```js
+{ move :
+  {	capturedPiece : null, // the captured piece (if capture occurred)
+      castle : false, // was the move a castle?
+      enPassant : false, // was the move en passant?
+      postSquare : { file: 'a', rank: 4, piece: {
         moveCount: 1,
         side: { name: 'white' },
         type: 'pawn',
         notation: 'R'
-      }
-    },
-    prevSquare: { file: 'a', rank: 2, piece: null }
-  },
-  undo: __function__
-} // undo() can be used to back out the previous move
+      } },
+		prevSquare : { file: 'a', rank: 2, piece: null } },
+  undo : __function__ } // undo() can be used to back out the previous move
 ```
 
 ##### The `move` Object
@@ -116,7 +109,7 @@ move.undo();
 
 The status object is as follows (abbreviated in parts to improve readability):
 
-```json
+```js
 { board: // this is the top level board
   { squares: // an array of all squares on the board
     [ { file: 'a', rank: 1, piece: { // the file, rank and piece on the square
@@ -300,7 +293,7 @@ console.log(util.inspect(gameClient.getStatus(), false, 7));
 
 The above code produces the following output:
 
-```json
+```js
 { board:
     { squares:
       [ { file: 'a', rank: 1, piece: null },
