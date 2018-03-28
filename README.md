@@ -73,18 +73,31 @@ status = gameClient.getStatus();
 From the above example, the response object that is returned when calling chess.move() looks like the following:
 
 ```js
-{ move :
-  {	capturedPiece : null, // the captured piece (if capture occurred)
-      castle : false, // was the move a castle?
-      enPassant : false, // was the move en passant?
-      postSquare : { file: 'a', rank: 4, piece: {
+{
+  move: {
+    capturedPiece: null, // the captured piece (if capture occurred)
+    castle: false, // was the move a castle?
+    enPassant: false, // was the move en passant?
+    postSquare: {
+      file: 'a',
+      rank: 4,
+      piece: {
         moveCount: 1,
-        side: { name: 'white' },
+        side: {
+          name: 'white'
+        },
         type: 'pawn',
         notation: 'R'
-      } },
-		prevSquare : { file: 'a', rank: 2, piece: null } },
-  undo : __function__ } // undo() can be used to back out the previous move
+      }
+    },
+    prevSquare: {
+      file: 'a',
+      rank: 2,
+      piece: null
+    }
+  },
+  undo: __function__
+} // undo() can be used to back out the previous move
 ```
 
 ##### The `move` Object
