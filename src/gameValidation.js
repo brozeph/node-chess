@@ -5,7 +5,8 @@
 	repetition and pawn promotion.
 */
 
-var piece = require('./piece.js'),
+var
+	piece = require('./piece.js'),
 	boardValidation = require('./boardValidation.js');
 
 // base ctor

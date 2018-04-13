@@ -168,7 +168,10 @@ BoardValidation.prototype.isSquareAttacked = function (sq) {
 	'use strict';
 
 	if (!sq || !sq.piece) {
-		return false;
+		return {
+			attacked : false,
+			blocked : false
+		};
 	}
 
 	var
@@ -188,7 +191,8 @@ BoardValidation.prototype.isSquareAttacked = function (sq) {
 			};
 		},
 		isAttacked = function (b, n) {
-			var currentSquare = b.getNeighborSquare(sq, n),
+			var
+				currentSquare = b.getNeighborSquare(sq, n),
 				context = {};
 
 			while (currentSquare) {
@@ -211,11 +215,16 @@ BoardValidation.prototype.isSquareAttacked = function (sq) {
 				}
 			}
 
-			return context.blocked ? false : context.attacked || false;
+			return context;
 		},
 		isAttackedByKnight = function (b, n) {
-			var currentSquare = b.getNeighborSquare(sq, n),
-				context = { attacked : false };
+			var
+				currentSquare = b.getNeighborSquare(sq, n),
+				context = {
+					attacked : false,
+					blocked : false,
+					piece : currentSquare ? currentSquare.piece : currentSquare
+				};
 
 			if (currentSquare &&
 				currentSquare.piece &&
@@ -225,28 +234,29 @@ BoardValidation.prototype.isSquareAttacked = function (sq) {
 					.start(currentSquare, setAttacked(context));
 			}
 
-			return context.attacked;
-		};
+			return context;
+		},
+		result = [
+			isAttacked(this.board, board.NeighborType.Above),
+			isAttacked(this.board, board.NeighborType.AboveRight),
+			isAttacked(this.board, board.NeighborType.Right),
+			isAttacked(this.board, board.NeighborType.BelowRight),
+			isAttacked(this.board, board.NeighborType.Below),
+			isAttacked(this.board, board.NeighborType.BelowLeft),
+			isAttacked(this.board, board.NeighborType.Left),
+			isAttacked(this.board, board.NeighborType.AboveLeft),
+			// fix for issue #4
+			isAttackedByKnight(this.board, board.NeighborType.KnightAboveRight),
+			isAttackedByKnight(this.board, board.NeighborType.KnightRightAbove),
+			isAttackedByKnight(this.board, board.NeighborType.KnightBelowRight),
+			isAttackedByKnight(this.board, board.NeighborType.KnightRightBelow),
+			isAttackedByKnight(this.board, board.NeighborType.KnightBelowLeft),
+			isAttackedByKnight(this.board, board.NeighborType.KnightLeftBelow),
+			isAttackedByKnight(this.board, board.NeighborType.KnightAboveLeft),
+			isAttackedByKnight(this.board, board.NeighborType.KnightLeftAbove)
+		].filter((result) => result.attacked);
 
-	return (
-		isAttacked(this.board, board.NeighborType.Above) ||
-		isAttacked(this.board, board.NeighborType.AboveRight) ||
-		isAttacked(this.board, board.NeighborType.Right) ||
-		isAttacked(this.board, board.NeighborType.BelowRight) ||
-		isAttacked(this.board, board.NeighborType.Below) ||
-		isAttacked(this.board, board.NeighborType.BelowLeft) ||
-		isAttacked(this.board, board.NeighborType.Left) ||
-		isAttacked(this.board, board.NeighborType.AboveLeft) ||
-
-		// fix for issue #4
-		isAttackedByKnight(this.board, board.NeighborType.KnightAboveRight) ||
-		isAttackedByKnight(this.board, board.NeighborType.KnightRightAbove) ||
-		isAttackedByKnight(this.board, board.NeighborType.KnightBelowRight) ||
-		isAttackedByKnight(this.board, board.NeighborType.KnightRightBelow) ||
-		isAttackedByKnight(this.board, board.NeighborType.KnightBelowLeft) ||
-		isAttackedByKnight(this.board, board.NeighborType.KnightLeftBelow) ||
-		isAttackedByKnight(this.board, board.NeighborType.KnightAboveLeft) ||
-		isAttackedByKnight(this.board, board.NeighborType.KnightLeftAbove));
+	return result.length !== 0;
 };
 
 // begin evaluation of the valid moves for an entire board

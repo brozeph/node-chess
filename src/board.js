@@ -3,10 +3,12 @@
 	the squares it contains.
 */
 
-var EventEmitter = require('events').EventEmitter,
+import { Square } from './square';
+
+var
+	EventEmitter = require('events').EventEmitter,
 	sys = require('util'),
-	piece = require('./piece.js'),
-	Square = require('./square.js');
+	piece = require('./piece.js');
 
 // types
 var NeighborType = {
