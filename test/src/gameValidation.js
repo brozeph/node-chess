@@ -1,13 +1,16 @@
-var
-	game = requireWithCoverage('game'),
-	gameValidation = requireWithCoverage('gameValidation');
+/* eslint no-magic-numbers:0 */
+
+const
+	game = require('../../src/game'),
+	gameValidation = require('../../src/gameValidation');
 
 describe('GameValidation', function() {
 	'use strict';
 
 	// validate check
 	it('should properly indicate check', function() {
-		var g = game.create(),
+		let
+			g = game.create(),
 			b = g.board,
 			v = gameValidation.create(g);
 
@@ -18,6 +21,10 @@ describe('GameValidation', function() {
 		b.move(b.getSquare('f', 8), b.getSquare('b', 4));
 
 		v.start(function(err, result) {
+			if (err) {
+				throw err;
+			}
+
 			assert.strictEqual(result.isCheck, true);
 			assert.strictEqual(result.isCheckmate, false);
 			assert.strictEqual(result.isRepetition, false);
@@ -27,20 +34,26 @@ describe('GameValidation', function() {
 
 	// validate Knight check (part 1)
 	it('should properly indicate check due to Knight (part 1)', function () {
-		var g = game.create(),
+		let
+			g = game.create(),
 			b = g.board,
 			v = gameValidation.create(g);
 
 		b.move(b.getSquare('b1'), b.getSquare('c7'));
 
 		v.start(function (err, result) {
+			if (err) {
+				throw err;
+			}
+
 			assert.strictEqual(result.isCheck, true);
 		});
 	});
 
 	// validate Knight check (part 2)
 	it('should properly indicate check due to Knight (part 2)', function () {
-		var g = game.create(),
+		let
+			g = game.create(),
 			b = g.board,
 			v = gameValidation.create(g);
 
@@ -51,13 +64,18 @@ describe('GameValidation', function() {
 		b.move(b.getSquare('b5'), b.getSquare('d6'));
 
 		v.start(function (err, result) {
+			if (err) {
+				throw err;
+			}
+
 			assert.strictEqual(result.isCheck, true);
 		});
 	});
 
 	// validate checkmate
 	it('should properly indicate checkmate', function() {
-		var g = game.create(),
+		let
+			g = game.create(),
 			b = g.board,
 			v = gameValidation.create(g);
 
@@ -69,6 +87,10 @@ describe('GameValidation', function() {
 		b.move(b.getSquare('d', 1), b.getSquare('h', 5));
 
 		v.start(function(err, result) {
+			if (err) {
+				throw err;
+			}
+
 			assert.strictEqual(result.validMoves.length, 0);
 			assert.strictEqual(result.isCheck, false);
 			assert.strictEqual(result.isCheckmate, true);
@@ -79,7 +101,8 @@ describe('GameValidation', function() {
 
 	// validate stalemate
 	it('should properly indicate stalemate', function() {
-		var g = game.create(),
+		let
+			g = game.create(),
 			b = g.board,
 			v = gameValidation.create(g);
 
@@ -119,6 +142,10 @@ describe('GameValidation', function() {
 		b.move('e2', 'e7');
 
 		v.start(function(err, result) {
+			if (err) {
+				throw err;
+			}
+
 			assert.strictEqual(result.validMoves.length, 0);
 			assert.strictEqual(result.isCheck, false);
 			assert.strictEqual(result.isCheckmate, false);
@@ -130,7 +157,8 @@ describe('GameValidation', function() {
 	// validate threefold repetition rule
 	// Fischer vs Petrosian, Buenos Aires, 1971, round 3
 	it('should properly indicate 3-fold repetition', function() {
-		var g = game.create(),
+		let
+			g = game.create(),
 			b = g.board,
 			v = gameValidation.create(g);
 
@@ -237,6 +265,10 @@ describe('GameValidation', function() {
 		b.move('d3', 'e2');
 
 		v.start(function(err, result) {
+			if (err) {
+				throw err;
+			}
+
 			assert.ok(result.validMoves.length > 0);
 			assert.strictEqual(result.isCheck, false);
 			assert.strictEqual(result.isCheckmate, false);

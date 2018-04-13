@@ -6,7 +6,8 @@
 *.exe
 *.o
 *.so
-.dist
+dist
+.nyc_output
 
 # Packages #
 ############

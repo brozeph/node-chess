@@ -1,6 +1,8 @@
-var
-	board = requireWithCoverage('board'),
-	piece = requireWithCoverage('piece');
+/* eslint no-magic-numbers:0 */
+
+const
+	board = require('../../src/board'),
+	piece = require('../../src/piece');
 
 describe('Board', function() {
 	'use strict';
@@ -8,7 +10,7 @@ describe('Board', function() {
 	describe('#create()', function() {
 		// ensure 64 squares
 		it('should return 64 squares', function() {
-			var b = board.create();
+			let b = board.create();
 			assert.strictEqual(b.squares.length, 64);
 		});
 	});
@@ -16,7 +18,8 @@ describe('Board', function() {
 	describe('#getSquare()', function() {
 		// ensure squares retrieved via getSquare are correct
 		it('should be square a1', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				s = b.getSquare('a', 1);
 
 			assert.strictEqual(s.rank, 1);
@@ -25,7 +28,8 @@ describe('Board', function() {
 
 		// ensure shorthand for getSquare works as expected
 		it('should be square a1 via shorthand', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				s = b.getSquare('a1');
 
 			assert.strictEqual(s.rank, 1);
@@ -34,7 +38,8 @@ describe('Board', function() {
 
 		// ensure squares retrieved via getSquare are correct
 		it('should be square a8', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				s = b.getSquare('a', 8);
 
 			assert.strictEqual(s.rank, 8);
@@ -43,7 +48,8 @@ describe('Board', function() {
 
 		// ensure squares retrieved via getSquare are correct
 		it('should be square h1', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				s = b.getSquare('h', 1);
 
 			assert.strictEqual(s.rank, 1);
@@ -52,7 +58,8 @@ describe('Board', function() {
 
 		// ensure squares retrieved via getSquare are correct
 		it('should be square h8', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				s = b.getSquare('h', 8);
 
 			assert.strictEqual(s.rank, 8);
@@ -61,7 +68,8 @@ describe('Board', function() {
 
 		// ensure squares retrieved via getSquare are correct
 		it('should be square 5e', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				s = b.getSquare('e', 5);
 
 			assert.strictEqual(s.rank, 5);
@@ -70,21 +78,21 @@ describe('Board', function() {
 
 		// ensure squares requested with invalid data are null
 		it('should be null square (invalid rank)', function() {
-			var b = board.create();
+			let b = board.create();
 
 			assert.equal(b.getSquare('a', 0), null);
 		});
 
 		// ensure squares requested with invalid data are null
 		it('should be null square (invalid file)', function() {
-			var b = board.create();
+			let b = board.create();
 
 			assert.equal(b.getSquare('i', 1), null);
 		});
 
 		// ensure corrupted board returns null square
 		it('should be null square (corrupted board)', function() {
-			var b = board.create();
+			let b = board.create();
 			b.squares = [];
 
 			assert.equal(b.getSquare('a', 1), null);
@@ -94,7 +102,8 @@ describe('Board', function() {
 	describe('#getSquare().piece', function() {
 		// ensure pieces are placed properly on squares
 		it('should be White King on e1', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				p = b.getSquare('e', 1).piece;
 
 			assert.strictEqual(p.type, piece.PieceType.King);
@@ -103,7 +112,8 @@ describe('Board', function() {
 
 		// ensure pieces are placed properly on squares
 		it('should be Black Queen on d8', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				p = b.getSquare('d', 8).piece;
 
 			assert.strictEqual(p.type, piece.PieceType.Queen);
@@ -112,7 +122,8 @@ describe('Board', function() {
 
 		// ensure moveCount of piece isn't incremented during board create
 		it('should be White Pawn with move count of 0', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				p = b.getSquare('d', 2).piece;
 
 			assert.strictEqual(p.type, piece.PieceType.Pawn);
@@ -124,7 +135,8 @@ describe('Board', function() {
 	describe('#getSquares(piece.SideType)', function() {
 		// validate getSquares(piece.SideType) works correctly
 		it('should return all White squares', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				squares = b.getSquares(piece.SideType.White),
 				pawnCount = 0,
 				kingCount = 0,
@@ -147,7 +159,8 @@ describe('Board', function() {
 
 		// validate getSquares(piece.SideType) works correctly
 		it('should return all Black squares', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				squares = b.getSquares(piece.SideType.Black),
 				pawnCount = 0,
 				kingCount = 0,
@@ -172,7 +185,8 @@ describe('Board', function() {
 	describe('#getNeighborSquare(board.NeighborType)', function() {
 		// validate getSquares(piece.SideType) works correctly
 		it('should return square e3 when going above e2', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				sq1 = b.getSquare('e', 2),
 				sq2 = b.getNeighborSquare(sq1, board.NeighborType.Above);
 
@@ -182,7 +196,8 @@ describe('Board', function() {
 
 		// verify getNeighborSquare(board.NeighborType) returns null for invalid boundaries
 		it('should return null square when going above a8', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				sq1 = b.getSquare('a', 8),
 				sq2 = b.getNeighborSquare(sq1, board.NeighborType.Above);
 
@@ -191,7 +206,8 @@ describe('Board', function() {
 
 		// verify getNeighborSquare(board.NeighborType)
 		it('should return square d3 when going above left of e2 ', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				sq1 = b.getSquare('e', 2),
 				sq2 = b.getNeighborSquare(sq1, board.NeighborType.AboveLeft);
 
@@ -201,7 +217,8 @@ describe('Board', function() {
 
 		// verify getNeighborSquare(board.NeighborType)
 		it('should return f3 square when going above left of e2', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				sq1 = b.getSquare('e', 2),
 				sq2 = b.getNeighborSquare(sq1, board.NeighborType.AboveRight);
 
@@ -211,7 +228,8 @@ describe('Board', function() {
 
 		// verify getNeighborSquare(board.NeighborType)
 		it('should return e1 square when going below of e2', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				sq1 = b.getSquare('e', 2),
 				sq2 = b.getNeighborSquare(sq1, board.NeighborType.Below);
 
@@ -221,7 +239,8 @@ describe('Board', function() {
 
 		// verify getNeighborSquare(board.NeighborType) returns null for invalid boundaries
 		it('should return null square below a1', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				sq1 = b.getSquare('a', 1),
 				sq2 = b.getNeighborSquare(sq1, board.NeighborType.Below);
 
@@ -230,7 +249,8 @@ describe('Board', function() {
 
 		// verify getNeighborSquare(board.NeighborType)
 		it('should return d1 below left of e2', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				sq1 = b.getSquare('e', 2),
 				sq2 = b.getNeighborSquare(sq1, board.NeighborType.BelowLeft);
 
@@ -240,7 +260,8 @@ describe('Board', function() {
 
 		// verify getNeighborSquare(board.NeighborType)
 		it('should return f1 below right of e2', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				sq1 = b.getSquare('e', 2),
 				sq2 = b.getNeighborSquare(sq1, board.NeighborType.BelowRight);
 
@@ -250,7 +271,8 @@ describe('Board', function() {
 
 		// verify getNeighborSquare(board.NeighborType)
 		it('should return d2 left of e2', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				sq1 = b.getSquare('e', 2),
 				sq2 = b.getNeighborSquare(sq1, board.NeighborType.Left);
 
@@ -260,7 +282,8 @@ describe('Board', function() {
 
 		// verify getNeighborSquare(board.NeighborType) returns null for invalid boundaries
 		it('should return null square left of a2', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				sq1 = b.getSquare('a', 2),
 				sq2 = b.getNeighborSquare(sq1, board.NeighborType.Left);
 
@@ -269,7 +292,8 @@ describe('Board', function() {
 
 		// verify getNeighborSquare(board.NeighborType)
 		it('should return f2 right of e2', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				sq1 = b.getSquare('e', 2),
 				sq2 = b.getNeighborSquare(sq1, board.NeighborType.Right);
 
@@ -279,7 +303,8 @@ describe('Board', function() {
 
 		// verify getNeighborSquare(board.NeighborType) returns null for invalid boundaries
 		it('should return null square right of h2', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				sq1 = b.getSquare('h', 2),
 				sq2 = b.getNeighborSquare(sq1, board.NeighborType.Right);
 
@@ -290,7 +315,7 @@ describe('Board', function() {
 	describe('#move()', function() {
 		// verify that moving a piece actually results in the piece being moved
 		it('should have pieces on the correct squares after moving', function() {
-			var b = board.create();
+			let b = board.create();
 
 			b.move(b.getSquare('e', 2), b.getSquare('e', 4));
 			b.move(b.getSquare('f', 7), b.getSquare('f', 5));
@@ -303,7 +328,7 @@ describe('Board', function() {
 
 		// ensure shorthand for move works as expected
 		it('should support shorthand move', function() {
-			var b = board.create();
+			let b = board.create();
 
 			b.move('e2', 'e4');
 
@@ -312,7 +337,8 @@ describe('Board', function() {
 
 		// verify simulation of move provides backout method that doesn't corrupt board
 		it('should have non-corrupt board when backing out a simple move', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				r = b.move(b.getSquare('e', 2), b.getSquare('e', 4), true);
 
 			assert.strictEqual(b.getSquare('e', 2).piece, null);
@@ -326,7 +352,7 @@ describe('Board', function() {
 
 		// validate board.move for en-passant and proper capture of opposing pawn
 		it('should support en-passant', function() {
-			var b = board.create();
+			let b = board.create();
 
 			b.move(b.getSquare('e', 2), b.getSquare('e', 4));
 			b.move(b.getSquare('e', 7), b.getSquare('e', 6));
@@ -339,7 +365,8 @@ describe('Board', function() {
 
 		// validate simulated board.move undo for en-passant
 		it('should be able to backout an en-passant', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				r = null;
 
 			b.move(b.getSquare('e', 2), b.getSquare('e', 4));
@@ -359,7 +386,7 @@ describe('Board', function() {
 
 		// validate board.move for castle and proper swap with rook
 		it('should support a proper castle to the right from rank 8 ', function() {
-			var b = board.create();
+			let b = board.create();
 
 			b.getSquare('f', 8).piece = null;
 			b.getSquare('g', 8).piece = null;
@@ -373,7 +400,7 @@ describe('Board', function() {
 
 		// validate board.move for castle and proper swap with rook
 		it('should support a proper castle to the left from rank 1', function() {
-			var b = board.create();
+			let b = board.create();
 
 			b.getSquare('b', 1).piece = null;
 			b.getSquare('c', 1).piece = null;
@@ -388,7 +415,8 @@ describe('Board', function() {
 
 		// validate simulated board.move undo for castle
 		it('should properly undo a castle to the right during simulation', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				r = null;
 
 			b.getSquare('f', 8).piece = null;
@@ -409,7 +437,8 @@ describe('Board', function() {
 
 		// validate simulated board.move undo for castle
 		it('should properly undo a castle to the left during simulation', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				r = null;
 
 			b.getSquare('b', 1).piece = null;
@@ -431,7 +460,8 @@ describe('Board', function() {
 
 		// validate pawn capture works as expected
 		it('should properly recognize a pawn capture', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				r = null;
 
 			b.move('e2', 'e4');
@@ -447,7 +477,8 @@ describe('Board', function() {
 
 		// test pawn simulate move piece and no pieces disappear
 		it('should have a pawn disappear after undo', function() {
-			var b = board.create(),
+			let
+				b = board.create(),
 				r = null;
 
 			b.move('e2', 'e4');
@@ -466,7 +497,8 @@ describe('Board', function() {
 		});
 
 		it('should properly return notation when supplied', function () {
-			var b = board.create(),
+			let
+				b = board.create(),
 				r = null;
 
 			r = b.move('e2', 'e4', 'e4');
@@ -475,7 +507,8 @@ describe('Board', function() {
 		});
 
 		it('should not return notation when omitted', function () {
-			var b = board.create(),
+			let
+				b = board.create(),
 				r = null;
 
 			r = b.move('e2', 'e4');

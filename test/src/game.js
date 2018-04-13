@@ -1,19 +1,21 @@
-var
-	game = requireWithCoverage('game');
+/* eslint no-magic-numbers:0 */
+
+const game = require('../../src/game');
 
 describe('Game', function() {
 	'use strict';
 
 	// make sure there is no move history when game is created
 	it('should have no move history when game is created', function() {
-		var g = game.create();
+		let g = game.create();
 
 		assert.strictEqual(g.moveHistory.length, 0);
 	});
 
 	// verify move history is tracked on game when a move is made on board
 	it('should have move history length of 2 after 2 moves are made', function() {
-		var g = game.create(),
+		let
+			g = game.create(),
 			b = g.board;
 
 		b.move(b.getSquare('d', 2), b.getSquare('d', 4));
@@ -24,7 +26,8 @@ describe('Game', function() {
 
 	// ensure that when simulated moves are made on board, game history is not incremented
 	it('should have no move history when only simulated moves are made', function() {
-		var g = game.create(),
+		let
+			g = game.create(),
 			b = g.board,
 			r = b.move(b.getSquare('e', 2), b.getSquare('e', 4), true);
 
@@ -37,7 +40,8 @@ describe('Game', function() {
 
 	// ensure board position hash is accurate across moves
 	it('should have accurate hash code after each move stored in move history', function() {
-		var g = game.create(),
+		let
+			g = game.create(),
 			b = g.board;
 
 		b.move(b.getSquare('d', 2), b.getSquare('d', 4));
@@ -61,7 +65,8 @@ describe('Game', function() {
 	});
 
 	it('should properly have notation in move history after move when supplied', function () {
-		var g = game.create(),
+		let
+			g = game.create(),
 			b = g.board;
 
 		b.move('d2', 'd4', 'd4');
@@ -70,17 +75,19 @@ describe('Game', function() {
 	});
 
 	it('should not have notation in move history after move when omitted', function () {
-		var g = game.create(),
+		let
+			g = game.create(),
 			b = g.board;
 
 		b.move('d2', 'd4');
 		assert.strictEqual(g.moveHistory.length, 1);
-		assert.ok(g.moveHistory[0].algebraic === undefined);
+		assert.ok(typeof g.moveHistory[0].algebraic === 'undefined');
 	});
 
 	// ensure board position hash is accurate across games
 	it('should have consistent board hash across different game objects with same move histories', function() {
-		var g1 = game.create(),
+		let
+			g1 = game.create(),
 			b1 = g1.board,
 			g2 = game.create(),
 			b2 = g2.board;
@@ -97,9 +104,9 @@ describe('Game', function() {
 
 	// Issue #1 - Ensure no phantom pawns appear after sequence of moves
 	it('should not have phantom pawn appear after specific sequence of moves - Issue #1', function() {
-		var g = game.create(),
-			b = g.board,
-			r = null;
+		let
+			g = game.create(),
+			b = g.board;
 
 		b.move(b.getSquare('e', 2), b.getSquare('e', 4));
 		b.move(b.getSquare('e', 7), b.getSquare('e', 5));
@@ -116,7 +123,7 @@ describe('Game', function() {
 		b.move(b.getSquare('d', 2), b.getSquare('d', 4));
 		b.move(b.getSquare('e', 4), b.getSquare('d', 6));
 
-		r = b.move(b.getSquare('b', 5), b.getSquare('c', 6));
+		b.move(b.getSquare('b', 5), b.getSquare('c', 6));
 
 		assert.ok(b.getSquare('c5').piece === null);
 	});

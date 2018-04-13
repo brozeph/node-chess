@@ -1,12 +1,14 @@
-var
-	simpleGameClient = requireWithCoverage('simpleGameClient');
+/* eslint no-magic-numbers:0 */
+
+const simpleGameClient = require('../../src/simpleGameClient');
 
 describe('SimpleGameClient', function() {
 	'use strict';
 
 	// test create and getStatus
 	it('should properly create simple game client', function() {
-		var gc = simpleGameClient.create(),
+		let
+			gc = simpleGameClient.create(),
 			s = gc.getStatus();
 
 		assert.strictEqual(s.isCheck, false);
@@ -18,7 +20,8 @@ describe('SimpleGameClient', function() {
 
 	// test pawn move
 	it('should properly represent status after first pawn moves', function() {
-		var gc = simpleGameClient.create(),
+		let
+			gc = simpleGameClient.create(),
 			s = null;
 
 		gc.move('b2', 'b4');
@@ -35,16 +38,23 @@ describe('SimpleGameClient', function() {
 
 	// test invalid notation
 	it('should properly throw exception for invalid moves', function() {
-		var gc = simpleGameClient.create();
+		let gc = simpleGameClient.create();
 
-		assert.throws(function() { gc.move('h6'); });
-		assert.throws(function() { gc.move('e2', 'z9'); });
-		assert.throws(function() { gc.move('e2', 'e5'); });
+		assert.throws(function() {
+			gc.move('h6');
+		});
+		assert.throws(function() {
+			gc.move('e2', 'z9');
+		});
+		assert.throws(function() {
+			gc.move('e2', 'e5');
+		});
 	});
 
 	// Issue #1 - Ensure no phantom pawns appear after sequence of moves in SimpleGameClient
 	it('should not have a random Pawn appear on the board after a specific sequence of moves (bug fix test)', function() {
-		var gc = simpleGameClient.create(),
+		let
+			gc = simpleGameClient.create(),
 			b = gc.game.board;
 
 		gc.move('e2', 'e4');
