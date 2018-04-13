@@ -3,15 +3,12 @@
 	the squares it contains.
 */
 
+import { EventEmitter } from 'events';
 import { Piece, PieceType, SideType } from './piece';
 import { Square } from './square';
 
-var
-	EventEmitter = require('events').EventEmitter,
-	sys = require('util');
-
 // types
-var NeighborType = {
+export var NeighborType = {
 	Above : { offset : 8 },
 	AboveLeft : { offset : 7 },
 	AboveRight : { offset : 9 },
@@ -31,233 +28,16 @@ var NeighborType = {
 };
 
 // ctor
-var Board = function (squares) {
-	'use strict';
+export class Board extends EventEmitter {
+	constructor (squares) {
+		super();
 
-	this.squares = squares;
-};
-
-// enable events
-sys.inherits(Board, EventEmitter);
-
-// methods
-Board.prototype.getNeighborSquare = function (sq, n) {
-	'use strict';
-
-	if (sq && n) {
-		// validate boundaries of board
-		if (sq.file === 'a' && (n === NeighborType.AboveLeft ||
-				n === NeighborType.BelowLeft ||
-				n === NeighborType.Left)) {
-			return null;
-		}
-
-		if (sq.file === 'h' && (n === NeighborType.AboveRight ||
-				n === NeighborType.BelowRight ||
-				n === NeighborType.Right)) {
-			return null;
-		}
-
-		if (sq.rank === 1 && (n === NeighborType.Below ||
-				n === NeighborType.BelowLeft ||
-				n === NeighborType.BelowRight)) {
-			return null;
-		}
-
-		if (sq.rank === 8 && (n === NeighborType.Above ||
-				n === NeighborType.AboveLeft ||
-				n === NeighborType.AboveRight)) {
-			return null;
-		}
-
-		// validate file
-		var fIndex = 'abcdefgh'.indexOf(sq.file),
-			i = 0;
-
-		if (fIndex !== -1 && sq.rank > 0 && sq.rank < 9) {
-			// find the index
-			i = 8 * (sq.rank - 1) + fIndex + n.offset;
-			if (this.squares && this.squares.length > i && i > -1) {
-				return this.squares[i];
-			}
-		}
+		this.squares = squares;
 	}
 
-	return null;
-};
-
-Board.prototype.getSquare = function (f, r) {
-	'use strict';
-
-	// check for shorthand
-	if (typeof f === 'string' && f.length === 2 && !r) {
-		r = parseInt(f.charAt(1), 10);
-		f = f.charAt(0);
-	}
-
-	// validate file
-	var fIndex = 'abcdefgh'.indexOf(f),
-		i = 0;
-
-	if (fIndex !== -1 && r > 0 && r < 9) {
-		// Find the index
-		i = 8 * (r - 1) + fIndex;
-		if (this.squares && this.squares.length > i) {
-			return this.squares[i];
-		}
-	}
-
-	return null;
-};
-
-Board.prototype.getSquares = function (side) {
-	'use strict';
-
-	var list = [],
-		i = 0;
-
-	for (i = 0; i < this.squares.length; i++) {
-		if (this.squares[i].piece &&
-				this.squares[i].piece.side === side) {
-			list.push(this.squares[i]);
-		}
-	}
-
-	return list;
-};
-
-Board.prototype.move = function (src, dest, n) {
-	'use strict';
-
-	if (typeof src === 'string' &&
-			src.length === 2) {
-		src = this.getSquare(src);
-	}
-
-	if (typeof dest === 'string' &&
-			dest.length === 2) {
-		dest = this.getSquare(dest);
-	}
-
-	var simulate = false;
-
-	if (typeof n === 'boolean') {
-		simulate = n;
-		n = undefined;
-	}
-
-	if (src && src.file && src.rank &&
-			dest && dest.file && dest.rank) {
-		var move = {
-				algebraic : n,
-				capturedPiece : dest.piece,
-				castle : false,
-				enPassant : false,
-				postSquare : dest,
-				prevSquare : src
-			},
-			p = src.piece,
-			sq = null,
-			undo = function (b, m) {
-				return function () {
-					m.prevSquare.piece = m.postSquare.piece;
-					m.postSquare.piece = m.capturedPiece;
-
-					if (!m.enPassant) {
-						m.postSquare.piece = m.capturedPiece;
-					} else {
-						b.getSquare(m.postSquare.file,
-							m.prevSquare.rank).piece = m.capturedPiece;
-
-						// there is no piece on the post square in the event of
-						// an en-passant, clear anything that me be present as
-						// a result of the move (fix for issue #8)
-						m.postSquare.piece = null;
-					}
-
-					if (m.castle) {
-						sq = b.getSquare(
-							move.postSquare.file === 'g' ? 'f' : 'd',
-							move.postSquare.rank
-						);
-						b.getSquare(
-							move.postSquare.file === 'g' ? 'h' : 'a',
-							move.postSquare.rank
-						).piece = sq.piece;
-						sq.piece = null;
-					}
-				};
-			};
-
-		dest.piece = p;
-		move.castle = p.type === PieceType.King &&
-			p.moveCount === 0 &&
-			(move.postSquare.file === 'g' || move.postSquare.file === 'c');
-		move.enPassant = p.type === PieceType.Pawn &&
-			move.capturedPiece === null &&
-			move.postSquare.file !== move.prevSquare.file;
-		move.prevSquare.piece = null;
-
-		// check for en-passant
-		if (move.enPassant) {
-			sq = this.getSquare(move.postSquare.file, move.prevSquare.rank);
-			move.capturedPiece = sq.piece;
-			sq.piece = null;
-		}
-
-		// check for castle
-		if (move.castle) {
-			sq = this.getSquare(
-				move.postSquare.file === 'g' ? 'h' : 'a',
-				move.postSquare.rank
-			);
-
-			if (sq.piece === null) {
-				move.castle = false;
-			} else {
-				this.getSquare(
-					move.postSquare.file === 'g' ? 'f' : 'd',
-					move.postSquare.rank
-				).piece = sq.piece;
-				sq.piece = null;
-			}
-		}
-
-		if (!simulate) {
-			p.moveCount++;
-			this.lastMovedPiece = p;
-			this.emit('move', move);
-		}
-
-		return {
-			move : move,
-			undo : undo(this, move, simulate)
-		};
-	}
-};
-
-Board.prototype.promote = function (sq, p) {
-	'use strict';
-
-	// update move count and last piece
-	p.moveCount = sq.piece.moveCount;
-	this.lastMovedPiece = p;
-
-	// set to square
-	sq.piece = p;
-
-	this.emit('promote', sq);
-
-	return sq;
-};
-
-// exports
-module.exports = {
-	// methods
-	create : function () {
-		'use strict';
-
-		var b = new Board([]),
+	static create () {
+		let
+			b = new Board([]),
 			i = 0,
 			f = 0,
 			r = 0,
@@ -300,8 +80,218 @@ module.exports = {
 		}
 
 		return b;
-	},
+	}
 
-	// enums
-	NeighborType : NeighborType
-};
+	getNeighborSquare (sq, n) {
+		'use strict';
+
+		if (sq && n) {
+			// validate boundaries of board
+			if (sq.file === 'a' && (n === NeighborType.AboveLeft ||
+					n === NeighborType.BelowLeft ||
+					n === NeighborType.Left)) {
+				return null;
+			}
+
+			if (sq.file === 'h' && (n === NeighborType.AboveRight ||
+					n === NeighborType.BelowRight ||
+					n === NeighborType.Right)) {
+				return null;
+			}
+
+			if (sq.rank === 1 && (n === NeighborType.Below ||
+					n === NeighborType.BelowLeft ||
+					n === NeighborType.BelowRight)) {
+				return null;
+			}
+
+			if (sq.rank === 8 && (n === NeighborType.Above ||
+					n === NeighborType.AboveLeft ||
+					n === NeighborType.AboveRight)) {
+				return null;
+			}
+
+			// validate file
+			var fIndex = 'abcdefgh'.indexOf(sq.file),
+				i = 0;
+
+			if (fIndex !== -1 && sq.rank > 0 && sq.rank < 9) {
+				// find the index
+				i = 8 * (sq.rank - 1) + fIndex + n.offset;
+				if (this.squares && this.squares.length > i && i > -1) {
+					return this.squares[i];
+				}
+			}
+		}
+
+		return null;
+	}
+
+	getSquare (f, r) {
+		'use strict';
+
+		// check for shorthand
+		if (typeof f === 'string' && f.length === 2 && !r) {
+			r = parseInt(f.charAt(1), 10);
+			f = f.charAt(0);
+		}
+
+		// validate file
+		var fIndex = 'abcdefgh'.indexOf(f),
+			i = 0;
+
+		if (fIndex !== -1 && r > 0 && r < 9) {
+			// Find the index
+			i = 8 * (r - 1) + fIndex;
+			if (this.squares && this.squares.length > i) {
+				return this.squares[i];
+			}
+		}
+
+		return null;
+	}
+
+	getSquares (side) {
+		'use strict';
+
+		var list = [],
+			i = 0;
+
+		for (i = 0; i < this.squares.length; i++) {
+			if (this.squares[i].piece &&
+					this.squares[i].piece.side === side) {
+				list.push(this.squares[i]);
+			}
+		}
+
+		return list;
+	}
+
+	move (src, dest, n) {
+		'use strict';
+
+		if (typeof src === 'string' &&
+				src.length === 2) {
+			src = this.getSquare(src);
+		}
+
+		if (typeof dest === 'string' &&
+				dest.length === 2) {
+			dest = this.getSquare(dest);
+		}
+
+		var simulate = false;
+
+		if (typeof n === 'boolean') {
+			simulate = n;
+			n = undefined;
+		}
+
+		if (src && src.file && src.rank &&
+				dest && dest.file && dest.rank) {
+			var move = {
+					algebraic : n,
+					capturedPiece : dest.piece,
+					castle : false,
+					enPassant : false,
+					postSquare : dest,
+					prevSquare : src
+				},
+				p = src.piece,
+				sq = null,
+				undo = function (b, m) {
+					return function () {
+						m.prevSquare.piece = m.postSquare.piece;
+						m.postSquare.piece = m.capturedPiece;
+
+						if (!m.enPassant) {
+							m.postSquare.piece = m.capturedPiece;
+						} else {
+							b.getSquare(m.postSquare.file,
+								m.prevSquare.rank).piece = m.capturedPiece;
+
+							// there is no piece on the post square in the event of
+							// an en-passant, clear anything that me be present as
+							// a result of the move (fix for issue #8)
+							m.postSquare.piece = null;
+						}
+
+						if (m.castle) {
+							sq = b.getSquare(
+								move.postSquare.file === 'g' ? 'f' : 'd',
+								move.postSquare.rank
+							);
+							b.getSquare(
+								move.postSquare.file === 'g' ? 'h' : 'a',
+								move.postSquare.rank
+							).piece = sq.piece;
+							sq.piece = null;
+						}
+					};
+				};
+
+			dest.piece = p;
+			move.castle = p.type === PieceType.King &&
+				p.moveCount === 0 &&
+				(move.postSquare.file === 'g' || move.postSquare.file === 'c');
+			move.enPassant = p.type === PieceType.Pawn &&
+				move.capturedPiece === null &&
+				move.postSquare.file !== move.prevSquare.file;
+			move.prevSquare.piece = null;
+
+			// check for en-passant
+			if (move.enPassant) {
+				sq = this.getSquare(move.postSquare.file, move.prevSquare.rank);
+				move.capturedPiece = sq.piece;
+				sq.piece = null;
+			}
+
+			// check for castle
+			if (move.castle) {
+				sq = this.getSquare(
+					move.postSquare.file === 'g' ? 'h' : 'a',
+					move.postSquare.rank
+				);
+
+				if (sq.piece === null) {
+					move.castle = false;
+				} else {
+					this.getSquare(
+						move.postSquare.file === 'g' ? 'f' : 'd',
+						move.postSquare.rank
+					).piece = sq.piece;
+					sq.piece = null;
+				}
+			}
+
+			if (!simulate) {
+				p.moveCount++;
+				this.lastMovedPiece = p;
+				this.emit('move', move);
+			}
+
+			return {
+				move : move,
+				undo : undo(this, move, simulate)
+			};
+		}
+	}
+
+	promote (sq, p) {
+		'use strict';
+
+		// update move count and last piece
+		p.moveCount = sq.piece.moveCount;
+		this.lastMovedPiece = p;
+
+		// set to square
+		sq.piece = p;
+
+		this.emit('promote', sq);
+
+		return sq;
+	}
+}
+
+// exports
+export default { Board, NeighborType };

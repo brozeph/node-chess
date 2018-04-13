@@ -10,11 +10,10 @@
 	board in its current state.
 */
 
+import { NeighborType } from './board';
 import { PieceType, SideType } from './piece';
 
-var
-	sys = require('util'),
-	board = require('./board.js');
+var sys = require('util');
 
 // base ctor
 var PieceValidation = function (b) {
@@ -78,30 +77,30 @@ PieceValidation.prototype.start = function (src, callback) {
 		if (this.allowForward) {
 			findMoveOptions(this.board, this.repeat,
 				opt.piece.side === SideType.White ?
-						board.NeighborType.Above :
-						board.NeighborType.Below);
+						NeighborType.Above :
+						NeighborType.Below);
 		}
 
 		// backward squares
 		if (this.allowBackward) {
 			findMoveOptions(this.board, this.repeat,
 				opt.piece.side === SideType.White ?
-						board.NeighborType.Below :
-						board.NeighborType.Above);
+						NeighborType.Below :
+						NeighborType.Above);
 		}
 
 		// horizontal squares
 		if (this.allowHorizontal) {
-			findMoveOptions(this.board, this.repeat, board.NeighborType.Left);
-			findMoveOptions(this.board, this.repeat, board.NeighborType.Right);
+			findMoveOptions(this.board, this.repeat, NeighborType.Left);
+			findMoveOptions(this.board, this.repeat, NeighborType.Right);
 		}
 
 		// diagonal squares
 		if (this.allowDiagonal) {
-			findMoveOptions(this.board, this.repeat, board.NeighborType.AboveLeft);
-			findMoveOptions(this.board, this.repeat, board.NeighborType.BelowRight);
-			findMoveOptions(this.board, this.repeat, board.NeighborType.BelowLeft);
-			findMoveOptions(this.board, this.repeat, board.NeighborType.AboveRight);
+			findMoveOptions(this.board, this.repeat, NeighborType.AboveLeft);
+			findMoveOptions(this.board, this.repeat, NeighborType.BelowRight);
+			findMoveOptions(this.board, this.repeat, NeighborType.BelowLeft);
+			findMoveOptions(this.board, this.repeat, NeighborType.AboveRight);
 		}
 
 		// apply additional validation logic
@@ -176,16 +175,16 @@ KnightValidation.prototype.applySpecialValidation = function (opt) {
 	var
 		aboveLeft = this.board.getNeighborSquare(
 			opt.origin,
-			board.NeighborType.AboveLeft),
+			NeighborType.AboveLeft),
 		aboveRight = this.board.getNeighborSquare(
 			opt.origin,
-			board.NeighborType.AboveRight),
+			NeighborType.AboveRight),
 		belowLeft = this.board.getNeighborSquare(
 			opt.origin,
-			board.NeighborType.BelowLeft),
+			NeighborType.BelowLeft),
 		belowRight = this.board.getNeighborSquare(
 			opt.origin,
-			board.NeighborType.BelowRight),
+			NeighborType.BelowRight),
 		squares = [],
 		i = 0,
 		p = null;
@@ -193,41 +192,41 @@ KnightValidation.prototype.applySpecialValidation = function (opt) {
 	if (aboveLeft) {
 		squares.push(this.board.getNeighborSquare(
 			aboveLeft,
-			board.NeighborType.Above));
+			NeighborType.Above));
 
 		squares.push(this.board.getNeighborSquare(
 			aboveLeft,
-			board.NeighborType.Left));
+			NeighborType.Left));
 	}
 
 	if (aboveRight) {
 		squares.push(this.board.getNeighborSquare(
 			aboveRight,
-			board.NeighborType.Above));
+			NeighborType.Above));
 
 		squares.push(this.board.getNeighborSquare(
 			aboveRight,
-			board.NeighborType.Right));
+			NeighborType.Right));
 	}
 
 	if (belowLeft) {
 		squares.push(this.board.getNeighborSquare(
 			belowLeft,
-			board.NeighborType.Below));
+			NeighborType.Below));
 
 		squares.push(this.board.getNeighborSquare(
 			belowLeft,
-			board.NeighborType.Left));
+			NeighborType.Left));
 	}
 
 	if (belowRight) {
 		squares.push(this.board.getNeighborSquare(
 			belowRight,
-			board.NeighborType.Below));
+			NeighborType.Below));
 
 		squares.push(this.board.getNeighborSquare(
 			belowRight,
-			board.NeighborType.Right));
+			NeighborType.Right));
 	}
 
 	for (i = 0; i < squares.length; i++) {
@@ -264,12 +263,12 @@ PawnValidation.prototype.applySpecialValidation = function (opt) {
 		squares = [
 			this.board.getNeighborSquare(opt.origin,
 				opt.piece.side === SideType.White ?
-						board.NeighborType.AboveLeft :
-						board.NeighborType.BelowLeft),
+						NeighborType.AboveLeft :
+						NeighborType.BelowLeft),
 			this.board.getNeighborSquare(opt.origin,
 				opt.piece.side === SideType.White ?
-						board.NeighborType.AboveRight :
-						board.NeighborType.BelowRight)],
+						NeighborType.AboveRight :
+						NeighborType.BelowRight)],
 		i = 0,
 		sq = null,
 		p = null;
@@ -290,8 +289,8 @@ PawnValidation.prototype.applySpecialValidation = function (opt) {
 		sq = this.board.getNeighborSquare(
 			opt.destSquares[0],
 			opt.piece.side === SideType.White ?
-					board.NeighborType.Above :
-					board.NeighborType.Below);
+					NeighborType.Above :
+					NeighborType.Below);
 
 		if (!sq.piece) {
 			opt.destSquares.push(sq);
@@ -302,8 +301,8 @@ PawnValidation.prototype.applySpecialValidation = function (opt) {
 			(opt.piece.side === SideType.White ? 5 : 4)) {
 		// get squares left & right of pawn
 		squares = [
-			this.board.getNeighborSquare(opt.origin, board.NeighborType.Left),
-			this.board.getNeighborSquare(opt.origin, board.NeighborType.Right)];
+			this.board.getNeighborSquare(opt.origin, NeighborType.Left),
+			this.board.getNeighborSquare(opt.origin, NeighborType.Right)];
 		i = 0;
 
 		for (i = 0; i < squares.length; i++) {
@@ -319,8 +318,8 @@ PawnValidation.prototype.applySpecialValidation = function (opt) {
 					this.board.getNeighborSquare(
 						squares[i],
 						p.side === SideType.Black ?
-								board.NeighborType.Above :
-								board.NeighborType.Below));
+								NeighborType.Above :
+								NeighborType.Below));
 			}
 		}
 	}

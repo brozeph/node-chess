@@ -6,11 +6,9 @@
 	could be used for storage, etc.
 */
 
+import { Board } from './board';
 import { SideType } from './piece';
-
-var
-	crypto = require('crypto'),
-	board = require('./board.js');
+import crypto from 'crypto';
 
 // types
 var Move = function (sq1, sq2, cp, n, h) {
@@ -101,7 +99,7 @@ module.exports = {
 		'use strict';
 
 		var
-			b = board.create(),
+			b = Board.create(),
 			g = new Game(b);
 
 		b.on('move', addToHistory(g));
@@ -113,7 +111,7 @@ module.exports = {
 		'use strict';
 
 		var
-			b = board.create(),
+			b = Board.create(),
 			g = new Game(),
 			i = 0;
 

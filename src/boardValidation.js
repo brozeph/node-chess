@@ -24,11 +24,10 @@
 	of what is possible anyway).
 */
 
+import { NeighborType } from './board';
 import { PieceType, SideType } from './piece';
 
-var
-	board = require('./board.js'),
-	pieceValidation = require('./pieceValidation.js');
+var pieceValidation = require('./pieceValidation.js');
 
 // base ctor
 var BoardValidation = function (g) {
@@ -238,23 +237,23 @@ BoardValidation.prototype.isSquareAttacked = function (sq) {
 			return context;
 		},
 		result = [
-			isAttacked(this.board, board.NeighborType.Above),
-			isAttacked(this.board, board.NeighborType.AboveRight),
-			isAttacked(this.board, board.NeighborType.Right),
-			isAttacked(this.board, board.NeighborType.BelowRight),
-			isAttacked(this.board, board.NeighborType.Below),
-			isAttacked(this.board, board.NeighborType.BelowLeft),
-			isAttacked(this.board, board.NeighborType.Left),
-			isAttacked(this.board, board.NeighborType.AboveLeft),
+			isAttacked(this.board, NeighborType.Above),
+			isAttacked(this.board, NeighborType.AboveRight),
+			isAttacked(this.board, NeighborType.Right),
+			isAttacked(this.board, NeighborType.BelowRight),
+			isAttacked(this.board, NeighborType.Below),
+			isAttacked(this.board, NeighborType.BelowLeft),
+			isAttacked(this.board, NeighborType.Left),
+			isAttacked(this.board, NeighborType.AboveLeft),
 			// fix for issue #4
-			isAttackedByKnight(this.board, board.NeighborType.KnightAboveRight),
-			isAttackedByKnight(this.board, board.NeighborType.KnightRightAbove),
-			isAttackedByKnight(this.board, board.NeighborType.KnightBelowRight),
-			isAttackedByKnight(this.board, board.NeighborType.KnightRightBelow),
-			isAttackedByKnight(this.board, board.NeighborType.KnightBelowLeft),
-			isAttackedByKnight(this.board, board.NeighborType.KnightLeftBelow),
-			isAttackedByKnight(this.board, board.NeighborType.KnightAboveLeft),
-			isAttackedByKnight(this.board, board.NeighborType.KnightLeftAbove)
+			isAttackedByKnight(this.board, NeighborType.KnightAboveRight),
+			isAttackedByKnight(this.board, NeighborType.KnightRightAbove),
+			isAttackedByKnight(this.board, NeighborType.KnightBelowRight),
+			isAttackedByKnight(this.board, NeighborType.KnightRightBelow),
+			isAttackedByKnight(this.board, NeighborType.KnightBelowLeft),
+			isAttackedByKnight(this.board, NeighborType.KnightLeftBelow),
+			isAttackedByKnight(this.board, NeighborType.KnightAboveLeft),
+			isAttackedByKnight(this.board, NeighborType.KnightLeftAbove)
 		].filter((result) => result.attacked);
 
 	return result.length !== 0;
