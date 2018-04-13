@@ -1,8 +1,8 @@
 /* eslint no-magic-numbers:0 */
 
-const
-	piece = require('../../src/piece'),
-	algebraicGameClient = require('../../src/algebraicGameClient');
+import { Piece, PieceType, SideType } from '../../src/piece';
+
+const algebraicGameClient = require('../../src/algebraicGameClient');
 
 describe('AlgebraicGameClient', function() {
 	'use strict';
@@ -48,7 +48,7 @@ describe('AlgebraicGameClient', function() {
 		gc.move('d5');
 		r = gc.move('exd5');
 
-		assert.strictEqual(r.move.capturedPiece.type, piece.PieceType.Pawn);
+		assert.strictEqual(r.move.capturedPiece.type, PieceType.Pawn);
 	});
 
 	// test notation in history
@@ -263,7 +263,7 @@ describe('AlgebraicGameClient', function() {
 		gc.game.board.getSquare('a7').piece = null;
 		gc.game.board.getSquare('a8').piece = null;
 		gc.game.board.getSquare('a2').piece = null;
-		gc.game.board.getSquare('a7').piece = piece.createPawn(piece.SideType.White);
+		gc.game.board.getSquare('a7').piece = Piece.createPawn(SideType.White);
 		gc.game.board.getSquare('a7').piece.moveCount = 1;
 
 		r = gc.getStatus(true);
@@ -283,7 +283,7 @@ describe('AlgebraicGameClient', function() {
 		gc.game.board.getSquare('a2').piece = null;
 		gc.game.board.getSquare('a1').piece = null;
 		gc.game.board.getSquare('a7').piece = null;
-		gc.game.board.getSquare('a2').piece = piece.createPawn(piece.SideType.Black);
+		gc.game.board.getSquare('a2').piece = Piece.createPawn(SideType.Black);
 		gc.game.board.getSquare('a2').piece.moveCount = 1;
 
 		gc.getStatus(true);
@@ -310,14 +310,14 @@ describe('AlgebraicGameClient', function() {
 		gc.game.board.getSquare('c8').piece = null;
 		gc.game.board.getSquare('d8').piece = null;
 		gc.game.board.getSquare('a2').piece = null;
-		gc.game.board.getSquare('a7').piece = piece.createPawn(piece.SideType.White);
+		gc.game.board.getSquare('a7').piece = Piece.createPawn(SideType.White);
 		gc.game.board.getSquare('a7').piece.moveCount = 1;
 
 		gc.getStatus(true);
 		m = gc.move('a8R');
 		r = gc.getStatus();
 
-		assert.strictEqual(m.move.postSquare.piece.type, piece.PieceType.Rook);
+		assert.strictEqual(m.move.postSquare.piece.type, PieceType.Rook);
 		assert.strictEqual(r.isCheckmate, true);
 		assert.strictEqual(gc.game.moveHistory[0].promotion, true);
 	});
@@ -335,7 +335,7 @@ describe('AlgebraicGameClient', function() {
 		gc.game.board.getSquare('c1').piece = null;
 		gc.game.board.getSquare('d1').piece = null;
 		gc.game.board.getSquare('a7').piece = null;
-		gc.game.board.getSquare('a2').piece = piece.createPawn(piece.SideType.Black);
+		gc.game.board.getSquare('a2').piece = Piece.createPawn(SideType.Black);
 		gc.game.board.getSquare('a2').piece.moveCount = 1;
 
 		gc.getStatus(true);
@@ -343,7 +343,7 @@ describe('AlgebraicGameClient', function() {
 		m = gc.move('a1R');
 		r = gc.getStatus();
 
-		assert.strictEqual(m.move.postSquare.piece.type, piece.PieceType.Rook);
+		assert.strictEqual(m.move.postSquare.piece.type, PieceType.Rook);
 		assert.strictEqual(r.isCheckmate, true);
 		assert.strictEqual(gc.game.moveHistory[0].promotion, false);
 		assert.strictEqual(gc.game.moveHistory[1].promotion, true);
@@ -388,7 +388,7 @@ describe('AlgebraicGameClient', function() {
 		assert.ok(m !== null);
 		assert.strictEqual(m.move.postSquare.file, 'c');
 		assert.strictEqual(m.move.postSquare.rank, 3);
-		assert.strictEqual(m.move.postSquare.piece.type, piece.PieceType.Knight);
+		assert.strictEqual(m.move.postSquare.piece.type, PieceType.Knight);
 	});
 
 	// Issue #1 - Ensure no phantom pawns appear after sequence of moves in AlgebraicGameClient
@@ -701,10 +701,10 @@ describe('AlgebraicGameClient', function() {
 		gc.game.board.getSquare('c7').piece = null;
 		gc.game.board.getSquare('c8').piece = null;
 		gc.game.board.getSquare('c2').piece = null;
-		gc.game.board.getSquare('c7').piece = piece.createPawn(piece.SideType.White);
+		gc.game.board.getSquare('c7').piece = Piece.createPawn(SideType.White);
 		gc.game.board.getSquare('c7').piece.moveCount = 1;
 		gc.game.board.getSquare('h7').piece = null;
-		gc.game.board.getSquare('h7').piece = piece.createBishop(piece.SideType.White);
+		gc.game.board.getSquare('h7').piece = Piece.createBishop(SideType.White);
 		gc.game.board.getSquare('h7').piece.moveCount = 1;
 
 		// force recalculation of board position
@@ -731,7 +731,7 @@ describe('AlgebraicGameClient', function() {
 		// position the board for a promotion next move
 		gc.game.board.getSquare('c7').piece = null;
 		gc.game.board.getSquare('c2').piece = null;
-		gc.game.board.getSquare('c7').piece = piece.createPawn(piece.SideType.White);
+		gc.game.board.getSquare('c7').piece = Piece.createPawn(SideType.White);
 		gc.game.board.getSquare('c7').piece.moveCount = 1;
 
 		// force recalculation of board position

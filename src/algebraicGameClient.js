@@ -1,5 +1,6 @@
+import { Piece, PieceType } from './piece';
+
 var
-	piece = require('./piece.js'),
 	game = require('./game.js'),
 	gameValidation = require('./gameValidation.js');
 
@@ -91,18 +92,18 @@ var notate = function (validMoves, gameClient) {
 			// check for potential promotion
 			isPromotion =
 				(sq.rank === 8 || sq.rank === 1) &&
-				p.type === piece.PieceType.Pawn;
+				p.type === PieceType.Pawn;
 
 			// squares with pawns
-			if (sq.piece && p.type === piece.PieceType.Pawn) {
+			if (sq.piece && p.type === PieceType.Pawn) {
 				prefix = validMoves[i].src.file;
 			}
 
 			// squares with Bishop, Knight, Queen or Rook pieces
-			if (p.type === piece.PieceType.Bishop ||
-				p.type === piece.PieceType.Knight ||
-				p.type === piece.PieceType.Queen ||
-				p.type === piece.PieceType.Rook) {
+			if (p.type === PieceType.Bishop ||
+				p.type === PieceType.Knight ||
+				p.type === PieceType.Queen ||
+				p.type === PieceType.Rook) {
 				// if there is more than 1 of the specified piece on the board,
 				// can more than 1 land on the specified square?
 				movesForPiece = getValidMovesByPieceType(p.type, validMoves);
@@ -114,7 +115,7 @@ var notate = function (validMoves, gameClient) {
 			}
 
 			// squares with a King piece
-			if (p.type === piece.PieceType.King) {
+			if (p.type === PieceType.King) {
 				// look for castle left and castle right
 				if (validMoves[i].src.file === 'e' && sq.file === 'g') {
 					// fix for issue #13 - if PGN is specified should be letters, not numbers
@@ -280,16 +281,16 @@ AlgebraicGameClient.prototype.move = function (notation, isFuzzy) {
 			if (promo) {
 				switch (promo) {
 					case 'B':
-						p = piece.createBishop(side);
+						p = Piece.createBishop(side);
 						break;
 					case 'N':
-						p = piece.createKnight(side);
+						p = Piece.createKnight(side);
 						break;
 					case 'Q':
-						p = piece.createQueen(side);
+						p = Piece.createQueen(side);
 						break;
 					case 'R':
-						p = piece.createRook(side);
+						p = Piece.createRook(side);
 						break;
 				}
 

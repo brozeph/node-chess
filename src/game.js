@@ -6,9 +6,10 @@
 	could be used for storage, etc.
 */
 
+import { SideType } from './piece';
+
 var
 	crypto = require('crypto'),
-	piece = require('./piece.js'),
 	board = require('./board.js');
 
 // types
@@ -68,8 +69,8 @@ Game.prototype.getCurrentSide = function () {
 	'use strict';
 
 	return this.moveHistory.length % 2 === 0 ?
-			piece.SideType.White :
-			piece.SideType.Black;
+			SideType.White :
+			SideType.Black;
 };
 
 Game.prototype.getHashCode = function () {
@@ -83,7 +84,7 @@ Game.prototype.getHashCode = function () {
 		if (this.board.squares[i].piece !== null) {
 			sum.update(this.board.squares[i].file +
 				this.board.squares[i].rank +
-				(this.board.squares[i].piece.side === piece.SideType.White ? 'w' : 'b') +
+				(this.board.squares[i].piece.side === SideType.White ? 'w' : 'b') +
 				this.board.squares[i].piece.notation +
 				(i < (this.board.squares.length - 1) ? '-' : ''));
 		}

@@ -5,9 +5,9 @@
 	repetition and pawn promotion.
 */
 
-var
-	piece = require('./piece.js'),
-	boardValidation = require('./boardValidation.js');
+import { PieceType } from './piece';
+
+var boardValidation = require('./boardValidation.js');
 
 // base ctor
 var GameValidation = function (g) {
@@ -23,7 +23,7 @@ GameValidation.prototype.findKingSquare = function (side) {
 		squares = this.game.board.getSquares(side);
 
 	for (i = 0; i < squares.length; i++) {
-		if (squares[i].piece.type === piece.PieceType.King) {
+		if (squares[i].piece.type === PieceType.King) {
 			return squares[i];
 		}
 	}

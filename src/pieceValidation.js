@@ -10,9 +10,10 @@
 	board in its current state.
 */
 
+import { PieceType, SideType } from './piece';
+
 var
 	sys = require('util'),
-	piece = require('./piece.js'),
 	board = require('./board.js');
 
 // base ctor
@@ -53,7 +54,7 @@ PieceValidation.prototype.start = function (src, callback) {
 
 			while (currentSquare && i < r) {
 				block = currentSquare.piece !== null &&
-					(opt.piece.type === piece.PieceType.Pawn ||
+					(opt.piece.type === PieceType.Pawn ||
 						currentSquare.piece.side === opt.piece.side);
 				capture = (currentSquare.piece && !block);
 
@@ -76,7 +77,7 @@ PieceValidation.prototype.start = function (src, callback) {
 		// forward squares
 		if (this.allowForward) {
 			findMoveOptions(this.board, this.repeat,
-				opt.piece.side === piece.SideType.White ?
+				opt.piece.side === SideType.White ?
 						board.NeighborType.Above :
 						board.NeighborType.Below);
 		}
@@ -84,7 +85,7 @@ PieceValidation.prototype.start = function (src, callback) {
 		// backward squares
 		if (this.allowBackward) {
 			findMoveOptions(this.board, this.repeat,
-				opt.piece.side === piece.SideType.White ?
+				opt.piece.side === SideType.White ?
 						board.NeighborType.Below :
 						board.NeighborType.Above);
 		}
@@ -124,7 +125,7 @@ var BishopValidation = function (b) {
 	PieceValidation.call(this, b);
 
 	this.allowDiagonal = true;
-	this.type = piece.PieceType.Bishop;
+	this.type = PieceType.Bishop;
 	this.repeat = 8;
 };
 
@@ -141,7 +142,7 @@ var KingValidation = function (b) {
 	this.allowDiagonal = true;
 	this.allowForward = true;
 	this.allowHorizontal = true;
-	this.type = piece.PieceType.King;
+	this.type = PieceType.King;
 	this.repeat = 1;
 };
 
@@ -161,7 +162,7 @@ var KnightValidation = function (b) {
 	// base
 	PieceValidation.call(this, b);
 
-	this.type = piece.PieceType.Knight;
+	this.type = PieceType.Knight;
 	this.repeat = 1;
 };
 
@@ -248,7 +249,7 @@ var PawnValidation = function (b) {
 	PieceValidation.call(this, b);
 
 	this.allowForward = true;
-	this.type = piece.PieceType.Pawn;
+	this.type = PieceType.Pawn;
 	this.repeat = 1;
 };
 
@@ -262,11 +263,11 @@ PawnValidation.prototype.applySpecialValidation = function (opt) {
 	var
 		squares = [
 			this.board.getNeighborSquare(opt.origin,
-				opt.piece.side === piece.SideType.White ?
+				opt.piece.side === SideType.White ?
 						board.NeighborType.AboveLeft :
 						board.NeighborType.BelowLeft),
 			this.board.getNeighborSquare(opt.origin,
-				opt.piece.side === piece.SideType.White ?
+				opt.piece.side === SideType.White ?
 						board.NeighborType.AboveRight :
 						board.NeighborType.BelowRight)],
 		i = 0,
@@ -288,7 +289,7 @@ PawnValidation.prototype.applySpecialValidation = function (opt) {
 			opt.destSquares[0].piece === null) { // Fix for issue #1
 		sq = this.board.getNeighborSquare(
 			opt.destSquares[0],
-			opt.piece.side === piece.SideType.White ?
+			opt.piece.side === SideType.White ?
 					board.NeighborType.Above :
 					board.NeighborType.Below);
 
@@ -298,7 +299,7 @@ PawnValidation.prototype.applySpecialValidation = function (opt) {
 
 	// check for en passant
 	} else if (opt.origin.rank ===
-			(opt.piece.side === piece.SideType.White ? 5 : 4)) {
+			(opt.piece.side === SideType.White ? 5 : 4)) {
 		// get squares left & right of pawn
 		squares = [
 			this.board.getNeighborSquare(opt.origin, board.NeighborType.Left),
@@ -309,7 +310,7 @@ PawnValidation.prototype.applySpecialValidation = function (opt) {
 			// check for pawn on square
 			p = squares[i] ? squares[i].piece : null;
 			if (p &&
-					p.type === piece.PieceType.Pawn &&
+					p.type === PieceType.Pawn &&
 					p.side !== opt.piece.side &&
 					p.moveCount === 1 &&
 					this.board.lastMovedPiece === p) {
@@ -317,7 +318,7 @@ PawnValidation.prototype.applySpecialValidation = function (opt) {
 				opt.destSquares.push(
 					this.board.getNeighborSquare(
 						squares[i],
-						p.side === piece.SideType.Black ?
+						p.side === SideType.Black ?
 								board.NeighborType.Above :
 								board.NeighborType.Below));
 			}
@@ -336,7 +337,7 @@ var QueenValidation = function (b) {
 	this.allowDiagonal = true;
 	this.allowForward = true;
 	this.allowHorizontal = true;
-	this.type = piece.PieceType.Queen;
+	this.type = PieceType.Queen;
 	this.repeat = 8;
 };
 
@@ -352,7 +353,7 @@ var RookValidation = function (b) {
 	this.allowBackward = true;
 	this.allowForward = true;
 	this.allowHorizontal = true;
-	this.type = piece.PieceType.Rook;
+	this.type = PieceType.Rook;
 	this.repeat = 8;
 };
 
@@ -364,17 +365,17 @@ module.exports = {
 		'use strict';
 
 		switch (p) {
-			case piece.PieceType.Bishop:
+			case PieceType.Bishop:
 				return new BishopValidation(b);
-			case piece.PieceType.King:
+			case PieceType.King:
 				return new KingValidation(b);
-			case piece.PieceType.Knight:
+			case PieceType.Knight:
 				return new KnightValidation(b);
-			case piece.PieceType.Pawn:
+			case PieceType.Pawn:
 				return new PawnValidation(b);
-			case piece.PieceType.Queen:
+			case PieceType.Queen:
 				return new QueenValidation(b);
-			case piece.PieceType.Rook:
+			case PieceType.Rook:
 				return new RookValidation(b);
 			default:
 				return null;

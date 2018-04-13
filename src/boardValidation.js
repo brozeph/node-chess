@@ -24,8 +24,9 @@
 	of what is possible anyway).
 */
 
+import { PieceType, SideType } from './piece';
+
 var
-	piece = require('./piece.js'),
 	board = require('./board.js'),
 	pieceValidation = require('./pieceValidation.js');
 
@@ -53,7 +54,7 @@ BoardValidation.prototype.evaluateCastle = function (validMoves) {
 			}
 		},
 		r = null,
-		rank = this.game.getCurrentSide() === piece.SideType.White ? 1 : 8,
+		rank = this.game.getCurrentSide() === SideType.White ? 1 : 8,
 		squares = {
 			'a' : this.board.getSquare('a', rank),
 			'b' : this.board.getSquare('b', rank),
@@ -67,13 +68,13 @@ BoardValidation.prototype.evaluateCastle = function (validMoves) {
 
 	// is king eligible
 	if (squares.e.piece &&
-			squares.e.piece.type === piece.PieceType.King &&
+			squares.e.piece.type === PieceType.King &&
 			squares.e.piece.moveCount === 0 &&
 			!this.isSquareAttacked(squares.e)) {
 
 		// is left rook eligible
 		if (squares.a.piece &&
-				squares.a.piece.type === piece.PieceType.Rook &&
+				squares.a.piece.type === PieceType.Rook &&
 				squares.a.piece.moveCount === 0) {
 
 			// are the squares between king and rook clear
@@ -97,7 +98,7 @@ BoardValidation.prototype.evaluateCastle = function (validMoves) {
 
 		// is right rook eligible
 		if (squares.h.piece &&
-				squares.h.piece.type === piece.PieceType.Rook &&
+				squares.h.piece.type === PieceType.Rook &&
 				squares.h.piece.moveCount === 0) {
 
 			// are the squares between king and rook clear
@@ -138,7 +139,7 @@ BoardValidation.prototype.filterKingAttack = function (kingSquare, moves) {
 			r = this.board.move(moves[i].src, moves[i].squares[n], true);
 
 			// check if king is attacked
-			if (moves[i].squares[n].piece.type !== piece.PieceType.King) {
+			if (moves[i].squares[n].piece.type !== PieceType.King) {
 				isCheck = this.isSquareAttacked(kingSquare);
 			} else {
 				isCheck = this.isSquareAttacked(moves[i].squares[n]);
@@ -228,9 +229,9 @@ BoardValidation.prototype.isSquareAttacked = function (sq) {
 
 			if (currentSquare &&
 				currentSquare.piece &&
-				currentSquare.piece.type === piece.PieceType.Knight) {
+				currentSquare.piece.type === PieceType.Knight) {
 				pieceValidation
-					.create(piece.PieceType.Knight, b)
+					.create(PieceType.Knight, b)
 					.start(currentSquare, setAttacked(context));
 			}
 
@@ -285,11 +286,11 @@ BoardValidation.prototype.start = function (callback) {
 
 		for (i = 0; i < squares.length; i++) {
 			// set king to refer to later
-			if (squares[i].piece.type === piece.PieceType.King) {
+			if (squares[i].piece.type === PieceType.King) {
 				kingSquare = squares[i];
 			}
 
-			if (squares[i]) {
+			if (squares[i] && squares[i].piece) {
 				pieceValidation
 					.create(squares[i].piece.type, this.board)
 					.start(squares[i], setValidMoves(validMoves, squares[i]));

@@ -3,12 +3,12 @@
 	the squares it contains.
 */
 
+import { Piece, PieceType, SideType } from './piece';
 import { Square } from './square';
 
 var
 	EventEmitter = require('events').EventEmitter,
-	sys = require('util'),
-	piece = require('./piece.js');
+	sys = require('util');
 
 // types
 var NeighborType = {
@@ -190,10 +190,10 @@ Board.prototype.move = function (src, dest, n) {
 			};
 
 		dest.piece = p;
-		move.castle = p.type === piece.PieceType.King &&
+		move.castle = p.type === PieceType.King &&
 			p.moveCount === 0 &&
 			(move.postSquare.file === 'g' || move.postSquare.file === 'c');
-		move.enPassant = p.type === piece.PieceType.Pawn &&
+		move.enPassant = p.type === PieceType.Pawn &&
 			move.capturedPiece === null &&
 			move.postSquare.file !== move.prevSquare.file;
 		move.prevSquare.piece = null;
@@ -272,29 +272,29 @@ module.exports = {
 
 			if (r === 1 || r === 8) { // Named pieces
 				if (f === 0 || f === 7) { // Rookage
-					sq.piece = piece.createRook(
-						r === 1 ? piece.SideType.White : piece.SideType.Black
+					sq.piece = Piece.createRook(
+						r === 1 ? SideType.White : SideType.Black
 					);
 				} else if (f === 1 || f === 6) { // Knights
-					sq.piece = piece.createKnight(
-						r === 1 ? piece.SideType.White : piece.SideType.Black
+					sq.piece = Piece.createKnight(
+						r === 1 ? SideType.White : SideType.Black
 					);
 				} else if (f === 2 || f === 5) { // Bish's
-					sq.piece = piece.createBishop(
-						r === 1 ? piece.SideType.White : piece.SideType.Black
+					sq.piece = Piece.createBishop(
+						r === 1 ? SideType.White : SideType.Black
 					);
 				} else if (f === 3) {
-					sq.piece = piece.createQueen(
-						r === 1 ? piece.SideType.White : piece.SideType.Black
+					sq.piece = Piece.createQueen(
+						r === 1 ? SideType.White : SideType.Black
 					);
 				} else {
-					sq.piece = piece.createKing(
-						r === 1 ? piece.SideType.White : piece.SideType.Black
+					sq.piece = Piece.createKing(
+						r === 1 ? SideType.White : SideType.Black
 					);
 				}
 			} else if (r === 2 || r === 7) { // Pawns
-				sq.piece = piece.createPawn(
-					r === 2 ? piece.SideType.White : piece.SideType.Black
+				sq.piece = Piece.createPawn(
+					r === 2 ? SideType.White : SideType.Black
 				);
 			}
 		}

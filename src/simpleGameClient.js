@@ -1,5 +1,7 @@
-var piece = require('./piece.js'),
-	game = require('./game.js'),
+import { Piece } from './piece';
+
+var
+	Game = require('./game.js'),
 	gameValidation = require('./gameValidation.js');
 
 // private methods
@@ -48,66 +50,75 @@ var updateGameClient = function (gameClient) {
 };
 
 // ctor
-var SimpleGameClient = function (g) {
-	'use strict';
-
-	this.isCheck = false;
-	this.isCheckmate = false;
-	this.isRepetition = false;
-	this.isStalemate = false;
-	this.game = g;
-	this.validMoves = [];
-	this.validation = gameValidation.create(this.game);
-};
-
-SimpleGameClient.prototype.getStatus = function (forceUpdate) {
-	'use strict';
-
-	if (forceUpdate) {
-		updateGameClient(this);
+export class SimpleGameClient {
+	constructor (game) {
+		this.isCheck = false;
+		this.isCheckmate = false;
+		this.isRepetition = false;
+		this.isStalemate = false;
+		this.game = game;
+		this.validMoves = [];
+		this.validation = gameValidation.create(this.game);
 	}
 
-	return {
-		board : this.game.board,
-		isCheck : this.isCheck,
-		isCheckmate : this.isCheckmate,
-		isRepetition : this.isRepetition,
-		isStalemate : this.isStalemate,
-		validMoves : this.validMoves
-	};
-};
+	static create () {
+		let
+			game = Game.create(),
+			gameClient = new SimpleGameClient(game);
 
-SimpleGameClient.prototype.move = function (src, dest, promo) {
-	'use strict';
+		updateGameClient(gameClient);
 
-	var move = null,
-		p = null,
-		side = this.game.getCurrentSide();
+		return gameClient;
+	}
+
+	getStatus (forceUpdate) {
+		if (forceUpdate) {
+			updateGameClient(this);
+		}
+
+		return {
+			board : this.game.board,
+			isCheck : this.isCheck,
+			isCheckmate : this.isCheckmate,
+			isRepetition : this.isRepetition,
+			isStalemate : this.isStalemate,
+			validMoves : this.validMoves
+		};
+	}
+
+	move (src, dest, promo) {
+		let
+			move = null,
+			side = this.game.getCurrentSide();
 
 	if (src && dest && isMoveValid(src, dest, this.validMoves)) {
-
 		move = this.game.board.move(src, dest);
 
 		if (move) {
-			// apply pawn promotion
+			// apply pawn promotion if applicable
 			if (promo) {
+				let piece;
+
 				switch (promo) {
-				case 'B':
-					p = piece.createBishop(side);
-					break;
-				case 'N':
-					p = piece.createKnight(side);
-					break;
-				case 'Q':
-					p = piece.createQueen(side);
-					break;
-				case 'R':
-					p = piece.createRook(side);
-					break;
+					case 'B':
+						piece = Piece.createBishop(side);
+						break;
+					case 'N':
+						piece = Piece.createKnight(side);
+						break;
+					case 'Q':
+						piece = Piece.createQueen(side);
+						break;
+					case 'R':
+						piece = Piece.createRook(side);
+						break;
+					default:
+						piece = null;
+						break;
 				}
 
-				if (p) {
-					this.game.board.promote(move.move.postSquare, p);
+				if (piece) {
+					this.game.board.promote(move.move.postSquare, piece);
 					/*
 					p.moveCount = move.move.postSquare.piece.moveCount;
 					move.move.postSquare.piece = p;
@@ -120,18 +131,8 @@ SimpleGameClient.prototype.move = function (src, dest, promo) {
 		}
 	}
 
-	throw 'Move is invalid (' + src + ' to ' + dest + ')';
-};
-
-// exports
-module.exports = {
-	create : function () {
-		'use strict';
-
-		var g = game.create(),
-			gc = new SimpleGameClient(g);
-
-		updateGameClient(gc);
-		return gc;
+	throw new Error(`Move is invalid (${ src } to ${ dest })`);
 	}
-};
+}
+
+export default { SimpleGameClient };
