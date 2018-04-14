@@ -13,371 +13,336 @@
 import { NeighborType } from './board';
 import { PieceType, SideType } from './piece';
 
-var sys = require('util');
-
-// base ctor
-var PieceValidation = function (b) {
-	'use strict';
-
-	this.allowBackward = false;
-	this.allowDiagonal = false;
-	this.allowForward = false;
-	this.allowHorizontal = false;
-	this.board = b;
-	this.type = null;
-	this.repeat = 0;
-};
-
-// methods
-PieceValidation.prototype.applySpecialValidation = function () {
-	'use strict';
-	// do nothing...
-};
-
-PieceValidation.prototype.start = function (src, callback) {
-	'use strict';
-
-	var
-		err = null,
-		opt = {
-			destSquares : [],
-			piece : src ? src.piece : null,
-			origin : src
-		},
-		findMoveOptions = function (b, r, n) {
-			var
-				block = false,
-				capture = false,
-				currentSquare = b.getNeighborSquare(opt.origin, n),
-				i = 0;
-
-			while (currentSquare && i < r) {
-				block = currentSquare.piece !== null &&
-					(opt.piece.type === PieceType.Pawn ||
-						currentSquare.piece.side === opt.piece.side);
-				capture = (currentSquare.piece && !block);
-
-				if (!block) {
-					opt.destSquares.push(currentSquare);
-				}
-
-				if (capture || block) {
-					currentSquare = null;
-				} else {
-					currentSquare = b.getNeighborSquare(currentSquare, n);
-					i++;
-				}
-			}
-		};
-
-	if (!opt.piece || opt.piece.type !== this.type) {
-		err = 'piece is invalid';
-	} else if (this.board && opt.origin) {
-		// forward squares
-		if (this.allowForward) {
-			findMoveOptions(this.board, this.repeat,
-				opt.piece.side === SideType.White ?
-						NeighborType.Above :
-						NeighborType.Below);
-		}
-
-		// backward squares
-		if (this.allowBackward) {
-			findMoveOptions(this.board, this.repeat,
-				opt.piece.side === SideType.White ?
-						NeighborType.Below :
-						NeighborType.Above);
-		}
-
-		// horizontal squares
-		if (this.allowHorizontal) {
-			findMoveOptions(this.board, this.repeat, NeighborType.Left);
-			findMoveOptions(this.board, this.repeat, NeighborType.Right);
-		}
-
-		// diagonal squares
-		if (this.allowDiagonal) {
-			findMoveOptions(this.board, this.repeat, NeighborType.AboveLeft);
-			findMoveOptions(this.board, this.repeat, NeighborType.BelowRight);
-			findMoveOptions(this.board, this.repeat, NeighborType.BelowLeft);
-			findMoveOptions(this.board, this.repeat, NeighborType.AboveRight);
-		}
-
-		// apply additional validation logic
-		this.applySpecialValidation(opt);
-
-	} else {
-		err = 'board is invalid';
+export class PieceValidation {
+	constructor (board) {
+		this.allowBackward = false;
+		this.allowDiagonal = false;
+		this.allowForward = false;
+		this.allowHorizontal = false;
+		this.board = board;
+		this.type = null;
+		this.repeat = 0;
 	}
 
-	// callback
-	if (callback) {
-		callback(err, opt.destSquares);
-	}
-};
-
-// bishop Validation ctor
-var BishopValidation = function (b) {
-	'use strict';
-
-	// base
-	PieceValidation.call(this, b);
-
-	this.allowDiagonal = true;
-	this.type = PieceType.Bishop;
-	this.repeat = 8;
-};
-
-sys.inherits(BishopValidation, PieceValidation);
-
-// king Validation ctor
-var KingValidation = function (b) {
-	'use strict';
-
-	// base
-	PieceValidation.call(this, b);
-
-	this.allowBackward = true;
-	this.allowDiagonal = true;
-	this.allowForward = true;
-	this.allowHorizontal = true;
-	this.type = PieceType.King;
-	this.repeat = 1;
-};
-
-sys.inherits(KingValidation, PieceValidation);
-
-// methods
-KingValidation.prototype.applySpecialValidation = function () {
-	'use strict';
-
-	// check for castle
-};
-
-// knight Validation ctor
-var KnightValidation = function (b) {
-	'use strict';
-
-	// base
-	PieceValidation.call(this, b);
-
-	this.type = PieceType.Knight;
-	this.repeat = 1;
-};
-
-sys.inherits(KnightValidation, PieceValidation);
-
-// methods
-KnightValidation.prototype.applySpecialValidation = function (opt) {
-	'use strict';
-
-	// add knight move options
-	var
-		aboveLeft = this.board.getNeighborSquare(
-			opt.origin,
-			NeighborType.AboveLeft),
-		aboveRight = this.board.getNeighborSquare(
-			opt.origin,
-			NeighborType.AboveRight),
-		belowLeft = this.board.getNeighborSquare(
-			opt.origin,
-			NeighborType.BelowLeft),
-		belowRight = this.board.getNeighborSquare(
-			opt.origin,
-			NeighborType.BelowRight),
-		squares = [],
-		i = 0,
-		p = null;
-
-	if (aboveLeft) {
-		squares.push(this.board.getNeighborSquare(
-			aboveLeft,
-			NeighborType.Above));
-
-		squares.push(this.board.getNeighborSquare(
-			aboveLeft,
-			NeighborType.Left));
+	applySpecialValidation () {
+		// do nothing...
+		// overridden in the concrete validation classes
+		// where special logic is required
 	}
 
-	if (aboveRight) {
-		squares.push(this.board.getNeighborSquare(
-			aboveRight,
-			NeighborType.Above));
-
-		squares.push(this.board.getNeighborSquare(
-			aboveRight,
-			NeighborType.Right));
-	}
-
-	if (belowLeft) {
-		squares.push(this.board.getNeighborSquare(
-			belowLeft,
-			NeighborType.Below));
-
-		squares.push(this.board.getNeighborSquare(
-			belowLeft,
-			NeighborType.Left));
-	}
-
-	if (belowRight) {
-		squares.push(this.board.getNeighborSquare(
-			belowRight,
-			NeighborType.Below));
-
-		squares.push(this.board.getNeighborSquare(
-			belowRight,
-			NeighborType.Right));
-	}
-
-	for (i = 0; i < squares.length; i++) {
-		if (squares[i]) {
-			// check for enemy piece on square
-			p = squares[i] ? squares[i].piece : null;
-			if (!p || p.side !== opt.piece.side) {
-				opt.destSquares.push(squares[i]);
-			}
-		}
-	}
-};
-
-// pawn Validation ctor
-var PawnValidation = function (b) {
-	'use strict';
-
-	// base
-	PieceValidation.call(this, b);
-
-	this.allowForward = true;
-	this.type = PieceType.Pawn;
-	this.repeat = 1;
-};
-
-sys.inherits(PawnValidation, PieceValidation);
-
-// methods
-PawnValidation.prototype.applySpecialValidation = function (opt) {
-	'use strict';
-
-	// check for capture
-	var
-		squares = [
-			this.board.getNeighborSquare(opt.origin,
-				opt.piece.side === SideType.White ?
-						NeighborType.AboveLeft :
-						NeighborType.BelowLeft),
-			this.board.getNeighborSquare(opt.origin,
-				opt.piece.side === SideType.White ?
-						NeighborType.AboveRight :
-						NeighborType.BelowRight)],
-		i = 0,
-		sq = null,
-		p = null;
-
-	// check for capture
-	for (i = 0; i < squares.length; i++) {
-		// check for enemy piece on square
-		p = squares[i] ? squares[i].piece : null;
-		if (p && p.side !== opt.piece.side) {
-			opt.destSquares.push(squares[i]);
-		}
-	}
-
-	// check for double square first move
-	if (opt.piece.moveCount === 0 &&
-			opt.destSquares.length && // Fix for issue #15 (originally looked for length of 1)
-			opt.destSquares[0].piece === null) { // Fix for issue #1
-		sq = this.board.getNeighborSquare(
-			opt.destSquares[0],
-			opt.piece.side === SideType.White ?
-					NeighborType.Above :
-					NeighborType.Below);
-
-		if (!sq.piece) {
-			opt.destSquares.push(sq);
-		}
-
-	// check for en passant
-	} else if (opt.origin.rank ===
-			(opt.piece.side === SideType.White ? 5 : 4)) {
-		// get squares left & right of pawn
-		squares = [
-			this.board.getNeighborSquare(opt.origin, NeighborType.Left),
-			this.board.getNeighborSquare(opt.origin, NeighborType.Right)];
-		i = 0;
-
-		for (i = 0; i < squares.length; i++) {
-			// check for pawn on square
-			p = squares[i] ? squares[i].piece : null;
-			if (p &&
-					p.type === PieceType.Pawn &&
-					p.side !== opt.piece.side &&
-					p.moveCount === 1 &&
-					this.board.lastMovedPiece === p) {
-
-				opt.destSquares.push(
-					this.board.getNeighborSquare(
-						squares[i],
-						p.side === SideType.Black ?
-								NeighborType.Above :
-								NeighborType.Below));
-			}
-		}
-	}
-};
-
-// queen Validation ctor
-var QueenValidation = function (b) {
-	'use strict';
-
-	// base
-	PieceValidation.call(this, b);
-
-	this.allowBackward = true;
-	this.allowDiagonal = true;
-	this.allowForward = true;
-	this.allowHorizontal = true;
-	this.type = PieceType.Queen;
-	this.repeat = 8;
-};
-
-sys.inherits(QueenValidation, PieceValidation);
-
-// rook Validation ctor
-var RookValidation = function (b) {
-	'use strict';
-
-	// base
-	PieceValidation.call(this, b);
-
-	this.allowBackward = true;
-	this.allowForward = true;
-	this.allowHorizontal = true;
-	this.type = PieceType.Rook;
-	this.repeat = 8;
-};
-
-sys.inherits(RookValidation, PieceValidation);
-
-// exports
-module.exports = {
-	create : function (p, b) {
-		'use strict';
-
-		switch (p) {
+	static create (piece, board) {
+		switch (piece) {
 			case PieceType.Bishop:
-				return new BishopValidation(b);
+				return new BishopValidation(board);
 			case PieceType.King:
-				return new KingValidation(b);
+				return new KingValidation(board);
 			case PieceType.Knight:
-				return new KnightValidation(b);
+				return new KnightValidation(board);
 			case PieceType.Pawn:
-				return new PawnValidation(b);
+				return new PawnValidation(board);
 			case PieceType.Queen:
-				return new QueenValidation(b);
+				return new QueenValidation(board);
 			case PieceType.Rook:
-				return new RookValidation(b);
+				return new RookValidation(board);
 			default:
 				return null;
 		}
 	}
-};
+
+	start (src, callback) {
+		let
+			err = null,
+			opt = {
+				destSquares : [],
+				piece : src ? src.piece : null,
+				origin : src
+			},
+			findMoveOptions = function (b, r, n) {
+				var
+					block = false,
+					capture = false,
+					currentSquare = b.getNeighborSquare(opt.origin, n),
+					i = 0;
+
+				while (currentSquare && i < r) {
+					block = currentSquare.piece !== null &&
+						(opt.piece.type === PieceType.Pawn ||
+							currentSquare.piece.side === opt.piece.side);
+					capture = (currentSquare.piece && !block);
+
+					if (!block) {
+						opt.destSquares.push(currentSquare);
+					}
+
+					if (capture || block) {
+						currentSquare = null;
+					} else {
+						currentSquare = b.getNeighborSquare(currentSquare, n);
+						i++;
+					}
+				}
+			};
+
+		if (!opt.piece || opt.piece.type !== this.type) {
+			err = 'piece is invalid';
+		} else if (this.board && opt.origin) {
+			// forward squares
+			if (this.allowForward) {
+				findMoveOptions(this.board, this.repeat,
+					opt.piece.side === SideType.White ?
+							NeighborType.Above :
+							NeighborType.Below);
+			}
+
+			// backward squares
+			if (this.allowBackward) {
+				findMoveOptions(this.board, this.repeat,
+					opt.piece.side === SideType.White ?
+							NeighborType.Below :
+							NeighborType.Above);
+			}
+
+			// horizontal squares
+			if (this.allowHorizontal) {
+				findMoveOptions(this.board, this.repeat, NeighborType.Left);
+				findMoveOptions(this.board, this.repeat, NeighborType.Right);
+			}
+
+			// diagonal squares
+			if (this.allowDiagonal) {
+				findMoveOptions(this.board, this.repeat, NeighborType.AboveLeft);
+				findMoveOptions(this.board, this.repeat, NeighborType.BelowRight);
+				findMoveOptions(this.board, this.repeat, NeighborType.BelowLeft);
+				findMoveOptions(this.board, this.repeat, NeighborType.AboveRight);
+			}
+
+			// apply additional validation logic
+			this.applySpecialValidation(opt);
+
+		} else {
+			err = 'board is invalid';
+		}
+
+		// callback
+		if (callback) {
+			return callback(err, opt.destSquares);
+		}
+	}
+}
+
+export class BishopValidation extends PieceValidation {
+	constructor (board) {
+		super(board);
+
+		// base validation properties
+		this.allowDiagonal = true;
+		this.type = PieceType.Bishop;
+		this.repeat = 8;
+	}
+}
+
+export class KingValidation extends PieceValidation {
+	constructor (board) {
+		super(board);
+
+		// base validation properties
+		this.allowBackward = true;
+		this.allowDiagonal = true;
+		this.allowForward = true;
+		this.allowHorizontal = true;
+		this.type = PieceType.King;
+		this.repeat = 1;
+	}
+
+	applySpecialValidation () {
+		// check for castle?
+	}
+}
+
+export class KnightValidation extends PieceValidation {
+	constructor (board) {
+		super(board);
+
+		// base validation properties
+		this.type = PieceType.Knight;
+		this.repeat = 1;
+	}
+
+	applySpecialValidation (opt) {
+		// add knight move options
+		let
+			aboveLeft = this.board.getNeighborSquare(
+				opt.origin,
+				NeighborType.AboveLeft),
+			aboveRight = this.board.getNeighborSquare(
+				opt.origin,
+				NeighborType.AboveRight),
+			belowLeft = this.board.getNeighborSquare(
+				opt.origin,
+				NeighborType.BelowLeft),
+			belowRight = this.board.getNeighborSquare(
+				opt.origin,
+				NeighborType.BelowRight),
+			squares = [],
+			i = 0,
+			p = null;
+
+		if (aboveLeft) {
+			squares.push(this.board.getNeighborSquare(
+				aboveLeft,
+				NeighborType.Above));
+
+			squares.push(this.board.getNeighborSquare(
+				aboveLeft,
+				NeighborType.Left));
+		}
+
+		if (aboveRight) {
+			squares.push(this.board.getNeighborSquare(
+				aboveRight,
+				NeighborType.Above));
+
+			squares.push(this.board.getNeighborSquare(
+				aboveRight,
+				NeighborType.Right));
+		}
+
+		if (belowLeft) {
+			squares.push(this.board.getNeighborSquare(
+				belowLeft,
+				NeighborType.Below));
+
+			squares.push(this.board.getNeighborSquare(
+				belowLeft,
+				NeighborType.Left));
+		}
+
+		if (belowRight) {
+			squares.push(this.board.getNeighborSquare(
+				belowRight,
+				NeighborType.Below));
+
+			squares.push(this.board.getNeighborSquare(
+				belowRight,
+				NeighborType.Right));
+		}
+
+		for (i = 0; i < squares.length; i++) {
+			if (squares[i]) {
+				// check for enemy piece on square
+				p = squares[i] ? squares[i].piece : null;
+				if (!p || p.side !== opt.piece.side) {
+					opt.destSquares.push(squares[i]);
+				}
+			}
+		}
+	}
+}
+
+export class PawnValidation extends PieceValidation {
+	constructor (board) {
+		super(board);
+
+		// base validation properties
+		this.allowForward = true;
+		this.type = PieceType.Pawn;
+		this.repeat = 1;
+	}
+
+	applySpecialValidation (opt) {
+		// check for capture
+		let
+			squares = [
+				this.board.getNeighborSquare(opt.origin,
+					opt.piece.side === SideType.White ?
+							NeighborType.AboveLeft :
+							NeighborType.BelowLeft),
+				this.board.getNeighborSquare(opt.origin,
+					opt.piece.side === SideType.White ?
+							NeighborType.AboveRight :
+							NeighborType.BelowRight)],
+			i = 0,
+			sq = null,
+			p = null;
+
+		// check for capture
+		for (i = 0; i < squares.length; i++) {
+			// check for enemy piece on square
+			p = squares[i] ? squares[i].piece : null;
+			if (p && p.side !== opt.piece.side) {
+				opt.destSquares.push(squares[i]);
+			}
+		}
+
+		// check for double square first move
+		if (opt.piece.moveCount === 0 &&
+				opt.destSquares.length && // Fix for issue #15 (originally looked for length of 1)
+				opt.destSquares[0].piece === null) { // Fix for issue #1
+			sq = this.board.getNeighborSquare(
+				opt.destSquares[0],
+				opt.piece.side === SideType.White ?
+						NeighborType.Above :
+						NeighborType.Below);
+
+			if (!sq.piece) {
+				opt.destSquares.push(sq);
+			}
+
+		// check for en passant
+		} else if (opt.origin.rank ===
+				(opt.piece.side === SideType.White ? 5 : 4)) {
+			// get squares left & right of pawn
+			squares = [
+				this.board.getNeighborSquare(opt.origin, NeighborType.Left),
+				this.board.getNeighborSquare(opt.origin, NeighborType.Right)];
+			i = 0;
+
+			for (i = 0; i < squares.length; i++) {
+				// check for pawn on square
+				p = squares[i] ? squares[i].piece : null;
+				if (p &&
+						p.type === PieceType.Pawn &&
+						p.side !== opt.piece.side &&
+						p.moveCount === 1 &&
+						this.board.lastMovedPiece === p) {
+
+					opt.destSquares.push(
+						this.board.getNeighborSquare(
+							squares[i],
+							p.side === SideType.Black ?
+									NeighborType.Above :
+									NeighborType.Below));
+				}
+			}
+		}
+	}
+}
+
+export class QueenValidation extends PieceValidation {
+	constructor (board) {
+		super(board);
+
+		// base validation properties
+		this.allowBackward = true;
+		this.allowDiagonal = true;
+		this.allowForward = true;
+		this.allowHorizontal = true;
+		this.type = PieceType.Queen;
+		this.repeat = 8;
+	}
+}
+
+export class RookValidation extends PieceValidation {
+	constructor (board) {
+		super(board);
+
+		// base validation properties
+		this.allowBackward = true;
+		this.allowForward = true;
+		this.allowHorizontal = true;
+		this.type = PieceType.Rook;
+		this.repeat = 8;
+	}
+}
+
+export default { PieceValidation };

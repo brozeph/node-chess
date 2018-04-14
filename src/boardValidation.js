@@ -26,8 +26,7 @@
 
 import { NeighborType } from './board';
 import { PieceType, SideType } from './piece';
-
-var pieceValidation = require('./pieceValidation.js');
+import { PieceValidation } from './pieceValidation';
 
 // base ctor
 var BoardValidation = function (g) {
@@ -204,7 +203,7 @@ BoardValidation.prototype.isSquareAttacked = function (sq) {
 
 				if (context.attacked) {
 					// verify that the square is actually attacked
-					pieceValidation
+					PieceValidation
 						.create(context.piece.type, b)
 						.start(currentSquare, setAttacked(context));
 					currentSquare = null;
@@ -229,7 +228,7 @@ BoardValidation.prototype.isSquareAttacked = function (sq) {
 			if (currentSquare &&
 				currentSquare.piece &&
 				currentSquare.piece.type === PieceType.Knight) {
-				pieceValidation
+				PieceValidation
 					.create(PieceType.Knight, b)
 					.start(currentSquare, setAttacked(context));
 			}
@@ -290,7 +289,7 @@ BoardValidation.prototype.start = function (callback) {
 			}
 
 			if (squares[i] && squares[i].piece) {
-				pieceValidation
+				PieceValidation
 					.create(squares[i].piece.type, this.board)
 					.start(squares[i], setValidMoves(validMoves, squares[i]));
 			}

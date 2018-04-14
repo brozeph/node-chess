@@ -2,8 +2,7 @@
 
 import { Board } from '../../src/board';
 import { Piece, PieceType } from '../../src/piece';
-
-const pieceValidation = require('../../src/pieceValidation');
+import { PieceValidation } from '../../src/pieceValidation';
 
 describe('PieceValidation', function() {
 	'use strict';
@@ -24,7 +23,7 @@ describe('PieceValidation', function() {
 	it('should throw exception if validation is created for wrong piece', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Bishop, b);
+			pv = PieceValidation.create(PieceType.Bishop, b);
 
 		pv.start(b.getSquare('a', 2), function(err) {
 			assert.strictEqual(err, 'piece is invalid');
@@ -39,7 +38,7 @@ describe('PieceValidation', function() {
 	it('should create bishop validation correctly', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Bishop, b);
+			pv = PieceValidation.create(PieceType.Bishop, b);
 
 		assert.strictEqual(pv.allowDiagonal, true);
 		assert.strictEqual(pv.type, PieceType.Bishop);
@@ -50,7 +49,7 @@ describe('PieceValidation', function() {
 	it('should properly represent bishop moves when blocked', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Bishop, b);
+			pv = PieceValidation.create(PieceType.Bishop, b);
 
 		pv.start(b.getSquare('c', 1), function(err, squares) {
 			assert.strictEqual(err, null);
@@ -62,7 +61,7 @@ describe('PieceValidation', function() {
 	it('should properly represent white bishop moves when not blocked', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Bishop, b);
+			pv = PieceValidation.create(PieceType.Bishop, b);
 
 		b.move(b.getSquare('d', 2), b.getSquare('d', 3));
 		b.move(b.getSquare('c', 1), b.getSquare('e', 3));
@@ -80,7 +79,7 @@ describe('PieceValidation', function() {
 	it('should properly represent black bishop moves when not blocked', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Bishop, b);
+			pv = PieceValidation.create(PieceType.Bishop, b);
 
 		b.move(b.getSquare('d', 7), b.getSquare('d', 6));
 		b.move(b.getSquare('c', 8), b.getSquare('e', 6));
@@ -98,7 +97,7 @@ describe('PieceValidation', function() {
 	it('should properly create king validation', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.King, b);
+			pv = PieceValidation.create(PieceType.King, b);
 
 		assert.strictEqual(pv.allowForward, true);
 		assert.strictEqual(pv.allowBackward, true);
@@ -112,7 +111,7 @@ describe('PieceValidation', function() {
 	it('should properly create knight validation', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Knight, b);
+			pv = PieceValidation.create(PieceType.Knight, b);
 
 		assert.strictEqual(pv.type, PieceType.Knight);
 		assert.strictEqual(pv.repeat, 1);
@@ -122,7 +121,7 @@ describe('PieceValidation', function() {
 	it('should properly represent white knight first moves', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Knight, b);
+			pv = PieceValidation.create(PieceType.Knight, b);
 
 		pv.start(b.getSquare('b', 1), function(err, squares) {
 			assert.strictEqual(err, null);
@@ -136,7 +135,7 @@ describe('PieceValidation', function() {
 	it('should properly represent black knight first moves', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Knight, b);
+			pv = PieceValidation.create(PieceType.Knight, b);
 
 		pv.start(b.getSquare('b', 8), function(err, squares) {
 			assert.strictEqual(err, null);
@@ -150,7 +149,7 @@ describe('PieceValidation', function() {
 	it('should properly represent white knight second moves', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Knight, b);
+			pv = PieceValidation.create(PieceType.Knight, b);
 
 		b.move(b.getSquare('b', 1), b.getSquare('c', 3));
 
@@ -169,7 +168,7 @@ describe('PieceValidation', function() {
 	it('should properly create pawn validation', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Pawn, b);
+			pv = PieceValidation.create(PieceType.Pawn, b);
 
 		assert.strictEqual(pv.allowForward, true);
 		assert.strictEqual(pv.type, PieceType.Pawn);
@@ -180,7 +179,7 @@ describe('PieceValidation', function() {
 	it('should properly represent white pawn first moves', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Pawn, b);
+			pv = PieceValidation.create(PieceType.Pawn, b);
 
 		pv.start(b.getSquare('a', 2), function(err, squares) {
 			assert.strictEqual(err, null);
@@ -193,7 +192,7 @@ describe('PieceValidation', function() {
 	it('should properly represent white pawn second move', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Pawn, b);
+			pv = PieceValidation.create(PieceType.Pawn, b);
 
 		b.move(b.getSquare('a', 2), b.getSquare('a', 3));
 
@@ -211,7 +210,7 @@ describe('PieceValidation', function() {
 	it('should properly represent black pawn first moves', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Pawn, b);
+			pv = PieceValidation.create(PieceType.Pawn, b);
 
 		pv.start(b.getSquare('a', 7), function(err, squares) {
 			if (err) {
@@ -227,7 +226,7 @@ describe('PieceValidation', function() {
 	it('should properly represent black pawn second move', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Pawn, b);
+			pv = PieceValidation.create(PieceType.Pawn, b);
 
 		b.move(b.getSquare('a', 7), b.getSquare('a', 6));
 
@@ -245,7 +244,7 @@ describe('PieceValidation', function() {
 	it('should properly represent pawn moves when blocked', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Pawn, b);
+			pv = PieceValidation.create(PieceType.Pawn, b);
 
 		b.move(b.getSquare('e', 2), b.getSquare('e', 4));
 		b.move(b.getSquare('e', 7), b.getSquare('e', 6));
@@ -264,7 +263,7 @@ describe('PieceValidation', function() {
 	it('should properly represent en-passant as available move', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Pawn, b);
+			pv = PieceValidation.create(PieceType.Pawn, b);
 
 		// turn 1
 		b.move(b.getSquare('e', 2), b.getSquare('e', 4));
@@ -289,7 +288,7 @@ describe('PieceValidation', function() {
 	it('should properly not allow en-passant as available move', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Pawn, b);
+			pv = PieceValidation.create(PieceType.Pawn, b);
 
 		// turn 1
 		b.move(b.getSquare('e', 2), b.getSquare('e', 4));
@@ -316,7 +315,7 @@ describe('PieceValidation', function() {
 	it('should properly allow pawn capture to the right moves', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Pawn, b);
+			pv = PieceValidation.create(PieceType.Pawn, b);
 
 		b.move(b.getSquare('e', 2), b.getSquare('e', 4));
 		b.move(b.getSquare('f', 7), b.getSquare('f', 6));
@@ -337,7 +336,7 @@ describe('PieceValidation', function() {
 	it('should properly allow pawn capture to the left moves', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Pawn, b);
+			pv = PieceValidation.create(PieceType.Pawn, b);
 
 		b.move(b.getSquare('e', 2), b.getSquare('e', 4));
 		b.move(b.getSquare('d', 7), b.getSquare('d', 6));
@@ -358,7 +357,7 @@ describe('PieceValidation', function() {
 	it('should properly create queen validation', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Queen, b);
+			pv = PieceValidation.create(PieceType.Queen, b);
 
 		assert.strictEqual(pv.allowForward, true);
 		assert.strictEqual(pv.allowBackward, true);
@@ -372,7 +371,7 @@ describe('PieceValidation', function() {
 	it('should properly allow queen moves across ranks and files', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Queen, b);
+			pv = PieceValidation.create(PieceType.Queen, b);
 
 		b.move(b.getSquare('e', 2), b.getSquare('e', 5));
 		b.move(b.getSquare('d', 1), b.getSquare('f', 3));
@@ -394,7 +393,7 @@ describe('PieceValidation', function() {
 	it('should properly create rook validation', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Rook, b);
+			pv = PieceValidation.create(PieceType.Rook, b);
 
 		assert.strictEqual(pv.allowForward, true);
 		assert.strictEqual(pv.allowBackward, true);
@@ -407,7 +406,7 @@ describe('PieceValidation', function() {
 	it('should properly represent blocked white rook moves', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Rook, b);
+			pv = PieceValidation.create(PieceType.Rook, b);
 
 		pv.start(b.getSquare('a', 1), function(err, squares) {
 			if (err) {
@@ -423,7 +422,7 @@ describe('PieceValidation', function() {
 	it('should properly represent white rook moves when not blocked', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Rook, b);
+			pv = PieceValidation.create(PieceType.Rook, b);
 
 		b.move(b.getSquare('a', 2), b.getSquare('a', 4));
 		b.move(b.getSquare('a', 1), b.getSquare('a', 3));
@@ -452,7 +451,7 @@ describe('PieceValidation', function() {
 	it('should properly represent black rook moves when not blocked', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Rook, b);
+			pv = PieceValidation.create(PieceType.Rook, b);
 
 			b.move(b.getSquare('a', 7), b.getSquare('a', 5));
 			b.move(b.getSquare('a', 8), b.getSquare('a', 6));
@@ -481,7 +480,7 @@ describe('PieceValidation', function() {
 	it('should properly represent rook moves including captures', function() {
 		let
 			b = Board.create(),
-			pv = pieceValidation.create(PieceType.Rook, b);
+			pv = PieceValidation.create(PieceType.Rook, b);
 
 		// kill the white pawn in-front of the rook
 		b.getSquare('a', 2).piece = null;
