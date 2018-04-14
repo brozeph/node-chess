@@ -1,7 +1,7 @@
 /* eslint no-magic-numbers:0 */
 
 import { Board } from '../../src/board';
-import { Piece, PieceType } from '../../src/piece';
+import { PieceType } from '../../src/piece';
 import { PieceValidation } from '../../src/pieceValidation';
 
 describe('PieceValidation', function() {
