@@ -2,7 +2,7 @@
 ==================
 
 	* adding in ability to determine pieces that put King in check (#22)
-	* merging pull request from @Piterden (simplified Regex)
+	* merging pull request from @Piterden (improved Regex)
 	* moving to eslint and Babel compliant build and test tasks
 
 0.2.8 / 2016-11-18

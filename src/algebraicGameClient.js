@@ -232,7 +232,7 @@ export class AlgebraicGameClient {
 	move (notation, isFuzzy) {
 		let
 			move = null,
-			notationRegex = /[BKQNR]?[a-h]?[1-8]?x?[a-h][1-8]/,
+			notationRegex = /^[BKQNR]?[a-h]?[1-8]?[x-]?[a-h][1-8][+#]?$/,
 			p = null,
 			promo = '',
 			side = this.game.getCurrentSide();
