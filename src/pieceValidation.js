@@ -249,6 +249,7 @@ export class PawnValidation extends PieceValidation {
 		this.repeat = 1;
 	}
 
+	/* eslint no-magic-numbers:0 */
 	applySpecialValidation (opt) {
 		// check for capture
 		let

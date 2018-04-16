@@ -43,6 +43,7 @@ export class Board extends EventEmitter {
 			r = 0,
 			sq = null;
 
+		/* eslint no-magic-numbers:0 */
 		for (i = 0; i < 64; i++) {
 			f = Math.floor(i % 8);
 			r = Math.floor(i / 8) + 1;
@@ -83,8 +84,6 @@ export class Board extends EventEmitter {
 	}
 
 	getNeighborSquare (sq, n) {
-		'use strict';
-
 		if (sq && n) {
 			// validate boundaries of board
 			if (sq.file === 'a' && (n === NeighborType.AboveLeft ||
@@ -112,7 +111,8 @@ export class Board extends EventEmitter {
 			}
 
 			// validate file
-			var fIndex = 'abcdefgh'.indexOf(sq.file),
+			let
+				fIndex = 'abcdefgh'.indexOf(sq.file),
 				i = 0;
 
 			if (fIndex !== -1 && sq.rank > 0 && sq.rank < 9) {
@@ -128,8 +128,6 @@ export class Board extends EventEmitter {
 	}
 
 	getSquare (f, r) {
-		'use strict';
-
 		// check for shorthand
 		if (typeof f === 'string' && f.length === 2 && !r) {
 			r = parseInt(f.charAt(1), 10);
@@ -137,7 +135,8 @@ export class Board extends EventEmitter {
 		}
 
 		// validate file
-		var fIndex = 'abcdefgh'.indexOf(f),
+		let
+			fIndex = 'abcdefgh'.indexOf(f),
 			i = 0;
 
 		if (fIndex !== -1 && r > 0 && r < 9) {
@@ -152,9 +151,8 @@ export class Board extends EventEmitter {
 	}
 
 	getSquares (side) {
-		'use strict';
-
-		var list = [],
+		let
+			list = [],
 			i = 0;
 
 		for (i = 0; i < this.squares.length; i++) {
@@ -168,8 +166,6 @@ export class Board extends EventEmitter {
 	}
 
 	move (src, dest, n) {
-		'use strict';
-
 		if (typeof src === 'string' &&
 				src.length === 2) {
 			src = this.getSquare(src);
@@ -180,16 +176,17 @@ export class Board extends EventEmitter {
 			dest = this.getSquare(dest);
 		}
 
-		var simulate = false;
+		let simulate = false;
 
 		if (typeof n === 'boolean') {
 			simulate = n;
-			n = undefined;
+			n = null;
 		}
 
 		if (src && src.file && src.rank &&
 				dest && dest.file && dest.rank) {
-			var move = {
+			let
+				move = {
 					algebraic : n,
 					capturedPiece : dest.piece,
 					castle : false,
@@ -271,15 +268,13 @@ export class Board extends EventEmitter {
 			}
 
 			return {
-				move : move,
+				move,
 				undo : undo(this, move, simulate)
 			};
 		}
 	}
 
 	promote (sq, p) {
-		'use strict';
-
 		// update move count and last piece
 		p.moveCount = sq.piece.moveCount;
 		this.lastMovedPiece = p;
