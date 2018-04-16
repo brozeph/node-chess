@@ -1,13 +1,11 @@
 import { Game } from './game';
+import { GameValidation } from './gameValidation';
 import { Piece } from './piece';
 
-var gameValidation = require('./gameValidation.js');
-
 // private methods
-var isMoveValid = function (src, dest, validMoves) {
-	'use strict';
-
-	var i = 0,
+function isMoveValid (src, dest, validMoves) {
+	let
+		i = 0,
 		isFound = function (expr, sq) {
 			return ((typeof expr === 'string' && sq.file + sq.rank === expr) ||
 				(expr.rank && expr.file &&
@@ -30,12 +28,10 @@ var isMoveValid = function (src, dest, validMoves) {
 	}
 
 	return false;
-};
+}
 
-var updateGameClient = function (gameClient) {
-	'use strict';
-
-	gameClient.validation.start(function (err, result) {
+function updateGameClient (gameClient) {
+	return gameClient.validation.start(function (err, result) {
 		if (err) {
 			throw new Error(err);
 		}
@@ -46,7 +42,7 @@ var updateGameClient = function (gameClient) {
 		gameClient.isStalemate = result.isStalemate;
 		gameClient.validMoves = result.validMoves;
 	});
-};
+}
 
 // ctor
 export class SimpleGameClient {
@@ -57,7 +53,7 @@ export class SimpleGameClient {
 		this.isStalemate = false;
 		this.game = game;
 		this.validMoves = [];
-		this.validation = gameValidation.create(this.game);
+		this.validation = GameValidation.create(this.game);
 	}
 
 	static create () {

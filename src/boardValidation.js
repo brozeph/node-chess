@@ -28,292 +28,289 @@ import { NeighborType } from './board';
 import { PieceType, SideType } from './piece';
 import { PieceValidation } from './pieceValidation';
 
-// base ctor
-var BoardValidation = function (g) {
-	'use strict';
+export class BoardValidation {
+	constructor (game) {
+		this.board = game ? game.board : null;
+		this.game = game;
+	}
 
-	this.board = g ? g.board : null;
-	this.game = g;
-};
+	static create (game) {
+		return new BoardValidation(game);
+	}
 
-// methods
-// add castle moves to king's valid squares if appropriate
-BoardValidation.prototype.evaluateCastle = function (validMoves) {
-	'use strict';
+	evaluateCastle (validMoves) {
+		let
+			getValidSquares = (sq) => {
+				let i = 0;
 
-	var
-		getValidSquares = function (sq) {
-			var i = 0;
-
-			for (i = 0; i < validMoves.length; i++) {
-				if (validMoves[i].src === sq) {
-					return validMoves[i].squares;
-				}
-			}
-		},
-		r = null,
-		rank = this.game.getCurrentSide() === SideType.White ? 1 : 8,
-		squares = {
-			'a' : this.board.getSquare('a', rank),
-			'b' : this.board.getSquare('b', rank),
-			'c' : this.board.getSquare('c', rank),
-			'd' : this.board.getSquare('d', rank),
-			'e' : this.board.getSquare('e', rank),
-			'f' : this.board.getSquare('f', rank),
-			'g' : this.board.getSquare('g', rank),
-			'h' : this.board.getSquare('h', rank)
-		};
-
-	// is king eligible
-	if (squares.e.piece &&
-			squares.e.piece.type === PieceType.King &&
-			squares.e.piece.moveCount === 0 &&
-			!this.isSquareAttacked(squares.e)) {
-
-		// is left rook eligible
-		if (squares.a.piece &&
-				squares.a.piece.type === PieceType.Rook &&
-				squares.a.piece.moveCount === 0) {
-
-			// are the squares between king and rook clear
-			if (!squares.b.piece &&
-					!squares.c.piece &&
-					!squares.d.piece) {
-
-				// when king moves through squares between, is it in check
-				r = this.board.move(squares.e, squares.d, true);
-				if (!this.isSquareAttacked(squares.d)) {
-					r.undo();
-					r = this.board.move(squares.e, squares.c, true);
-
-					if (!this.isSquareAttacked(squares.c)) {
-						getValidSquares(squares.e).push(squares.c);
+				for (i = 0; i < validMoves.length; i++) {
+					if (validMoves[i].src === sq) {
+						return validMoves[i].squares;
 					}
 				}
-				r.undo();
-			}
-		}
+			},
+			interimMove = null,
+			/* eslint no-magic-numbers: 0 */
+			rank = this.game.getCurrentSide() === SideType.White ? 1 : 8,
+			squares = {
+				'a' : this.board.getSquare('a', rank),
+				'b' : this.board.getSquare('b', rank),
+				'c' : this.board.getSquare('c', rank),
+				'd' : this.board.getSquare('d', rank),
+				'e' : this.board.getSquare('e', rank),
+				'f' : this.board.getSquare('f', rank),
+				'g' : this.board.getSquare('g', rank),
+				'h' : this.board.getSquare('h', rank)
+			};
 
-		// is right rook eligible
-		if (squares.h.piece &&
-				squares.h.piece.type === PieceType.Rook &&
-				squares.h.piece.moveCount === 0) {
+		// is king eligible
+		if (squares.e.piece &&
+				squares.e.piece.type === PieceType.King &&
+				squares.e.piece.moveCount === 0 &&
+				!this.isSquareAttacked(squares.e)) {
 
-			// are the squares between king and rook clear
-			if (!squares.g.piece && !squares.f.piece) {
-				// when king moves through squares between, is it in check
-				r = this.board.move(squares.e, squares.f, true);
-				if (!this.isSquareAttacked(squares.f)) {
-					r.undo();
-					r = this.board.move(squares.e, squares.g, true);
+			// is left rook eligible
+			if (squares.a.piece &&
+					squares.a.piece.type === PieceType.Rook &&
+					squares.a.piece.moveCount === 0) {
 
-					if (!this.isSquareAttacked(squares.g)) {
-						getValidSquares(squares.e).push(squares.g);
-					}
-				}
-				r.undo();
-			}
-		}
-	}
-};
+				// are the squares between king and rook clear
+				if (!squares.b.piece &&
+						!squares.c.piece &&
+						!squares.d.piece) {
 
-// filter out any moves that would result in the king being attacked
-BoardValidation.prototype.filterKingAttack = function (kingSquare, moves) {
-	'use strict';
+					// when king moves through squares between, is it in check
+					interimMove = this.board.move(squares.e, squares.d, true);
+					if (!this.isSquareAttacked(squares.d)) {
+						interimMove.undo();
+						interimMove = this.board.move(squares.e, squares.c, true);
 
-	var
-		i = 0,
-		isCheck = false,
-		n = 0,
-		r = null,
-		squares = [],
-		filteredMoves = [];
-
-	for (i = 0; i < moves.length; i++) {
-		squares = [];
-
-		for (n = 0; n < moves[i].squares.length; n++) {
-			// simulate move on the board
-			r = this.board.move(moves[i].src, moves[i].squares[n], true);
-
-			// check if king is attacked
-			if (moves[i].squares[n].piece.type !== PieceType.King) {
-				isCheck = this.isSquareAttacked(kingSquare);
-			} else {
-				isCheck = this.isSquareAttacked(moves[i].squares[n]);
-			}
-
-			// reverse the move
-			r.undo();
-
-			if (!isCheck) {
-				squares.push(moves[i].squares[n]);
-			}
-		}
-
-		if (squares && squares.length > 0) {
-			filteredMoves.push({
-				src : moves[i].src,
-				squares : squares
-			});
-		}
-	}
-
-	return filteredMoves;
-};
-
-// determine if the specified square is under attack
-BoardValidation.prototype.isSquareAttacked = function (sq) {
-	'use strict';
-
-	if (!sq || !sq.piece) {
-		return {
-			attacked : false,
-			blocked : false
-		};
-	}
-
-	var
-		setAttacked = function (c) {
-			return function (err, squares) {
-				if (!err) {
-					var i = 0;
-					for (i = 0; i < squares.length; i++) {
-						if (squares[i] === sq) {
-							c.attacked = true;
-							return;
+						if (!this.isSquareAttacked(squares.c)) {
+							getValidSquares(squares.e).push(squares.c);
 						}
 					}
+					interimMove.undo();
 				}
+			}
 
-				c.attacked = false;
-			};
-		},
-		isAttacked = function (b, n) {
-			var
-				currentSquare = b.getNeighborSquare(sq, n),
-				context = {};
+			// is right rook eligible
+			if (squares.h.piece &&
+					squares.h.piece.type === PieceType.Rook &&
+					squares.h.piece.moveCount === 0) {
 
-			while (currentSquare) {
-				context = {
-					attacked : currentSquare.piece && currentSquare.piece.side !== sq.piece.side,
-					blocked : currentSquare.piece && currentSquare.piece.side === sq.piece.side,
-					piece : currentSquare.piece
-				};
+				// are the squares between king and rook clear
+				if (!squares.g.piece && !squares.f.piece) {
+					// when king moves through squares between, is it in check
+					interimMove = this.board.move(squares.e, squares.f, true);
+					if (!this.isSquareAttacked(squares.f)) {
+						interimMove.undo();
+						interimMove = this.board.move(squares.e, squares.g, true);
 
-				if (context.attacked) {
-					// verify that the square is actually attacked
-					PieceValidation
-						.create(context.piece.type, b)
-						.start(currentSquare, setAttacked(context));
-					currentSquare = null;
-				} else if (context.blocked) {
-					currentSquare = null;
+						if (!this.isSquareAttacked(squares.g)) {
+							getValidSquares(squares.e).push(squares.g);
+						}
+					}
+					interimMove.undo();
+				}
+			}
+		}
+	}
+
+	filterKingAttack (kingSquare, moves) {
+		let
+			i = 0,
+			isCheck = false,
+			n = 0,
+			r = null,
+			squares = [],
+			filteredMoves = [];
+
+		for (i = 0; i < moves.length; i++) {
+			squares = [];
+
+			for (n = 0; n < moves[i].squares.length; n++) {
+				// simulate move on the board
+				r = this.board.move(moves[i].src, moves[i].squares[n], true);
+
+				// check if king is attacked
+				if (moves[i].squares[n].piece.type !== PieceType.King) {
+					isCheck = this.isSquareAttacked(kingSquare);
 				} else {
-					currentSquare = b.getNeighborSquare(currentSquare, n);
+					isCheck = this.isSquareAttacked(moves[i].squares[n]);
+				}
+
+				// reverse the move
+				r.undo();
+
+				if (!isCheck) {
+					squares.push(moves[i].squares[n]);
 				}
 			}
 
-			return context;
-		},
-		isAttackedByKnight = function (b, n) {
-			var
-				currentSquare = b.getNeighborSquare(sq, n),
-				context = {
-					attacked : false,
-					blocked : false,
-					piece : currentSquare ? currentSquare.piece : currentSquare
-				};
-
-			if (currentSquare &&
-				currentSquare.piece &&
-				currentSquare.piece.type === PieceType.Knight) {
-				PieceValidation
-					.create(PieceType.Knight, b)
-					.start(currentSquare, setAttacked(context));
-			}
-
-			return context;
-		},
-		result = [
-			isAttacked(this.board, NeighborType.Above),
-			isAttacked(this.board, NeighborType.AboveRight),
-			isAttacked(this.board, NeighborType.Right),
-			isAttacked(this.board, NeighborType.BelowRight),
-			isAttacked(this.board, NeighborType.Below),
-			isAttacked(this.board, NeighborType.BelowLeft),
-			isAttacked(this.board, NeighborType.Left),
-			isAttacked(this.board, NeighborType.AboveLeft),
-			// fix for issue #4
-			isAttackedByKnight(this.board, NeighborType.KnightAboveRight),
-			isAttackedByKnight(this.board, NeighborType.KnightRightAbove),
-			isAttackedByKnight(this.board, NeighborType.KnightBelowRight),
-			isAttackedByKnight(this.board, NeighborType.KnightRightBelow),
-			isAttackedByKnight(this.board, NeighborType.KnightBelowLeft),
-			isAttackedByKnight(this.board, NeighborType.KnightLeftBelow),
-			isAttackedByKnight(this.board, NeighborType.KnightAboveLeft),
-			isAttackedByKnight(this.board, NeighborType.KnightLeftAbove)
-		].filter((result) => result.attacked);
-
-	return result.length !== 0;
-};
-
-// begin evaluation of the valid moves for an entire board
-BoardValidation.prototype.start = function (callback) {
-	'use strict';
-
-	var err = null,
-		i = 0,
-		kingSquare = null,
-		setValidMoves = function (v, sq) {
-			return function (err, squares) {
-				if (squares && squares.length > 0) {
-					v.push({
-						squares : squares,
-						src : sq
-					});
-				}
-			};
-		},
-		squares = [],
-		validMoves = [];
-
-	if (this.board) {
-		// get squares with pieces for which to evaluate move options
-		squares = this.board.getSquares(this.game.getCurrentSide());
-
-		for (i = 0; i < squares.length; i++) {
-			// set king to refer to later
-			if (squares[i].piece.type === PieceType.King) {
-				kingSquare = squares[i];
-			}
-
-			if (squares[i] && squares[i].piece) {
-				PieceValidation
-					.create(squares[i].piece.type, this.board)
-					.start(squares[i], setValidMoves(validMoves, squares[i]));
+			if (squares && squares.length > 0) {
+				filteredMoves.push({
+					src : moves[i].src,
+					squares
+				});
 			}
 		}
 
-		// perform king castle validation
-		this.evaluateCastle(validMoves);
-
-		// make sure moves only contain escape & non-check options
-		validMoves = this.filterKingAttack(kingSquare, validMoves);
-	} else {
-		err = 'board is invalid';
+		return filteredMoves;
 	}
 
-	if (callback) {
-		callback(err, validMoves);
-	}
-};
+	isSquareAttacked = function (sq) {
+		if (!sq || !sq.piece) {
+			return {
+				attacked : false,
+				blocked : false
+			};
+		}
 
-// exports
-module.exports = {
-	create : function (g) {
-		'use strict';
+		let
+			setAttacked = function (c) {
+				return function (err, squares) {
+					if (!err) {
+						let i = 0;
+						for (i = 0; i < squares.length; i++) {
+							if (squares[i] === sq) {
+								c.attacked = true;
+								return;
+							}
+						}
+					}
 
-		return new BoardValidation(g);
+					c.attacked = false;
+				};
+			},
+			/* eslint no-invalid-this: 0 */
+			self = this,
+			isAttacked = function (b, n) {
+				var
+					currentSquare = b.getNeighborSquare(sq, n),
+					context = {};
+
+				while (currentSquare) {
+					context = {
+						attacked : currentSquare.piece && currentSquare.piece.side !== sq.piece.side,
+						blocked : currentSquare.piece && currentSquare.piece.side === sq.piece.side,
+						piece : currentSquare.piece
+					};
+
+					if (context.attacked) {
+						// verify that the square is actually attacked
+						PieceValidation
+							.create(context.piece.type, b)
+							.start(currentSquare, setAttacked(context));
+						currentSquare = null;
+					} else if (context.blocked) {
+						currentSquare = null;
+					} else {
+						currentSquare = b.getNeighborSquare(currentSquare, n);
+					}
+				}
+
+				return context;
+			},
+			isAttackedByKnight = function (b, n) {
+				let
+					currentSquare = b.getNeighborSquare(sq, n),
+					context = {
+						attacked : false,
+						blocked : false,
+						piece : currentSquare ? currentSquare.piece : currentSquare
+					};
+
+				if (currentSquare &&
+					currentSquare.piece &&
+					currentSquare.piece.type === PieceType.Knight) {
+					PieceValidation
+						.create(PieceType.Knight, b)
+						.start(currentSquare, setAttacked(context));
+				}
+
+				return context;
+			},
+			result = [
+				isAttacked(self.board, NeighborType.Above),
+				isAttacked(self.board, NeighborType.AboveRight),
+				isAttacked(self.board, NeighborType.Right),
+				isAttacked(self.board, NeighborType.BelowRight),
+				isAttacked(self.board, NeighborType.Below),
+				isAttacked(self.board, NeighborType.BelowLeft),
+				isAttacked(self.board, NeighborType.Left),
+				isAttacked(self.board, NeighborType.AboveLeft),
+				// fix for issue #4
+				isAttackedByKnight(self.board, NeighborType.KnightAboveRight),
+				isAttackedByKnight(self.board, NeighborType.KnightRightAbove),
+				isAttackedByKnight(self.board, NeighborType.KnightBelowRight),
+				isAttackedByKnight(self.board, NeighborType.KnightRightBelow),
+				isAttackedByKnight(self.board, NeighborType.KnightBelowLeft),
+				isAttackedByKnight(self.board, NeighborType.KnightLeftBelow),
+				isAttackedByKnight(self.board, NeighborType.KnightAboveLeft),
+				isAttackedByKnight(self.board, NeighborType.KnightLeftAbove)
+			].filter((result) => result.attacked);
+
+		return result.length !== 0;
 	}
-};
+
+	start (callback) {
+		// ensure callback is set
+		callback = callback || ((err, validMoves) => new Promise((resolve, reject) => {
+			if (err) {
+				return reject(err);
+			}
+
+			return resolve(validMoves);
+		}));
+
+		let
+			i = 0,
+			kingSquare = null,
+			setValidMoves = function (v, sq) {
+				return function (err, squares) {
+					if (err) {
+						return callback(err);
+					}
+
+					if (squares && squares.length > 0) {
+						v.push({
+							squares,
+							src : sq
+						});
+					}
+				};
+			},
+			squares = [],
+			validMoves = [];
+
+		if (this.board) {
+			// get squares with pieces for which to evaluate move options
+			squares = this.board.getSquares(this.game.getCurrentSide());
+
+			for (i = 0; i < squares.length; i++) {
+				// set king to refer to later
+				if (squares[i].piece.type === PieceType.King) {
+					kingSquare = squares[i];
+				}
+
+				if (squares[i] && squares[i].piece) {
+					PieceValidation
+						.create(squares[i].piece.type, this.board)
+						.start(squares[i], setValidMoves(validMoves, squares[i]));
+				}
+			}
+
+			// perform king castle validation
+			this.evaluateCastle(validMoves);
+
+			// make sure moves only contain escape & non-check options
+			validMoves = this.filterKingAttack(kingSquare, validMoves);
+		} else {
+			return callback(new Error('board is invalid'));
+		}
+
+		return callback(null, validMoves);
+	}
+}
+
+export default { BoardValidation };

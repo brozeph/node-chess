@@ -5,94 +5,97 @@
 	repetition and pawn promotion.
 */
 
+import { BoardValidation } from './boardValidation';
 import { PieceType } from './piece';
 
-var boardValidation = require('./boardValidation.js');
-
-// base ctor
-var GameValidation = function (g) {
-	'use strict';
-
-	this.game = g;
-};
-
-GameValidation.prototype.findKingSquare = function (side) {
-	'use strict';
-
-	var i = 0,
-		squares = this.game.board.getSquares(side);
-
-	for (i = 0; i < squares.length; i++) {
-		if (squares[i].piece.type === PieceType.King) {
-			return squares[i];
-		}
+export class GameValidation {
+	constructor (game) {
+		this.game = game;
 	}
-};
 
-GameValidation.prototype.isRepetition = function () {
-	'use strict';
+	static create (game) {
+		return new GameValidation(game);
+	}
 
-	var hash = '',
-		hashCount = [],
-		i = 0;
+	findKingSquare (side) {
+		let
+			i = 0,
+			squares = this.game.board.getSquares(side);
 
-	// analyze 3-fold repetition (draw)
-	for (i = 0; i < this.game.moveHistory.length; i++) {
-		hash = this.game.moveHistory[i].hashCode;
-		hashCount[hash] = hashCount[hash] ? hashCount[hash] + 1 : 1;
-
-		if (hashCount[hash] === 3) {
-			return true;
+		for (i = 0; i < squares.length; i++) {
+			if (squares[i].piece.type === PieceType.King) {
+				return squares[i];
+			}
 		}
 	}
 
-	return false;
-};
+	isRepetition () {
+		let
+			hash = '',
+			hashCount = [],
+			i = 0;
 
-GameValidation.prototype.start = function (callback) {
-	'use strict';
+		// analyze 3-fold repetition (draw)
+		for (i = 0; i < this.game.moveHistory.length; i++) {
+			hash = this.game.moveHistory[i].hashCode;
+			hashCount[hash] = hashCount[hash] ? hashCount[hash] + 1 : 1;
 
-	var err = null,
-		kingSquare = null,
-		result = {
-			isCheck : false,
-			isCheckmate : false,
-			isFiftyMoveDraw : false,
-			isStalemate : false,
-			isRepetition : false,
-			validMoves : []
-		},
-		setResult = function (v, result, isKingAttacked) {
-			return function (err, moves) {
-				result.isCheck = isKingAttacked && moves.length > 0;
-				result.isCheckmate = isKingAttacked && moves.length === 0;
-				result.isStalemate = !isKingAttacked &&  moves.length === 0;
-				result.isRepetition = v.isRepetition();
-				result.validMoves = moves;
-			};
-		},
-		v = boardValidation.create(this.game);
+			/* eslint no-magic-numbers: 0 */
+			if (hashCount[hash] === 3) {
+				return true;
+			}
+		}
 
-	if (this.game) {
-		// find current side king square
-		kingSquare = this.findKingSquare(this.game.getCurrentSide());
-
-		// find valid moves
-		v.start(setResult(this, result, v.isSquareAttacked(kingSquare)));
-	} else {
-		err = 'game is invalid';
+		return false;
 	}
 
-	if (callback) {
-		callback(err, result);
-	}
-};
+	start (callback) {
+		// ensure callback is set
+		callback = callback || ((err, result) => new Promise((resolve, reject) => {
+			if (err) {
+				return reject(err);
+			}
 
-// exports
-module.exports = {
-	create : function (g) {
-		'use strict';
+			return resolve(result);
+		}));
 
-		return new GameValidation(g);
+		let
+			kingSquare = null,
+			result = {
+				isCheck : false,
+				isCheckmate : false,
+				isFiftyMoveDraw : false,
+				isStalemate : false,
+				isRepetition : false,
+				validMoves : []
+			},
+			setResult = function (v, result, isKingAttacked) {
+				return function (err, moves) {
+					if (err) {
+						return callback(err);
+					}
+
+					result.isCheck = isKingAttacked && moves.length > 0;
+					result.isCheckmate = isKingAttacked && moves.length === 0;
+					result.isStalemate = !isKingAttacked && moves.length === 0;
+					result.isRepetition = v.isRepetition();
+					result.validMoves = moves;
+
+					return callback(null, result);
+				};
+			},
+			v = BoardValidation.create(this.game);
+
+		if (this.game) {
+			// find current side king square
+			kingSquare = this.findKingSquare(this.game.getCurrentSide());
+
+			// find valid moves
+			return v.start(setResult(this, result, v.isSquareAttacked(kingSquare)));
+		} else {
+			return callback(new Error('game is invalid'));
+		}
 	}
-};
+}
+
+export default { GameValidation };

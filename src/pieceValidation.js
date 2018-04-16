@@ -50,15 +50,23 @@ export class PieceValidation {
 	}
 
 	start (src, callback) {
+		// ensure callback is set
+		callback = callback || ((err, destinationSquares) => new Promise((resolve, reject) => {
+			if (err) {
+				return reject(err);
+			}
+
+			return resolve(destinationSquares);
+		}));
+
 		let
-			err = null,
 			opt = {
 				destSquares : [],
 				piece : src ? src.piece : null,
 				origin : src
 			},
 			findMoveOptions = function (b, r, n) {
-				var
+				let
 					block = false,
 					capture = false,
 					currentSquare = b.getNeighborSquare(opt.origin, n),
@@ -84,8 +92,10 @@ export class PieceValidation {
 			};
 
 		if (!opt.piece || opt.piece.type !== this.type) {
-			err = 'piece is invalid';
-		} else if (this.board && opt.origin) {
+			return callback(new Error('piece is invalid'));
+		}
+
+		if (this.board && opt.origin) {
 			// forward squares
 			if (this.allowForward) {
 				findMoveOptions(this.board, this.repeat,
@@ -118,15 +128,12 @@ export class PieceValidation {
 
 			// apply additional validation logic
 			this.applySpecialValidation(opt);
-
 		} else {
-			err = 'board is invalid';
+			return callback(new Error('board is invalid'));
 		}
 
 		// callback
-		if (callback) {
-			return callback(err, opt.destSquares);
-		}
+		return callback(null, opt.destSquares);
 	}
 }
 

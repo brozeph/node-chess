@@ -1,7 +1,6 @@
 import { Game } from './game';
+import { GameValidation } from './gameValidation';
 import { Piece, PieceType } from './piece';
-
-var gameValidation = require('./gameValidation.js');
 
 // private methods
 var getNotationPrefix = function (src, dest, movesForPiece) {
@@ -89,6 +88,7 @@ var notate = function (validMoves, gameClient) {
 			suffix = (sq.piece ? 'x' : '') + sq.file + sq.rank;
 
 			// check for potential promotion
+			/* eslint no-magic-numbers: 0 */
 			isPromotion =
 				(sq.rank === 8 || sq.rank === 1) &&
 				p.type === PieceType.Pawn;
@@ -212,7 +212,7 @@ var AlgebraicGameClient = function (g, opts) {
 	// appear as capital letter O rather than the number 0
 	this.PGN = (opts && typeof opts.PGN === 'boolean') ? opts.PGN : false;
 	this.validMoves = [];
-	this.validation = gameValidation.create(this.game);
+	this.validation = GameValidation.create(this.game);
 };
 
 AlgebraicGameClient.prototype.getStatus = function (forceUpdate) {
@@ -272,7 +272,7 @@ AlgebraicGameClient.prototype.move = function (notation, isFuzzy) {
 		} else if (notation.match(notationRegex) && notation.length > 1 && !isFuzzy) {
 			return this.move(parseNotation(notation), true);
 		} else if (isFuzzy) {
-			throw 'Invalid move (' + notation + ')';
+			throw new Error(`Invalid move (${notation})`);
 		}
 
 		if (move) {
@@ -291,6 +291,8 @@ AlgebraicGameClient.prototype.move = function (notation, isFuzzy) {
 					case 'R':
 						p = Piece.createRook(side);
 						break;
+					default:
+						p = Piece.createPawn(side);
 				}
 
 				if (p) {
@@ -307,7 +309,7 @@ AlgebraicGameClient.prototype.move = function (notation, isFuzzy) {
 		}
 	}
 
-	throw 'Notation is invalid (' + notation + ')';
+	throw new Error(`Notation is invalid (${notation})`);
 };
 
 // exports

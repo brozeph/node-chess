@@ -1,8 +1,7 @@
 /* eslint no-magic-numbers:0 */
 
+import { BoardValidation } from '../../src/boardValidation';
 import { Game } from '../../src/game';
-
-const boardValidation = require('../../src/boardValidation');
 
 describe('BoardValidation', function() {
 	'use strict';
@@ -19,10 +18,11 @@ describe('BoardValidation', function() {
 
 	// validate error creating BoardValidation when board is null
 	it('should fail if validation object is created without a valid board', function() {
-		let bv = boardValidation.create(null);
+		let bv = BoardValidation.create(null);
 
 		bv.start(function(err) {
-			assert.strictEqual(err, 'board is invalid');
+			assert.ok(err);
+			assert.strictEqual(err.message, 'board is invalid');
 		});
 	});
 
@@ -31,7 +31,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g);
+			bv = BoardValidation.create(g);
 
 		assert.strictEqual(bv.board, b);
 	});
@@ -41,7 +41,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g),
+			bv = BoardValidation.create(g),
 			squares = [];
 
 		bv.start(function(err, validMoves) {
@@ -62,7 +62,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g),
+			bv = BoardValidation.create(g),
 			squares = [];
 
 		bv.start(function(err, validMoves) {
@@ -83,7 +83,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g),
+			bv = BoardValidation.create(g),
 			kingSquare = b.getSquare('e', 1);
 
 		assert.strictEqual(bv.isSquareAttacked(kingSquare), false);
@@ -94,7 +94,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g);
+			bv = BoardValidation.create(g);
 
 		b.move(b.getSquare('d', 2), b.getSquare('d', 4));
 		b.move(b.getSquare('d', 7), b.getSquare('d', 5));
@@ -108,7 +108,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g);
+			bv = BoardValidation.create(g);
 
 		b.move(b.getSquare('e', 2), b.getSquare('e', 4));
 		b.move(b.getSquare('f', 7), b.getSquare('f', 5));
@@ -124,7 +124,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g);
+			bv = BoardValidation.create(g);
 
 		b.move('g2', 'g4');
 		b.move('f7', 'f6');
@@ -140,7 +140,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g),
+			bv = BoardValidation.create(g),
 			squares = [];
 
 		b.getSquare('b', 1).piece = null;
@@ -165,7 +165,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g),
+			bv = BoardValidation.create(g),
 			squares = [];
 
 		b.getSquare('f', 8).piece = null;
@@ -191,7 +191,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g),
+			bv = BoardValidation.create(g),
 			squares = [];
 
 		// clear squares between king and rook
@@ -219,7 +219,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g),
+			bv = BoardValidation.create(g),
 			squares = [];
 
 		// clear squares between king and rook
@@ -247,7 +247,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g),
+			bv = BoardValidation.create(g),
 			queenSquare = b.getSquare('d', 1),
 			bishopSquare = b.getSquare('f', 1),
 			knightSquare = b.getSquare('g', 1),
@@ -281,7 +281,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g),
+			bv = BoardValidation.create(g),
 			squares = [];
 
 		// clear squares between king and rook
@@ -310,7 +310,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g),
+			bv = BoardValidation.create(g),
 			squares = [];
 
 		// clear squares between king and rook
@@ -339,7 +339,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g),
+			bv = BoardValidation.create(g),
 			squares = [];
 
 		// block king with knight and attack with queen
@@ -365,7 +365,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g);
+			bv = BoardValidation.create(g);
 
 		// put king into checkmate
 		b.move(b.getSquare('e', 2), b.getSquare('e', 4));
@@ -388,7 +388,7 @@ describe('BoardValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			bv = boardValidation.create(g);
+			bv = BoardValidation.create(g);
 
 		b.move('e2', 'e4');
 		b.move('e7', 'e6');

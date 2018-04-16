@@ -1,8 +1,7 @@
 /* eslint no-magic-numbers:0 */
 
 import { Game } from '../../src/game';
-
-const gameValidation = require('../../src/gameValidation');
+import { GameValidation } from '../../src/gameValidation';
 
 describe('GameValidation', function() {
 	'use strict';
@@ -12,7 +11,7 @@ describe('GameValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			v = gameValidation.create(g);
+			v = GameValidation.create(g);
 
 		// put king into check
 		b.move(b.getSquare('d', 2), b.getSquare('d', 4));
@@ -37,7 +36,7 @@ describe('GameValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			v = gameValidation.create(g);
+			v = GameValidation.create(g);
 
 		b.move(b.getSquare('b1'), b.getSquare('c7'));
 
@@ -55,7 +54,7 @@ describe('GameValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			v = gameValidation.create(g);
+			v = GameValidation.create(g);
 
 		b.move(b.getSquare('b1'), b.getSquare('c3'));
 		b.move(b.getSquare('g8'), b.getSquare('f6'));
@@ -77,7 +76,7 @@ describe('GameValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			v = gameValidation.create(g);
+			v = GameValidation.create(g);
 
 		// put king into checkmate
 		b.move(b.getSquare('e', 2), b.getSquare('e', 4));
@@ -104,7 +103,7 @@ describe('GameValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			v = gameValidation.create(g);
+			v = GameValidation.create(g);
 
 		// remove several pieces from the board
 		b.getSquare('a1').piece = null;
@@ -160,7 +159,7 @@ describe('GameValidation', function() {
 		let
 			g = Game.create(),
 			b = g.board,
-			v = gameValidation.create(g);
+			v = GameValidation.create(g);
 
 		// 1. e4 e6
 		b.move('e2', 'e4');

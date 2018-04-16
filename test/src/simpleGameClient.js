@@ -1,4 +1,5 @@
 /* eslint no-magic-numbers:0 */
+
 import { SimpleGameClient } from '../../src/simpleGameClient';
 
 describe('SimpleGameClient', function() {

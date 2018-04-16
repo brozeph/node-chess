@@ -26,11 +26,13 @@ describe('PieceValidation', function() {
 			pv = PieceValidation.create(PieceType.Bishop, b);
 
 		pv.start(b.getSquare('a', 2), function(err) {
-			assert.strictEqual(err, 'piece is invalid');
+			assert.ok(err);
+			assert.strictEqual(err.message, 'piece is invalid');
 		});
 
 		pv.start(null, function(err) {
-			assert.strictEqual(err, 'piece is invalid');
+			assert.ok(err);
+			assert.strictEqual(err.message, 'piece is invalid');
 		});
 	});
 
