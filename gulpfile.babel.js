@@ -3,6 +3,7 @@ import 'babel-polyfill';
 
 const
 	babel = require('gulp-babel'),
+	coveralls = require('gulp-coveralls'),
 	del = require('del'),
 	eslint = require('gulp-eslint'),
 	gulp = require('gulp'),
