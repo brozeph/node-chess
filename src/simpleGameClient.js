@@ -1,8 +1,7 @@
+import { Game } from './game';
 import { Piece } from './piece';
 
-var
-	Game = require('./game.js'),
-	gameValidation = require('./gameValidation.js');
+var gameValidation = require('./gameValidation.js');
 
 // private methods
 var isMoveValid = function (src, dest, validMoves) {

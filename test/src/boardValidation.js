@@ -1,8 +1,8 @@
 /* eslint no-magic-numbers:0 */
 
-const
-	game = require('../../src/game'),
-	boardValidation = require('../../src/boardValidation');
+import { Game } from '../../src/game';
+
+const boardValidation = require('../../src/boardValidation');
 
 describe('BoardValidation', function() {
 	'use strict';
@@ -29,7 +29,7 @@ describe('BoardValidation', function() {
 	// ensure board and game set properly when BoardValidation is created
 	it('should properly reflect board and game when validation object is created', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g);
 
@@ -39,7 +39,7 @@ describe('BoardValidation', function() {
 	// ensure validation returns appropriate piece move options based on turn
 	it('should properly indicate that a white Pawn has 2 valid moves', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g),
 			squares = [];
@@ -60,7 +60,7 @@ describe('BoardValidation', function() {
 	// ensure validation returns appropriate piece move options based on turn
 	it('testBoardValidation_BlackPawn_NoValidMoves', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g),
 			squares = [];
@@ -81,7 +81,7 @@ describe('BoardValidation', function() {
 	// validate is square attacked on piece not being attacked
 	it('testBoardValidation_WhiteKing_IsNotAttacked', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g),
 			kingSquare = b.getSquare('e', 1);
@@ -92,7 +92,7 @@ describe('BoardValidation', function() {
 	// validate is square attacked on piece being attacked
 	it('testBoardValidation_BlackPawn_IsAttacked', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g);
 
@@ -106,7 +106,7 @@ describe('BoardValidation', function() {
 	// ensure is square attacked accurately tracks king being attacked
 	it('testBoardValidation_BlackKing_IsAttacked', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g);
 
@@ -122,7 +122,7 @@ describe('BoardValidation', function() {
 	// than 1 square away diagonally
 	it('testBoardValidation_BlackKing_IsNotAttacked', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g);
 
@@ -138,7 +138,7 @@ describe('BoardValidation', function() {
 	// validate castle rule to left
 	it('testBoardValidation_WhiteKingCastle_Left', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g),
 			squares = [];
@@ -163,7 +163,7 @@ describe('BoardValidation', function() {
 	// validate castle rule to right
 	it('testBoardValidation_BlackKingCastle_Right', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g),
 			squares = [];
@@ -189,7 +189,7 @@ describe('BoardValidation', function() {
 	// validate castle rule no longer applies when king has moved
 	it('testBoardValidation_WhiteKingCastle_KingMoved', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g),
 			squares = [];
@@ -217,7 +217,7 @@ describe('BoardValidation', function() {
 	// validate castle rule no longer applies when rook has moved
 	it('testBoardValidation_WhiteKingCastle_RookMoved', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g),
 			squares = [];
@@ -245,7 +245,7 @@ describe('BoardValidation', function() {
 	// validate only move options are to block check
 	it('testBoardValidation_WhiteKingInCheck_BlockMovesOnly', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g),
 			queenSquare = b.getSquare('d', 1),
@@ -279,7 +279,7 @@ describe('BoardValidation', function() {
 	// validate inability to castle while king is in check
 	it('testBoardValidation_WhiteKingCastle_KingInCheck', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g),
 			squares = [];
@@ -308,7 +308,7 @@ describe('BoardValidation', function() {
 	// validate inability to castle through or into check
 	it('testBoardValidation_WhiteKingCastle_MoveThroughCheck', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g),
 			squares = [];
@@ -337,7 +337,7 @@ describe('BoardValidation', function() {
 	// validate inability to move into check
 	it('testBoardValidation_WhiteKing_UnableToExposeCheck', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g),
 			squares = [];
@@ -363,7 +363,7 @@ describe('BoardValidation', function() {
 	// validate checkmate (no available moves)
 	it('testBoardValidation_BlackKing_Checkmate', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g);
 
@@ -386,7 +386,7 @@ describe('BoardValidation', function() {
 	// validate pieces don't disappear after validation
 	it('testBoardValidation_Pawn_Disappears', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			bv = boardValidation.create(g);
 

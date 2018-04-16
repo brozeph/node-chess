@@ -1,8 +1,8 @@
 /* eslint no-magic-numbers:0 */
 
-const
-	game = require('../../src/game'),
-	gameValidation = require('../../src/gameValidation');
+import { Game } from '../../src/game';
+
+const gameValidation = require('../../src/gameValidation');
 
 describe('GameValidation', function() {
 	'use strict';
@@ -10,7 +10,7 @@ describe('GameValidation', function() {
 	// validate check
 	it('should properly indicate check', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			v = gameValidation.create(g);
 
@@ -35,7 +35,7 @@ describe('GameValidation', function() {
 	// validate Knight check (part 1)
 	it('should properly indicate check due to Knight (part 1)', function () {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			v = gameValidation.create(g);
 
@@ -53,7 +53,7 @@ describe('GameValidation', function() {
 	// validate Knight check (part 2)
 	it('should properly indicate check due to Knight (part 2)', function () {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			v = gameValidation.create(g);
 
@@ -75,7 +75,7 @@ describe('GameValidation', function() {
 	// validate checkmate
 	it('should properly indicate checkmate', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			v = gameValidation.create(g);
 
@@ -102,7 +102,7 @@ describe('GameValidation', function() {
 	// validate stalemate
 	it('should properly indicate stalemate', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			v = gameValidation.create(g);
 
@@ -158,7 +158,7 @@ describe('GameValidation', function() {
 	// Fischer vs Petrosian, Buenos Aires, 1971, round 3
 	it('should properly indicate 3-fold repetition', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			v = gameValidation.create(g);
 

@@ -1,8 +1,7 @@
+import { Game } from './game';
 import { Piece, PieceType } from './piece';
 
-var
-	game = require('./game.js'),
-	gameValidation = require('./gameValidation.js');
+var gameValidation = require('./gameValidation.js');
 
 // private methods
 var getNotationPrefix = function (src, dest, movesForPiece) {
@@ -317,7 +316,7 @@ module.exports = {
 		'use strict';
 
 		var
-			g = game.create(),
+			g = Game.create(),
 			gc = new AlgebraicGameClient(g, opts);
 
 		updateGameClient(gc);

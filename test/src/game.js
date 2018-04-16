@@ -1,13 +1,13 @@
 /* eslint no-magic-numbers:0 */
 
-const game = require('../../src/game');
+import { Game } from '../../src/game';
 
 describe('Game', function() {
 	'use strict';
 
 	// make sure there is no move history when game is created
 	it('should have no move history when game is created', function() {
-		let g = game.create();
+		let g = Game.create();
 
 		assert.strictEqual(g.moveHistory.length, 0);
 	});
@@ -15,7 +15,7 @@ describe('Game', function() {
 	// verify move history is tracked on game when a move is made on board
 	it('should have move history length of 2 after 2 moves are made', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board;
 
 		b.move(b.getSquare('d', 2), b.getSquare('d', 4));
@@ -27,7 +27,7 @@ describe('Game', function() {
 	// ensure that when simulated moves are made on board, game history is not incremented
 	it('should have no move history when only simulated moves are made', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board,
 			r = b.move(b.getSquare('e', 2), b.getSquare('e', 4), true);
 
@@ -41,7 +41,7 @@ describe('Game', function() {
 	// ensure board position hash is accurate across moves
 	it('should have accurate hash code after each move stored in move history', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board;
 
 		b.move(b.getSquare('d', 2), b.getSquare('d', 4));
@@ -66,7 +66,7 @@ describe('Game', function() {
 
 	it('should properly have notation in move history after move when supplied', function () {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board;
 
 		b.move('d2', 'd4', 'd4');
@@ -76,7 +76,7 @@ describe('Game', function() {
 
 	it('should not have notation in move history after move when omitted', function () {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board;
 
 		b.move('d2', 'd4');
@@ -87,9 +87,9 @@ describe('Game', function() {
 	// ensure board position hash is accurate across games
 	it('should have consistent board hash across different game objects with same move histories', function() {
 		let
-			g1 = game.create(),
+			g1 = Game.create(),
 			b1 = g1.board,
-			g2 = game.create(),
+			g2 = Game.create(),
 			b2 = g2.board;
 
 		b1.move(b1.getSquare('d', 2), b1.getSquare('d', 4));
@@ -105,7 +105,7 @@ describe('Game', function() {
 	// Issue #1 - Ensure no phantom pawns appear after sequence of moves
 	it('should not have phantom pawn appear after specific sequence of moves - Issue #1', function() {
 		let
-			g = game.create(),
+			g = Game.create(),
 			b = g.board;
 
 		b.move(b.getSquare('e', 2), b.getSquare('e', 4));

@@ -10,119 +10,113 @@ import { Board } from './board';
 import { SideType } from './piece';
 import crypto from 'crypto';
 
-// types
-var Move = function (sq1, sq2, cp, n, h) {
-	'use strict';
-
-	this.capturedPiece = cp;
-	this.hashCode = h;
-	this.algebraic = n || undefined;
-	this.promotion = false;
-	this.piece = sq2.piece;
-	this.prevFile = sq1.file;
-	this.prevRank = sq1.rank;
-	this.postFile = sq2.file;
-	this.postRank = sq2.rank;
-};
-
-// event handlers
-var addToHistory = function (g) {
-	'use strict';
-
+function addToHistory (game) {
 	return function (ev) {
-		var
-			hashCode = g.getHashCode(),
-			m = new Move(
+		let
+			hashCode = game.getHashCode(),
+			move = new Move(
 				ev.prevSquare,
 				ev.postSquare,
 				ev.capturedPiece,
 				ev.algebraic,
 				hashCode);
 
-		g.moveHistory.push(m);
+		game.moveHistory.push(move);
 	};
-};
+}
 
-var denotePromotionInHistory = function (g) {
-	'use strict';
-
+function denotePromotionInHistory (game) {
 	return function () {
-		var latest = g.moveHistory[g.moveHistory.length - 1];
+		let
+			latest = game.moveHistory[
+			game.moveHistory.length - 1];
 
 		if (latest) {
 			latest.promotion = true;
 		}
 	};
-};
+}
 
-// ctor
-var Game = function (b) {
-	'use strict';
+export class Game {
+	constructor (board) {
+		this.board = board;
+		this.moveHistory = [];
+	}
 
-	this.board = b;
-	this.moveHistory = [];
-};
+	static create () {
+		let
+			board = Board.create(),
+			game = new Game(board);
 
-Game.prototype.getCurrentSide = function () {
-	'use strict';
+		// handle move and promotion events correctly
+		board.on('move', addToHistory(game));
+		board.on('promote', denotePromotionInHistory(game));
 
-	return this.moveHistory.length % 2 === 0 ?
+		return game;
+	}
+
+	getCurrentSide () {
+		return this.moveHistory.length % 2 === 0 ?
 			SideType.White :
 			SideType.Black;
-};
-
-Game.prototype.getHashCode = function () {
-	'use strict';
-
-	var
-		i = 0,
-		sum = crypto.createHash('md5');
-
-	for (i = 0; i < this.board.squares.length; i++) {
-		if (this.board.squares[i].piece !== null) {
-			sum.update(this.board.squares[i].file +
-				this.board.squares[i].rank +
-				(this.board.squares[i].piece.side === SideType.White ? 'w' : 'b') +
-				this.board.squares[i].piece.notation +
-				(i < (this.board.squares.length - 1) ? '-' : ''));
-		}
 	}
 
-	// generate hash code for board
-	return sum.digest('base64');
-};
+	getHashCode () {
+		let
+			i = 0,
+			sum = crypto.createHash('md5');
 
-// exports
-module.exports = {
-	// methods
-	create : function () {
-		'use strict';
+		for (i = 0; i < this.board.squares.length; i++) {
+			if (this.board.squares[i].piece !== null) {
+				sum.update(this.board.squares[i].file +
+					this.board.squares[i].rank +
+					(this.board.squares[i].piece.side === SideType.White ? 'w' : 'b') +
+					this.board.squares[i].piece.notation +
+					(i < (this.board.squares.length - 1) ? '-' : ''));
+			}
+		}
 
-		var
-			b = Board.create(),
-			g = new Game(b);
+		// generate hash code for board
+		return sum.digest('base64');
+	}
 
-		b.on('move', addToHistory(g));
-		b.on('promote', denotePromotionInHistory(g));
-
-		return g;
-	},
-	load : function (moveHistory) {
-		'use strict';
-
-		var
-			b = Board.create(),
-			g = new Game(),
+	static load (moveHistory) {
+		let
+			board = Board.create(),
+			game = new Game(),
 			i = 0;
 
-		b.on('move', addToHistory(g));
-		b.on('promote', denotePromotionInHistory(g));
+		// handle move and promotion events correctly
+		board.on('move', addToHistory(game));
+		board.on('promote', denotePromotionInHistory(game));
 
+		// apply move history
 		for (i = 0; i < moveHistory.length; i++) {
-			b.move(b.getSquare(moveHistory[i].prevFile, moveHistory[i].prevRank),
-				b.getSquare(moveHistory[i].postFile, moveHistory[i].postRank));
+			board.move(
+				board.getSquare(
+					moveHistory[i].prevFile,
+					moveHistory[i].prevRank),
+				board.getSquare(
+					moveHistory[i].postFile,
+					moveHistory[i].postRank));
 		}
 
-		return g;
+		return game;
 	}
-};
+}
+
+export class Move {
+	constructor (originSquare, targetSquare, capturedPiece, notation, hash) {
+		this.algebraic = notation;
+		this.capturedPiece = capturedPiece;
+		this.hashCode = hash;
+		this.piece = targetSquare.piece;
+		this.promotion = false;
+		this.postFile = targetSquare.file;
+		this.postRank = targetSquare.rank;
+		this.prevFile = originSquare.file;
+		this.prevRank = originSquare.rank;
+	}
+}
+
+export default { Game, Move };
