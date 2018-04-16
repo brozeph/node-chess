@@ -9,8 +9,6 @@ const
 	sourcemaps = require('gulp-sourcemaps');
 
 module.exports = (() => {
-	'use strict';
-
 	gulp.task('build', ['clean-build'], () => {
 		return gulp
 			.src('src/**/*.js')
@@ -25,6 +23,12 @@ module.exports = (() => {
 	gulp.task('clean-build', () => del('dist'));
 
 	gulp.task('clean-reports', () => del('reports'));
+
+	gulp.task('coveralls', () => {
+		return gulp
+			.src('reports/lcov.info')
+			.pipe(coveralls());
+	});
 
 	gulp.task('default', ['build', 'lint']);
 

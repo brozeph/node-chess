@@ -1,9 +1,8 @@
+import { AlgebraicGameClient } from './algebraicGameClient';
 import { SimpleGameClient } from './simpleGameClient';
-
-var algebraic = require('./algebraicGameClient.js');
 
 // exports
 module.exports = {
-	create : (opts) => algebraic.create(opts),
+	create : (opts) => AlgebraicGameClient.create(opts),
 	createSimple : () => SimpleGameClient.create()
 };

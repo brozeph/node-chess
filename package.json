@@ -18,7 +18,7 @@
   "main": "./dist/main.js",
   "scripts": {
     "lint": "gulp lint",
-    "pretest-disabled": "gulp clean-reports && gulp lint",
+    "pretest": "gulp clean-reports && gulp lint",
     "test": "NODE_ENV=test nyc mocha -r ./test/common.js ./test/src",
     "posttest": ""
   },
@@ -38,6 +38,7 @@
     "eslint-plugin-babel": "^5.0.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.1",
+    "gulp-coveralls": "^0.1.4",
     "gulp-eslint": "^4.0.2",
     "gulp-sourcemaps": "^2.6.4",
     "mocha": "^5.0.5",
