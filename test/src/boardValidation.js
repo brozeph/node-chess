@@ -152,7 +152,8 @@ describe('BoardValidation', function() {
 				throw err;
 			}
 
-			squares = getValidSquares(b.getSquare('e', 1),
+			squares = getValidSquares(
+				b.getSquare('e', 1),
 				validMoves);
 
 			assert.strictEqual(squares.length, 2);
@@ -178,7 +179,8 @@ describe('BoardValidation', function() {
 				throw err;
 			}
 
-			squares = getValidSquares(b.getSquare('e', 8),
+			squares = getValidSquares(
+				b.getSquare('e', 8),
 				validMoves);
 
 			assert.strictEqual(squares.length, 2);
@@ -207,7 +209,8 @@ describe('BoardValidation', function() {
 				throw err;
 			}
 
-			squares = getValidSquares(b.getSquare('e', 1),
+			squares = getValidSquares(
+				b.getSquare('e', 1),
 				validMoves);
 
 			assert.strictEqual(squares.length, 1);
@@ -235,7 +238,8 @@ describe('BoardValidation', function() {
 				throw err;
 			}
 
-			squares = getValidSquares(b.getSquare('e', 1),
+			squares = getValidSquares(
+				b.getSquare('e', 1),
 				validMoves);
 
 			assert.strictEqual(squares.length, 1);
@@ -276,6 +280,44 @@ describe('BoardValidation', function() {
 		});
 	});
 
+	it('should properly trigger game to emit check when King is placed in check', function () {
+		let
+			g = Game.create(),
+			b = g.board,
+			bv = BoardValidation.create(g),
+			checkResult = [];
+
+		// capture check event
+		g.on('check', (result) => (checkResult.push(result)));
+
+		// prepare board by eliminating two Pawns
+		b.getSquare('e', 2).piece = null;
+		b.getSquare('e', 7).piece = null;
+
+		// arrange double check scenario via reveal
+		b.move(b.getSquare('b', 1), b.getSquare('c', 3));
+		b.move(b.getSquare('a', 7), b.getSquare('a', 6));
+
+		b.move(b.getSquare('c', 3), b.getSquare('e', 4));
+		b.move(b.getSquare('a', 6), b.getSquare('a', 5));
+
+		// Queen preparing to put in check
+		b.move(b.getSquare('d', 1), b.getSquare('e', 2));
+		b.move(b.getSquare('a', 5), b.getSquare('a', 4));
+
+		// double-check (a checkmate... Queen and Knight both attacking)
+		b.move(b.getSquare('e', 4), b.getSquare('f', 6));
+
+		bv.start(function(err) {
+			if (err) {
+				throw err;
+			}
+
+			assert.ok(checkResult);
+			assert.strictEqual(checkResult.length, 2);
+		});
+	});
+
 	// validate inability to castle while king is in check
 	it('testBoardValidation_WhiteKingCastle_KingInCheck', function() {
 		let
@@ -298,7 +340,8 @@ describe('BoardValidation', function() {
 				throw err;
 			}
 
-			squares = getValidSquares(b.getSquare('e', 1),
+			squares = getValidSquares(
+				b.getSquare('e', 1),
 				validMoves);
 
 			assert.strictEqual(squares.length, 1);
@@ -327,7 +370,8 @@ describe('BoardValidation', function() {
 				throw err;
 			}
 
-			squares = getValidSquares(b.getSquare('e', 1),
+			squares = getValidSquares(
+				b.getSquare('e', 1),
 				validMoves);
 
 			assert.ok(typeof squares === 'undefined');
@@ -353,7 +397,8 @@ describe('BoardValidation', function() {
 				throw err;
 			}
 
-			squares = getValidSquares(b.getSquare('e', 2),
+			squares = getValidSquares(
+				b.getSquare('e', 2),
 				validMoves);
 
 			assert.ok(typeof squares === 'undefined');

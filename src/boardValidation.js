@@ -158,7 +158,7 @@ export class BoardValidation {
 		return filteredMoves;
 	}
 
-	isSquareAttacked = function (sq) {
+	findAttackers (sq) {
 		if (!sq || !sq.piece) {
 			return {
 				attacked : false,
@@ -185,7 +185,7 @@ export class BoardValidation {
 			/* eslint no-invalid-this: 0 */
 			self = this,
 			isAttacked = function (b, n) {
-				var
+				let
 					currentSquare = b.getNeighborSquare(sq, n),
 					context = {};
 
@@ -193,7 +193,8 @@ export class BoardValidation {
 					context = {
 						attacked : currentSquare.piece && currentSquare.piece.side !== sq.piece.side,
 						blocked : currentSquare.piece && currentSquare.piece.side === sq.piece.side,
-						piece : currentSquare.piece
+						piece : currentSquare.piece,
+						square : currentSquare
 					};
 
 					if (context.attacked) {
@@ -217,7 +218,8 @@ export class BoardValidation {
 					context = {
 						attacked : false,
 						blocked : false,
-						piece : currentSquare ? currentSquare.piece : currentSquare
+						piece : currentSquare ? currentSquare.piece : currentSquare,
+						square : currentSquare
 					};
 
 				if (currentSquare &&
@@ -250,7 +252,13 @@ export class BoardValidation {
 				isAttackedByKnight(self.board, NeighborType.KnightLeftAbove)
 			].filter((result) => result.attacked);
 
-		return result.length !== 0;
+		// console.log('findAttackers result', result);
+
+		return result;
+	}
+
+	isSquareAttacked = function (sq) {
+		return this.findAttackers(sq).length !== 0;
 	}
 
 	start (callback) {
@@ -305,6 +313,15 @@ export class BoardValidation {
 
 			// make sure moves only contain escape & non-check options
 			validMoves = this.filterKingAttack(kingSquare, validMoves);
+
+			// find any pieces attacking the king
+			this.findAttackers(kingSquare).forEach((attacker) => {
+				this.game.emit(
+					'check', {
+						attackingSquare : attacker.square,
+						kingSquare
+					});
+			});
 		} else {
 			return callback(new Error('board is invalid'));
 		}

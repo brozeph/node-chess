@@ -1,4 +1,4 @@
-0.3.0 / 2018-04-16
+0.3.0 / 2018-04-18
 ==================
 
 	* adding in ability to determine pieces that put King in check (#22)

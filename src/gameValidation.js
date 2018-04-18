@@ -70,16 +70,16 @@ export class GameValidation {
 				validMoves : []
 			},
 			setResult = function (v, result, isKingAttacked) {
-				return function (err, moves) {
+				return function (err, validMoves) {
 					if (err) {
 						return callback(err);
 					}
 
-					result.isCheck = isKingAttacked && moves.length > 0;
-					result.isCheckmate = isKingAttacked && moves.length === 0;
-					result.isStalemate = !isKingAttacked && moves.length === 0;
+					result.isCheck = isKingAttacked && validMoves.length > 0;
+					result.isCheckmate = isKingAttacked && validMoves.length === 0;
+					result.isStalemate = !isKingAttacked && validMoves.length === 0;
 					result.isRepetition = v.isRepetition();
-					result.validMoves = moves;
+					result.validMoves = validMoves;
 
 					return callback(null, result);
 				};

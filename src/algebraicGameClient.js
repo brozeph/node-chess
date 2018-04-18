@@ -190,11 +190,11 @@ function updateGameClient (gameClient) {
 
 export class AlgebraicGameClient {
 	constructor (game, opts) {
+		this.game = game;
 		this.isCheck = false;
 		this.isCheckmate = false;
 		this.isRepetition = false;
 		this.isStalemate = false;
-		this.game = game;
 		this.notatedMoves = {};
 		// for issue #13, adding options allowing consumers to specify
 		// PGN (Portable Game Notation)... essentially, this makes castle moves

@@ -7,6 +7,7 @@
 */
 
 import { Board } from './board';
+import { EventEmitter } from 'events';
 import { SideType } from './piece';
 import crypto from 'crypto';
 
@@ -37,8 +38,10 @@ function denotePromotionInHistory (game) {
 	};
 }
 
-export class Game {
+export class Game extends EventEmitter {
 	constructor (board) {
+		super();
+
 		this.board = board;
 		this.moveHistory = [];
 	}
