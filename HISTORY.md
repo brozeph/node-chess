@@ -1,7 +1,14 @@
+0.3.0 / 2018-04-18
+==================
+
+	* adding in ability to determine pieces that put King in check (#22)
+	* merging pull request from @Piterden (improved Regex)
+	* moving to eslint and Babel compliant build and test tasks
+
 0.2.8 / 2016-11-18
 ==================
 
-	* adding a new public function to the `game` object (`getHashCode`) that generates and returns the hash that is used for the move history 
+	* adding a new public function to the `game` object (`getHashCode`) that generates and returns the hash that is used for the move history
 
 0.2.7 / 2015-08-23
 ==================

@@ -1,15 +1,13 @@
-var
-	piece = require('./piece.js'),
-	game = require('./game.js'),
-	gameValidation = require('./gameValidation.js');
+import { EventEmitter } from 'events';
+import { Game } from './game';
+import { GameValidation } from './gameValidation';
+import { Piece, PieceType } from './piece';
 
 // private methods
-var getNotationPrefix = function (src, dest, movesForPiece) {
-	'use strict';
-
-	var
+function getNotationPrefix (src, dest, movesForPiece) {
+	let
 		containsDest = function (squares) {
-			var n = 0;
+			let n = 0;
 
 			for (n = 0; n < squares.length; n++) {
 				if (squares[n] === dest) {
@@ -45,12 +43,11 @@ var getNotationPrefix = function (src, dest, movesForPiece) {
 	}
 
 	return prefix;
-};
+}
 
-var getValidMovesByPieceType = function (pieceType, validMoves) {
-	'use strict';
-
-	var byPiece = [],
+function getValidMovesByPieceType (pieceType, validMoves) {
+	let
+		byPiece = [],
 		i = 0;
 
 	for (i = 0; i < validMoves.length; i++) {
@@ -60,12 +57,10 @@ var getValidMovesByPieceType = function (pieceType, validMoves) {
 	}
 
 	return byPiece;
-};
+}
 
-var notate = function (validMoves, gameClient) {
-	'use strict';
-
-	var
+function notate (validMoves, gameClient) {
+	let
 		algebraicNotation = {},
 		i = 0,
 		isPromotion = false,
@@ -89,20 +84,21 @@ var notate = function (validMoves, gameClient) {
 			suffix = (sq.piece ? 'x' : '') + sq.file + sq.rank;
 
 			// check for potential promotion
+			/* eslint no-magic-numbers: 0 */
 			isPromotion =
 				(sq.rank === 8 || sq.rank === 1) &&
-				p.type === piece.PieceType.Pawn;
+				p.type === PieceType.Pawn;
 
 			// squares with pawns
-			if (sq.piece && p.type === piece.PieceType.Pawn) {
+			if (sq.piece && p.type === PieceType.Pawn) {
 				prefix = validMoves[i].src.file;
 			}
 
 			// squares with Bishop, Knight, Queen or Rook pieces
-			if (p.type === piece.PieceType.Bishop ||
-				p.type === piece.PieceType.Knight ||
-				p.type === piece.PieceType.Queen ||
-				p.type === piece.PieceType.Rook) {
+			if (p.type === PieceType.Bishop ||
+				p.type === PieceType.Knight ||
+				p.type === PieceType.Queen ||
+				p.type === PieceType.Rook) {
 				// if there is more than 1 of the specified piece on the board,
 				// can more than 1 land on the specified square?
 				movesForPiece = getValidMovesByPieceType(p.type, validMoves);
@@ -114,7 +110,7 @@ var notate = function (validMoves, gameClient) {
 			}
 
 			// squares with a King piece
-			if (p.type === piece.PieceType.King) {
+			if (p.type === PieceType.King) {
 				// look for castle left and castle right
 				if (validMoves[i].src.file === 'e' && sq.file === 'g') {
 					// fix for issue #13 - if PGN is specified should be letters, not numbers
@@ -164,12 +160,10 @@ var notate = function (validMoves, gameClient) {
 	}
 
 	return algebraicNotation;
-};
+}
 
-var parseNotation = function (notation) {
-	'use strict';
-
-	var parseDest = '';
+function parseNotation (notation) {
+	let parseDest = '';
 
 	// try and parse the notation
 	parseDest = notation.substring(notation.length - 2);
@@ -178,11 +172,9 @@ var parseNotation = function (notation) {
 	}
 
 	return '';
-};
+}
 
-var updateGameClient = function (gameClient) {
-	'use strict';
-
+function updateGameClient (gameClient) {
 	gameClient.validation.start(function (err, result) {
 		if (err) {
 			throw new Error(err);
@@ -195,131 +187,132 @@ var updateGameClient = function (gameClient) {
 		gameClient.notatedMoves = notate(result.validMoves, gameClient);
 		gameClient.validMoves = result.validMoves;
 	});
-};
+}
 
-// ctor
-var AlgebraicGameClient = function (g, opts) {
-	'use strict';
+export class AlgebraicGameClient extends EventEmitter {
+	constructor (game, opts) {
+		super();
 
-	this.isCheck = false;
-	this.isCheckmate = false;
-	this.isRepetition = false;
-	this.isStalemate = false;
-	this.game = g;
-	this.notatedMoves = {};
-	// for issue #13, adding options allowing consumers to specify
-	// PGN (Portable Game Notation)... essentially, this makes castle moves
-	// appear as capital letter O rather than the number 0
-	this.PGN = (opts && typeof opts.PGN === 'boolean') ? opts.PGN : false;
-	this.validMoves = [];
-	this.validation = gameValidation.create(this.game);
-};
+		this.game = game;
+		this.isCheck = false;
+		this.isCheckmate = false;
+		this.isRepetition = false;
+		this.isStalemate = false;
+		this.notatedMoves = {};
+		// for issue #13, adding options allowing consumers to specify
+		// PGN (Portable Game Notation)... essentially, this makes castle moves
+		// appear as capital letter O rather than the number 0
+		this.PGN = (opts && typeof opts.PGN === 'boolean') ? opts.PGN : false;
+		this.validMoves = [];
+		this.validation = GameValidation.create(this.game);
 
-AlgebraicGameClient.prototype.getStatus = function (forceUpdate) {
-	'use strict';
-
-	if (forceUpdate) {
-		updateGameClient(this);
+		// bubble the game check event
+		this.game.on('check', (attackers) => (this.emit('check', attackers)));
 	}
 
-	return {
-		board : this.game.board,
-		isCheck : this.isCheck,
-		isCheckmate : this.isCheckmate,
-		isRepetition : this.isRepetition,
-		isStalemate : this.isStalemate,
-		notatedMoves : this.notatedMoves
-	};
-};
+	static create (opts) {
+		let
+			game = Game.create(),
+			gameClient = new AlgebraicGameClient(game, opts);
 
-AlgebraicGameClient.prototype.move = function (notation, isFuzzy) {
-	'use strict';
+		updateGameClient(gameClient);
 
-	var
-		move = null,
-		notationRegex = /^[BKQNR]?[a-h]?[1-8]?[x-]?[a-h][1-8][+#]?$/,
-		p = null,
-		promo = '',
-		side = this.game.getCurrentSide();
+		return gameClient;
+	}
 
-	if (notation && typeof notation === 'string') {
-		// clean notation of extra or alternate chars
-		notation = notation
-			.replace(/\!/g, '')
-			.replace(/\+/g, '')
-			.replace(/\#/g, '')
-			.replace(/\=/g, '')
-			.replace(/\\/g, '');
-
-			// fix for issue #13 - if PGN is specified, should be letters not numbers
-			if (this.PGN) {
-				notation = notation.replace(/0/g, 'O');
-			} else {
-				notation = notation.replace(/O/g, '0');
-			}
-
-		// check for pawn promotion
-		if (notation.charAt(notation.length - 1).match(/[BNQR]/)) {
-			promo = notation.charAt(notation.length - 1);
-		}
-
-		// use it directly or attempt to parse it if not found
-		if (this.notatedMoves[notation]) {
-			move = this.game.board.move(
-				this.notatedMoves[notation].src,
-				this.notatedMoves[notation].dest,
-				notation);
-		} else if (notation.match(notationRegex) && notation.length > 1 && !isFuzzy) {
-			return this.move(parseNotation(notation), true);
-		} else if (isFuzzy) {
-			throw 'Invalid move (' + notation + ')';
-		}
-
-		if (move) {
-			// apply pawn promotion
-			if (promo) {
-				switch (promo) {
-					case 'B':
-						p = piece.createBishop(side);
-						break;
-					case 'N':
-						p = piece.createKnight(side);
-						break;
-					case 'Q':
-						p = piece.createQueen(side);
-						break;
-					case 'R':
-						p = piece.createRook(side);
-						break;
-				}
-
-				if (p) {
-					this.game.board.promote(move.move.postSquare, p);
-					/*
-					p.moveCount = move.move.postSquare.piece.moveCount;
-					move.move.postSquare.piece = p;
-					//*/
-				}
-			}
-
+	getStatus (forceUpdate) {
+		if (forceUpdate) {
 			updateGameClient(this);
-			return move;
 		}
+
+		return {
+			board : this.game.board,
+			isCheck : this.isCheck,
+			isCheckmate : this.isCheckmate,
+			isRepetition : this.isRepetition,
+			isStalemate : this.isStalemate,
+			notatedMoves : this.notatedMoves
+		};
 	}
 
-	throw 'Notation is invalid (' + notation + ')';
-};
+	move (notation, isFuzzy) {
+		let
+			move = null,
+			notationRegex = /^[BKQNR]?[a-h]?[1-8]?[x-]?[a-h][1-8][+#]?$/,
+			p = null,
+			promo = '',
+			side = this.game.getCurrentSide();
 
-// exports
-module.exports = {
-	create : function (opts) {
-		'use strict';
+		if (notation && typeof notation === 'string') {
+			// clean notation of extra or alternate chars
+			notation = notation
+				.replace(/\!/g, '')
+				.replace(/\+/g, '')
+				.replace(/\#/g, '')
+				.replace(/\=/g, '')
+				.replace(/\\/g, '');
 
-		var
-			g = game.create(),
-			gc = new AlgebraicGameClient(g, opts);
+				// fix for issue #13 - if PGN is specified, should be letters not numbers
+				if (this.PGN) {
+					notation = notation.replace(/0/g, 'O');
+				} else {
+					notation = notation.replace(/O/g, '0');
+				}
 
-		updateGameClient(gc);
-		return gc;
+			// check for pawn promotion
+			if (notation.charAt(notation.length - 1).match(/[BNQR]/)) {
+				promo = notation.charAt(notation.length - 1);
+			}
+
+			// use it directly or attempt to parse it if not found
+			if (this.notatedMoves[notation]) {
+				move = this.game.board.move(
+					this.notatedMoves[notation].src,
+					this.notatedMoves[notation].dest,
+					notation);
+			} else if (notation.match(notationRegex) && notation.length > 1 && !isFuzzy) {
+				return this.move(parseNotation(notation), true);
+			} else if (isFuzzy) {
+				throw new Error(`Invalid move (${notation})`);
+			}
+
+			if (move) {
+				// apply pawn promotion
+				if (promo) {
+					switch (promo) {
+						case 'B':
+							p = Piece.createBishop(side);
+							break;
+						case 'N':
+							p = Piece.createKnight(side);
+							break;
+						case 'Q':
+							p = Piece.createQueen(side);
+							break;
+						case 'R':
+							p = Piece.createRook(side);
+							break;
+						default:
+							p = Piece.createPawn(side);
+					}
+
+					if (p) {
+						this.game.board.promote(move.move.postSquare, p);
+						/*
+						p.moveCount = move.move.postSquare.piece.moveCount;
+						move.move.postSquare.piece = p;
+						//*/
+					}
+				}
+
+				updateGameClient(this);
+
+				return move;
+			}
+		}
+
+		throw new Error(`Notation is invalid (${notation})`);
 	}
-};
+}
+
+export default { AlgebraicGameClient };

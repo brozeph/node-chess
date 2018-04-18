@@ -6,6 +6,8 @@
 *.exe
 *.o
 *.so
+dist
+.nyc_output
 
 # Packages #
 ############
@@ -35,6 +37,7 @@ Thumbs.db
 
 # Everything else    #
 ######################
+.vscode
 node-chess.tmproj #textmate project file
 node_modules
 lib-cov
