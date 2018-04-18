@@ -1,3 +1,4 @@
+import { EventEmitter } from 'events';
 import { Game } from './game';
 import { GameValidation } from './gameValidation';
 import { Piece } from './piece';
@@ -45,8 +46,10 @@ function updateGameClient (gameClient) {
 }
 
 // ctor
-export class SimpleGameClient {
+export class SimpleGameClient extends EventEmitter {
 	constructor (game) {
+		super();
+
 		this.isCheck = false;
 		this.isCheckmate = false;
 		this.isRepetition = false;
@@ -54,6 +57,9 @@ export class SimpleGameClient {
 		this.game = game;
 		this.validMoves = [];
 		this.validation = GameValidation.create(this.game);
+
+		// bubble the game check event
+		this.game.on('check', (attackers) => (this.emit('check', attackers)));
 	}
 
 	static create () {

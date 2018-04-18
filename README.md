@@ -35,6 +35,12 @@ const chess = require('chess');
 const gameClient = chess.create();
 let move, status;
 
+// capture check and checkmate events
+gameClient.on('check', (attack) => {
+  // get more details about the attack on the King
+  console.log(attack);
+});
+
 // look at the status and valid moves
 status = gameClient.getStatus();
 
@@ -68,13 +74,51 @@ move = gameClient.move('a4');
 status = gameClient.getStatus();
 ```
 
+#### The `check` Event
+
+From the above example, the attack object that is provided when the `check` event is emitted is as follows:
+
+```js
+{ attackingSquare : {
+    file: 'f',
+    rank: 6,
+    piece: {
+      moveCount: 3,
+      side: {
+        name: 'white'
+      },
+      type: 'knight',
+      notation: 'N'
+    }
+  },
+  kingSquare : {
+    file: 'e',
+    rank: 8,
+    piece: {
+      moveCount: 0,
+      side: {
+        name: 'black'
+      },
+      type: 'king',
+      notation: 'K'
+    }
+  }
+}
+```
+
+##### The `attack` Object
+
+The attack object contains the attacking square and the King square. The properties of the attack object are:
+
+* attackingSquare - The square object from which the attacker originates which includes the piece conducting the attack
+* kingSquare - The square object representing the King that is under attack
+
 #### The `gameClient.move()` Function
 
 From the above example, the response object that is returned when calling chess.move() looks like the following:
 
 ```js
-{
-  move: {
+{ move: {
     capturedPiece: null, // the captured piece (if capture occurred)
     castle: false, // was the move a castle?
     enPassant: false, // was the move en passant?

@@ -1,5 +1,6 @@
 /* eslint no-magic-numbers:0 */
 
+import { Piece, PieceType, SideType } from '../../src/piece';
 import { SimpleGameClient } from '../../src/simpleGameClient';
 
 describe('SimpleGameClient', function() {
@@ -75,5 +76,29 @@ describe('SimpleGameClient', function() {
 		gc.move('b5', 'c6');
 
 		assert.ok(b.getSquare('c5').piece === null, 'Phantom piece appears after move from c5 to c6');
+	});
+
+	// Issue #23 - Show who is attacking the King
+	it ('should properly emit check and indicate attackers of the King', function () {
+		let
+			checkResult = null,
+			gc = SimpleGameClient.create();
+
+		gc.on('check', (result) => (checkResult = result));
+
+		// position the board for a promotion next move
+		gc.game.board.getSquare('b1').piece = null;
+		gc.game.board.getSquare('f6').piece = Piece.createKnight(SideType.White);
+		gc.game.board.getSquare('f6').piece.moveCount = 1;
+
+		// move to trigger evaluation that King is check
+		gc.move('a2', 'a3');
+
+		// force recalculation of board position
+		gc.getStatus(true);
+
+		// make sure Pawn promotions are present
+		assert.isDefined(checkResult);
+		assert.strictEqual(checkResult.attackingSquare.piece.type, PieceType.Knight);
 	});
 });

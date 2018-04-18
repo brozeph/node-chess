@@ -314,6 +314,7 @@ describe('BoardValidation', function() {
 			}
 
 			assert.ok(checkResult);
+			// TODO: Should emit two events, not a single event with an array of attackers...
 			assert.strictEqual(checkResult.length, 2);
 		});
 	});

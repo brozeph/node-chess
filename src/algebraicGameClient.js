@@ -1,3 +1,4 @@
+import { EventEmitter } from 'events';
 import { Game } from './game';
 import { GameValidation } from './gameValidation';
 import { Piece, PieceType } from './piece';
@@ -188,8 +189,10 @@ function updateGameClient (gameClient) {
 	});
 }
 
-export class AlgebraicGameClient {
+export class AlgebraicGameClient extends EventEmitter {
 	constructor (game, opts) {
+		super();
+
 		this.game = game;
 		this.isCheck = false;
 		this.isCheckmate = false;
@@ -202,6 +205,9 @@ export class AlgebraicGameClient {
 		this.PGN = (opts && typeof opts.PGN === 'boolean') ? opts.PGN : false;
 		this.validMoves = [];
 		this.validation = GameValidation.create(this.game);
+
+		// bubble the game check event
+		this.game.on('check', (attackers) => (this.emit('check', attackers)));
 	}
 
 	static create (opts) {

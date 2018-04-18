@@ -743,4 +743,32 @@ describe('AlgebraicGameClient', function() {
 		assert.isDefined(r.notatedMoves['cxb8B'], 'should allow promote to bishop');
 		assert.isDefined(r.notatedMoves['cxb8N'], 'should allow promote to knight');
 	});
+
+	// Issue #23 - Show who is attacking the King
+	it ('should properly emit check and indicate attackers of the King', function () {
+		let
+			checkResult = null,
+			gc = AlgebraicGameClient.create(),
+			r = null;
+
+		gc.on('check', (result) => (checkResult = result));
+
+		// position the board for a promotion next move
+		gc.game.board.getSquare('b1').piece = null;
+		gc.game.board.getSquare('f6').piece = Piece.createKnight(SideType.White);
+		gc.game.board.getSquare('f6').piece.moveCount = 1;
+
+		// move to trigger evaluation that King is check
+		gc.move('a3');
+
+		// force recalculation of board position
+		r = gc.getStatus(true);
+
+		// make sure Pawn promotions are present
+		assert.isDefined(checkResult);
+		assert.strictEqual(checkResult.attackingSquare.piece.type, PieceType.Knight);
+		assert.isDefined(r.notatedMoves['exf6'], 'should allow capture of attacking Knight');
+		assert.isDefined(r.notatedMoves['gxf6'], 'should allow capture of attacking Knight');
+		assert.isDefined(r.notatedMoves['Nxf6'], 'should allow capture of attacking Knight');
+	});
 });
