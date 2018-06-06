@@ -1,7 +1,12 @@
 0.3.1 / 2018-06-05
 ==================
 
-	* Added `prebuild` directive to `package.json` file
+	* Added `prepare` directive to `package.json` file
+
+0.3.1 / 2018-06-05
+==================
+
+	* Added `prepublish` directive to `package.json` file
 
 0.3.0 / 2018-04-18
 ==================
