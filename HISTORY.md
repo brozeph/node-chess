@@ -1,4 +1,9 @@
-0.3.1 / 2018-06-05
+0.3.3 / 2018-06-05
+==================
+
+	* Added `.npmignore` file to help with distribution of `dist` folder
+
+0.3.2 / 2018-06-05
 ==================
 
 	* Added `prepare` directive to `package.json` file
