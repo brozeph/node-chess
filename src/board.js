@@ -2,9 +2,8 @@
 	The Board is the representation of the current position of the pieces on
 	the squares it contains.
 */
-
-import { EventEmitter } from 'events';
 import { Piece, PieceType, SideType } from './piece';
+import { EventEmitter } from 'events';
 import { Square } from './square';
 
 // types
@@ -38,8 +37,8 @@ export class Board extends EventEmitter {
 	static create () {
 		let
 			b = new Board([]),
-			i = 0,
 			f = 0,
+			i = 0,
 			r = 0,
 			sq = null;
 
@@ -152,8 +151,8 @@ export class Board extends EventEmitter {
 
 	getSquares (side) {
 		let
-			list = [],
-			i = 0;
+			i = 0,
+			list = [];
 
 		for (i = 0; i < this.squares.length; i++) {
 			if (this.squares[i].piece &&
@@ -196,8 +195,8 @@ export class Board extends EventEmitter {
 				},
 				p = src.piece,
 				sq = null,
-				undo = function (b, m) {
-					return function () {
+				undo = (b, m) => {
+					return () => {
 						m.prevSquare.piece = m.postSquare.piece;
 						m.postSquare.piece = m.capturedPiece;
 

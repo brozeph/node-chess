@@ -1,3 +1,8 @@
+0.4.0 / 2019-01-15
+==================
+
+	* Moved to new version of gulp and re-worked Babel transpile
+
 0.3.3 / 2018-06-05
 ==================
 

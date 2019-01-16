@@ -1,9 +1,11 @@
 {
 	"presets": [
-		"es2015",
-		"stage-0"
+		[
+			"@babel/preset-env"
+		]
 	],
 	"plugins": [
-		"babel-plugin-istanbul"
-	]
+		"@babel/plugin-transform-runtime"
+	],
+	"sourceMaps": true
 }

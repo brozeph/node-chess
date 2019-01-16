@@ -9,9 +9,11 @@ describe('GameValidation', function() {
 	// validate check
 	it('should properly indicate check', function() {
 		let
+			b,
 			g = Game.create(),
-			b = g.board,
 			v = GameValidation.create(g);
+
+		b = g.board;
 
 		// put king into check
 		b.move(b.getSquare('d', 2), b.getSquare('d', 4));
@@ -34,9 +36,11 @@ describe('GameValidation', function() {
 	// validate Knight check (part 1)
 	it('should properly indicate check due to Knight (part 1)', function () {
 		let
+			b,
 			g = Game.create(),
-			b = g.board,
 			v = GameValidation.create(g);
+
+		b = g.board;
 
 		b.move(b.getSquare('b1'), b.getSquare('c7'));
 
@@ -52,9 +56,11 @@ describe('GameValidation', function() {
 	// validate Knight check (part 2)
 	it('should properly indicate check due to Knight (part 2)', function () {
 		let
+			b,
 			g = Game.create(),
-			b = g.board,
 			v = GameValidation.create(g);
+
+		b = g.board;
 
 		b.move(b.getSquare('b1'), b.getSquare('c3'));
 		b.move(b.getSquare('g8'), b.getSquare('f6'));
@@ -74,9 +80,11 @@ describe('GameValidation', function() {
 	// validate checkmate
 	it('should properly indicate checkmate', function() {
 		let
+			b,
 			g = Game.create(),
-			b = g.board,
 			v = GameValidation.create(g);
+
+		b = g.board;
 
 		// put king into checkmate
 		b.move(b.getSquare('e', 2), b.getSquare('e', 4));
@@ -101,9 +109,11 @@ describe('GameValidation', function() {
 	// validate stalemate
 	it('should properly indicate stalemate', function() {
 		let
+			b,
 			g = Game.create(),
-			b = g.board,
 			v = GameValidation.create(g);
+
+		b = g.board;
 
 		// remove several pieces from the board
 		b.getSquare('a1').piece = null;
@@ -157,9 +167,11 @@ describe('GameValidation', function() {
 	// Fischer vs Petrosian, Buenos Aires, 1971, round 3
 	it('should properly indicate 3-fold repetition', function() {
 		let
+			b,
 			g = Game.create(),
-			b = g.board,
 			v = GameValidation.create(g);
+
+		b = g.board;
 
 		// 1. e4 e6
 		b.move('e2', 'e4');
