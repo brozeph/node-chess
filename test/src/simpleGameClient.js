@@ -55,8 +55,10 @@ describe('SimpleGameClient', function() {
 	// Issue #1 - Ensure no phantom pawns appear after sequence of moves in SimpleGameClient
 	it('should not have a random Pawn appear on the board after a specific sequence of moves (bug fix test)', function() {
 		let
-			gc = SimpleGameClient.create(),
-			b = gc.game.board;
+			b,
+			gc = SimpleGameClient.create();
+
+		b = gc.game.board;
 
 		gc.move('e2', 'e4');
 		gc.move('e7', 'e5');

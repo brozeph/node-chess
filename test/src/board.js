@@ -136,10 +136,10 @@ describe('Board', function() {
 		it('should return all White squares', function() {
 			let
 				b = Board.create(),
-				squares = b.getSquares(SideType.White),
-				pawnCount = 0,
+				i = 0,
 				kingCount = 0,
-				i = 0;
+				pawnCount = 0,
+				squares = b.getSquares(SideType.White);
 
 			assert.strictEqual(squares.length, 16);
 			assert.strictEqual(squares[i].piece.side, SideType.White);
@@ -160,10 +160,10 @@ describe('Board', function() {
 		it('should return all Black squares', function() {
 			let
 				b = Board.create(),
-				squares = b.getSquares(SideType.Black),
-				pawnCount = 0,
+				i = 0,
 				kingCount = 0,
-				i = 0;
+				pawnCount = 0,
+				squares = b.getSquares(SideType.Black);
 
 			assert.strictEqual(squares.length, 16);
 			assert.strictEqual(squares[i].piece.side, SideType.Black);

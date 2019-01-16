@@ -9,9 +9,8 @@
 	component handles the overall evaluation of what moves are possible for the
 	board in its current state.
 */
-
-import { NeighborType } from './board';
 import { PieceType, SideType } from './piece';
+import { NeighborType } from './board';
 
 export class PieceValidation {
 	constructor (board) {
@@ -60,12 +59,7 @@ export class PieceValidation {
 		}));
 
 		let
-			opt = {
-				destSquares : [],
-				piece : src ? src.piece : null,
-				origin : src
-			},
-			findMoveOptions = function (b, r, n) {
+			findMoveOptions = (b, r, n) => {
 				let
 					block = false,
 					capture = false,
@@ -89,6 +83,11 @@ export class PieceValidation {
 						i++;
 					}
 				}
+			},
+			opt = {
+				destSquares : [],
+				origin : src,
+				piece : src ? src.piece : null
 			};
 
 		if (!opt.piece || opt.piece.type !== this.type) {
@@ -190,9 +189,9 @@ export class KnightValidation extends PieceValidation {
 			belowRight = this.board.getNeighborSquare(
 				opt.origin,
 				NeighborType.BelowRight),
-			squares = [],
 			i = 0,
-			p = null;
+			p = null,
+			squares = [];
 
 		if (aboveLeft) {
 			squares.push(this.board.getNeighborSquare(
@@ -260,6 +259,9 @@ export class PawnValidation extends PieceValidation {
 	applySpecialValidation (opt) {
 		// check for capture
 		let
+			i = 0,
+			p = null,
+			sq = null,
 			squares = [
 				this.board.getNeighborSquare(opt.origin,
 					opt.piece.side === SideType.White ?
@@ -268,10 +270,7 @@ export class PawnValidation extends PieceValidation {
 				this.board.getNeighborSquare(opt.origin,
 					opt.piece.side === SideType.White ?
 							NeighborType.AboveRight :
-							NeighborType.BelowRight)],
-			i = 0,
-			sq = null,
-			p = null;
+							NeighborType.BelowRight)];
 
 		// check for capture
 		for (i = 0; i < squares.length; i++) {

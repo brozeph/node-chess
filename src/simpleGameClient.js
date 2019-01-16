@@ -7,7 +7,7 @@ import { Piece } from './piece';
 function isMoveValid (src, dest, validMoves) {
 	let
 		i = 0,
-		isFound = function (expr, sq) {
+		isFound = (expr, sq) => {
 			return ((typeof expr === 'string' && sq.file + sq.rank === expr) ||
 				(expr.rank && expr.file &&
 					sq.file === expr.file && sq.rank === expr.rank));
@@ -32,7 +32,7 @@ function isMoveValid (src, dest, validMoves) {
 }
 
 function updateGameClient (gameClient) {
-	return gameClient.validation.start(function (err, result) {
+	return gameClient.validation.start((err, result) => {
 		if (err) {
 			throw new Error(err);
 		}

@@ -1,7 +1,12 @@
 ---
   env:
     browser: false
+    es6: true
+    mocha: true
     node: true
+  globals:
+    assert: true
+    chai: true
   parser: "babel-eslint"
   parserOptions:
     ecmaVersion: 6
@@ -122,6 +127,7 @@
     no-sparse-arrays: 2
     no-sync: 2
     no-throw-literal: 2
+    no-undef: 2
     no-undefined: 2
     no-unexpected-multiline: 2
     no-unmodified-loop-condition: 2
@@ -141,6 +147,18 @@
       - "single"
     radix: 2
     use-isnan: 2
+    sort-imports:
+      - 2
+      - ignoreCase: true
+        ignoreMemberSort: true
+    sort-keys:
+      - 2
+      - "asc"
+      - caseSensitive: true
+        natural: true
+    sort-vars:
+      - 2
+      - ignoreCase: true
     valid-jsdoc: 2
     valid-typeof: 2
     vars-on-top: 2
