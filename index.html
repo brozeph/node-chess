@@ -5,8 +5,8 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Node Chess</title>
-		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.0/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.0/css/bootstrap-theme.min.css" />
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css" />
 		<link rel="stylesheet" href="public/css/gh-fork-ribbon.css" />
 		<!--[if lt IE 9]>
@@ -85,7 +85,7 @@ $ npm install chess
 						<h5>Algebraic Game Client</h5>
 						<p>To create a client that lists valid moves in algebraic notation:</p>
 <pre class="prettyprint">
-var
+const
   chess = require('chess'),
   game = chess.create();
 </pre>
@@ -97,11 +97,11 @@ var
 						<h4>3. Determine available moves</h4>
 						<p>To get available moves, simply call the method <code>getStatus()</code>:</p>
 <pre class="prettyprint">
-var
+let
   status = game.getStatus(),
   validMoves = status.notatedMoves;
 
-Object.keys(client.notatedMoves).forEach(function (notation) {
+Object.keys(client.notatedMoves).forEach((notation) => {
   console.log(notation);
 });
 </pre>
@@ -137,12 +137,12 @@ Object.keys(client.notatedMoves).forEach(function (notation) {
 						<h4>4. Make a move</h4>
 						<p>Making a move is as simple as calling the <code>move()</code> function with the proper notation:</p>
 <pre class="prettyprint">
-var
+const
   chess = require('chess'),
   game = chess.create();
 
 // move the White Pawn located on square a2 forward two squares
-var move = game.move('a4');
+let move = game.move('a4');
 </pre>
 					</div>
 				</div>
@@ -253,7 +253,7 @@ var move = game.move('a4');
 						<h4>Fischer vs Petrosian / Buenos Aires, 1971</h4>
 						<p>This game is quite interesting as it resulted in a draw due to 3-fold repetition!</p>
 <pre class="prettyprint">
-var
+const
   chess = require('chess'),
   game = chess.create();
 
@@ -361,7 +361,7 @@ game.move('Qe2');
 
 console.log(JSON.stringify(game.getStatus(), 0, 2));
 </pre>
-						<p>The above code will output the following:</p>
+<p>The above code will output the following:</p>
 <pre class="prettyprint">
 { board:
    { squares:
@@ -912,14 +912,14 @@ console.log(JSON.stringify(game.getStatus(), 0, 2));
 
 			<div class="footer">
 				<p>
-					&copy; 2013 Joshua Thomas &nbsp; Node Chess is licensed under the
+					&copy; 2019 Joshua Thomas &nbsp; Node Chess is licensed under the
 					<a href="http://opensource.org/licenses/MIT">MIT license</a>.
 				</p>
 			</div>
 
 		</div>
 
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
 		<script src="public/js/node-chess.js"></script>
