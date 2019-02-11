@@ -24,7 +24,7 @@
     "include": [
       "src"
     ],
-    "instrument": true,
+    "instrument": false,
     "report-dir": "./reports",
     "reporter": [
       "lcov",

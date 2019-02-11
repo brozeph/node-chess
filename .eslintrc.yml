@@ -165,18 +165,6 @@
       - "always"
     spaced-comment: ["error", "always"]
     use-isnan: 2
-    sort-imports:
-      - 2
-      - ignoreCase: true
-        ignoreMemberSort: true
-    sort-keys:
-      - 2
-      - "asc"
-      - caseSensitive: true
-        natural: true
-    sort-vars:
-      - 2
-      - ignoreCase: true
     valid-jsdoc: 2
     valid-typeof: 2
     vars-on-top: 2
