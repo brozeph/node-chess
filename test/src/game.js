@@ -2,18 +2,16 @@
 
 import { Game } from '../../src/game';
 
-describe('Game', function() {
-	'use strict';
-
+describe('Game', () => {
 	// make sure there is no move history when game is created
-	it('should have no move history when game is created', function() {
+	it('should have no move history when game is created', () => {
 		let g = Game.create();
 
 		assert.strictEqual(g.moveHistory.length, 0);
 	});
 
 	// verify move history is tracked on game when a move is made on board
-	it('should have move history length of 2 after 2 moves are made', function() {
+	it('should have move history length of 2 after 2 moves are made', () => {
 		let
 			b,
 			g = Game.create();
@@ -27,7 +25,7 @@ describe('Game', function() {
 	});
 
 	// ensure that when simulated moves are made on board, game history is not incremented
-	it('should have no move history when only simulated moves are made', function() {
+	it('should have no move history when only simulated moves are made', () => {
 		let
 			b,
 			g = Game.create(),
@@ -44,7 +42,7 @@ describe('Game', function() {
 	});
 
 	// ensure board position hash is accurate across moves
-	it('should have accurate hash code after each move stored in move history', function() {
+	it('should have accurate hash code after each move stored in move history', () => {
 		let
 			b,
 			g = Game.create();
@@ -71,7 +69,7 @@ describe('Game', function() {
 		assert.strictEqual(g.moveHistory[5].hashCode, g.moveHistory[9].hashCode);
 	});
 
-	it('should properly have notation in move history after move when supplied', function () {
+	it('should properly have notation in move history after move when supplied', () => {
 		let
 			b,
 			g = Game.create();
@@ -83,7 +81,7 @@ describe('Game', function() {
 		assert.ok(g.moveHistory[0].algebraic === 'd4');
 	});
 
-	it('should not have notation in move history after move when omitted', function () {
+	it('should not have notation in move history after move when omitted', () => {
 		let
 			b,
 			g = Game.create();
@@ -96,7 +94,7 @@ describe('Game', function() {
 	});
 
 	// ensure board position hash is accurate across games
-	it('should have consistent board hash across different game objects with same move histories', function() {
+	it('should have consistent board hash across different game objects with same move histories', () => {
 		let
 			b1,
 			b2,
@@ -117,7 +115,7 @@ describe('Game', function() {
 	});
 
 	// Issue #1 - Ensure no phantom pawns appear after sequence of moves
-	it('should not have phantom pawn appear after specific sequence of moves - Issue #1', function() {
+	it('should not have phantom pawn appear after specific sequence of moves - Issue #1', () => {
 		let
 			b,
 			g = Game.create();

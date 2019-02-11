@@ -1,9 +1,9 @@
 {
   "name": "chess",
   "description": "An algebraic notation driven chess engine that can validate board position and produce a list of viable moves (notated).",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": "Joshua Thomas (http://github.com/brozeph)",
-  "engine": "node >= 4",
+  "engine": "node >= 6",
   "repository": {
     "type": "git",
     "url": "https://github.com/brozeph/node-chess.git"
@@ -16,20 +16,15 @@
     "algebraic notation"
   ],
   "main": "./dist/main.js",
-  "scripts": {
-    "lint": "gulp lint",
-    "prepublish": "check-node-version --npm \">=4\" || npm run prepare",
-    "prepare": "gulp build",
-    "pretest": "gulp clean && gulp lint",
-    "test": "nyc mocha -r ./test/common.js ./test/src",
-    "posttest": "nyc report --reporter=text-lcov | coveralls"
-  },
   "nyc": {
     "all": true,
+    "exclude": [
+      "src/main.js"
+    ],
     "include": [
       "src"
     ],
-    "instrument": true,
+    "instrument": false,
     "report-dir": "./reports",
     "reporter": [
       "lcov",
@@ -39,15 +34,19 @@
     "require": [
       "@babel/register"
     ],
-    "sourceMap": true
+    "sourceMap": false
+  },
+  "dependencies": {
+    "@babel/runtime-corejs2": "^7.3.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.0.0",
     "@babel/core": "^7.2.2",
     "@babel/plugin-transform-runtime": "^7.2.0",
-    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-env": "^7.3.1",
     "@babel/register": "^7.0.0",
-    "babel-cli": "^6.26.0",
     "babel-eslint": "^10.0.1",
+    "babel-plugin-istanbul": "^5.1.0",
     "chai": "^4.2.0",
     "coveralls": "^3.0.2",
     "eslint-plugin-babel": "^5.3.0",
@@ -57,10 +56,14 @@
     "gulp-eslint": "^5.0.0",
     "gulp-sourcemaps": "^2.6.4",
     "mocha": "^5.2.0",
-    "nyc": "^13.1.0"
+    "nyc": "^13.2.0"
   },
-  "dependencies": {
-    "@babel/polyfill": "^7.2.5",
-    "@babel/runtime": "^7.2.0"
+  "scripts": {
+    "lint": "gulp lint",
+    "posttest": "nyc report --reporter=text-lcov | coveralls",
+    "prepublish": "gulp build",
+    "pretest": "gulp clean && gulp lint",
+    "test": "NODE_ENV=test nyc mocha ./test/src",
+    "test:unit": "NODE_ENV=test nyc mocha ./test/src"
   }
 }

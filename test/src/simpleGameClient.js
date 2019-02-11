@@ -3,11 +3,9 @@
 import { Piece, PieceType, SideType } from '../../src/piece';
 import { SimpleGameClient } from '../../src/simpleGameClient';
 
-describe('SimpleGameClient', function() {
-	'use strict';
-
+describe('SimpleGameClient', () => {
 	// test create and getStatus
-	it('should properly create simple game client', function() {
+	it('should properly create simple game client', () => {
 		let
 			gc = SimpleGameClient.create(),
 			s = gc.getStatus();
@@ -20,7 +18,7 @@ describe('SimpleGameClient', function() {
 	});
 
 	// test pawn move
-	it('should properly represent status after first pawn moves', function() {
+	it('should properly represent status after first pawn moves', () => {
 		let
 			gc = SimpleGameClient.create(),
 			s = null;
@@ -38,22 +36,22 @@ describe('SimpleGameClient', function() {
 	});
 
 	// test invalid notation
-	it('should properly throw exception for invalid moves', function() {
+	it('should properly throw exception for invalid moves', () => {
 		let gc = SimpleGameClient.create();
 
-		assert.throws(function() {
+		assert.throws(() => {
 			gc.move('h6');
 		});
-		assert.throws(function() {
+		assert.throws(() => {
 			gc.move('e2', 'z9');
 		});
-		assert.throws(function() {
+		assert.throws(() => {
 			gc.move('e2', 'e5');
 		});
 	});
 
 	// Issue #1 - Ensure no phantom pawns appear after sequence of moves in SimpleGameClient
-	it('should not have a random Pawn appear on the board after a specific sequence of moves (bug fix test)', function() {
+	it('should not have a random Pawn appear on the board after a specific sequence of moves (bug fix test)', () => {
 		let
 			b,
 			gc = SimpleGameClient.create();
@@ -81,7 +79,7 @@ describe('SimpleGameClient', function() {
 	});
 
 	// Issue #23 - Show who is attacking the King
-	it ('should properly emit check and indicate attackers of the King', function () {
+	it ('should properly emit check and indicate attackers of the King', () => {
 		let
 			checkResult = null,
 			gc = SimpleGameClient.create();

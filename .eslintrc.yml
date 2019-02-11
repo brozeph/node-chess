@@ -59,6 +59,7 @@
     no-case-declarations: 2
     no-cond-assign: 2
     no-confusing-arrow: 2
+    no-console: 2
     no-const-assign: 2
     no-constant-condition: 2
     no-control-regex: 2
@@ -146,7 +147,7 @@
       - 2
       - "single"
     radix: 2
-    use-isnan: 2
+    semi: 2
     sort-imports:
       - 2
       - ignoreCase: true
@@ -154,11 +155,16 @@
     sort-keys:
       - 2
       - "asc"
-      - caseSensitive: true
+      - caseSensitive: false
         natural: true
     sort-vars:
       - 2
       - ignoreCase: true
+    space-before-function-paren:
+      - 2
+      - "always"
+    spaced-comment: ["error", "always"]
+    use-isnan: 2
     valid-jsdoc: 2
     valid-typeof: 2
     vars-on-top: 2
