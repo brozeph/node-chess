@@ -1,8 +1,13 @@
-0.3.4 / 2019-02-11
+0.4.1 / 2019-02-11
 ==================
 
 	* Adjusting @babel dependencies and build process
 	* Multiple eslint warning fixes
+
+0.4.0 / 2019-01-15
+==================
+
+	* Moved to new version of gulp and re-worked Babel transpile
 
 0.3.3 / 2018-06-05
 ==================

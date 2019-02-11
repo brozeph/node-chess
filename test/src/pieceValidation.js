@@ -436,8 +436,8 @@ describe('PieceValidation', () => {
 			assert.strictEqual(squares.length, 9);
 
 			let
-			files = '',
-			i = 0;
+				files = '',
+				i = 0;
 
 			for (; i < squares.length; i++) {
 				files += squares[i].file;

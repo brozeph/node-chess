@@ -1,5 +1,4 @@
 /* eslint no-magic-numbers:0 */
-
 import { Piece, PieceType, SideType } from '../../src/piece';
 import { AlgebraicGameClient } from '../../src/algebraicGameClient';
 

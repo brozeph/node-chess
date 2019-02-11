@@ -23,7 +23,6 @@
 	to call PieceValidation (and doing so wouldn't give an accurate picture
 	of what is possible anyway).
 */
-
 import { PieceType, SideType } from './piece';
 import { NeighborType } from './board';
 import { PieceValidation } from './pieceValidation';
@@ -168,25 +167,7 @@ export class BoardValidation {
 
 		let
 			/* eslint no-invalid-this: 0 */
-			self = this,
-			setAttacked = function (c) {
-				return function (err, squares) {
-					if (!err) {
-						let i = 0;
-						for (i = 0; i < squares.length; i++) {
-							if (squares[i] === sq) {
-								c.attacked = true;
-								return;
-							}
-						}
-					}
-
-					c.attacked = false;
-				};
-			};
-
-		let
-			isAttacked = function (b, n) {
+			isAttacked = (b, n) => {
 				let
 					context = {},
 					currentSquare = b.getNeighborSquare(sq, n);
@@ -214,7 +195,7 @@ export class BoardValidation {
 
 				return context;
 			},
-			isAttackedByKnight = function (b, n) {
+			isAttackedByKnight = (b, n) => {
 				let
 					context,
 					currentSquare = b.getNeighborSquare(sq, n);
@@ -236,27 +217,42 @@ export class BoardValidation {
 
 				return context;
 			},
-			result = [
-				isAttacked(self.board, NeighborType.Above),
-				isAttacked(self.board, NeighborType.AboveRight),
-				isAttacked(self.board, NeighborType.Right),
-				isAttacked(self.board, NeighborType.BelowRight),
-				isAttacked(self.board, NeighborType.Below),
-				isAttacked(self.board, NeighborType.BelowLeft),
-				isAttacked(self.board, NeighborType.Left),
-				isAttacked(self.board, NeighborType.AboveLeft),
-				// fix for issue #4
-				isAttackedByKnight(self.board, NeighborType.KnightAboveRight),
-				isAttackedByKnight(self.board, NeighborType.KnightRightAbove),
-				isAttackedByKnight(self.board, NeighborType.KnightBelowRight),
-				isAttackedByKnight(self.board, NeighborType.KnightRightBelow),
-				isAttackedByKnight(self.board, NeighborType.KnightBelowLeft),
-				isAttackedByKnight(self.board, NeighborType.KnightLeftBelow),
-				isAttackedByKnight(self.board, NeighborType.KnightAboveLeft),
-				isAttackedByKnight(self.board, NeighborType.KnightLeftAbove)
-			].filter((result) => result.attacked);
+			self = this,
+			setAttacked = (c) => {
+				return (err, squares) => {
+					if (!err) {
+						let i = 0;
+						for (i = 0; i < squares.length; i++) {
+							if (squares[i] === sq) {
+								c.attacked = true;
+								return;
+							}
+						}
+					}
 
-		return result;
+					c.attacked = false;
+				};
+			};
+
+		return [
+			isAttacked(self.board, NeighborType.Above),
+			isAttacked(self.board, NeighborType.AboveRight),
+			isAttacked(self.board, NeighborType.Right),
+			isAttacked(self.board, NeighborType.BelowRight),
+			isAttacked(self.board, NeighborType.Below),
+			isAttacked(self.board, NeighborType.BelowLeft),
+			isAttacked(self.board, NeighborType.Left),
+			isAttacked(self.board, NeighborType.AboveLeft),
+			// fix for issue #4
+			isAttackedByKnight(self.board, NeighborType.KnightAboveRight),
+			isAttackedByKnight(self.board, NeighborType.KnightRightAbove),
+			isAttackedByKnight(self.board, NeighborType.KnightBelowRight),
+			isAttackedByKnight(self.board, NeighborType.KnightRightBelow),
+			isAttackedByKnight(self.board, NeighborType.KnightBelowLeft),
+			isAttackedByKnight(self.board, NeighborType.KnightLeftBelow),
+			isAttackedByKnight(self.board, NeighborType.KnightAboveLeft),
+			isAttackedByKnight(self.board, NeighborType.KnightLeftAbove)
+		].filter((result) => result.attacked);
 	}
 
 	isSquareAttacked (sq) {
@@ -276,8 +272,8 @@ export class BoardValidation {
 		let
 			i = 0,
 			kingSquare = null,
-			setValidMoves = function (v, sq) {
-				return function (err, squares) {
+			setValidMoves = (v, sq) => {
+				return (err, squares) => {
 					if (err) {
 						return callback(err);
 					}

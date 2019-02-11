@@ -5,14 +5,13 @@
 	degree of information regarding the opponents and keys that
 	could be used for storage, etc.
 */
-
 import { Board } from './board';
 import crypto from 'crypto';
 import { EventEmitter } from 'events';
 import { SideType } from './piece';
 
 function addToHistory (game) {
-	return function (ev) {
+	return (ev) => {
 		let
 			hashCode = game.getHashCode(),
 			move = new Move(
@@ -27,7 +26,7 @@ function addToHistory (game) {
 }
 
 function denotePromotionInHistory (game) {
-	return function () {
+	return () => {
 		let
 			latest = game.moveHistory[
 			game.moveHistory.length - 1];

@@ -4,7 +4,6 @@
 	scope validation include Check, Checkmate, 3-fold position
 	repetition and pawn promotion.
 */
-
 import { BoardValidation } from './boardValidation';
 import { PieceType } from './piece';
 
@@ -69,8 +68,8 @@ export class GameValidation {
 				isStalemate : false,
 				validMoves : []
 			},
-			setResult = function (v, result, isKingAttacked) {
-				return function (err, validMoves) {
+			setResult = (v, result, isKingAttacked) => {
+				return (err, validMoves) => {
 					if (err) {
 						return callback(err);
 					}

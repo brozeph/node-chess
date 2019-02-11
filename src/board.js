@@ -2,7 +2,6 @@
 	The Board is the representation of the current position of the pieces on
 	the squares it contains.
 */
-
 import { Piece, PieceType, SideType } from './piece';
 import { EventEmitter } from 'events';
 import { Square } from './square';
@@ -196,8 +195,8 @@ export class Board extends EventEmitter {
 				},
 				p = src.piece,
 				sq = null,
-				undo = function (b, m) {
-					return function () {
+				undo = (b, m) => {
+					return () => {
 						m.prevSquare.piece = m.postSquare.piece;
 						m.postSquare.piece = m.capturedPiece;
 

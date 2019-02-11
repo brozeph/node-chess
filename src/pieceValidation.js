@@ -9,7 +9,6 @@
 	component handles the overall evaluation of what moves are possible for the
 	board in its current state.
 */
-
 import { PieceType, SideType } from './piece';
 import { NeighborType } from './board';
 

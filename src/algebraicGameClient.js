@@ -6,7 +6,7 @@ import { GameValidation } from './gameValidation';
 // private methods
 function getNotationPrefix (src, dest, movesForPiece) {
 	let
-		containsDest = function (squares) {
+		containsDest = (squares) => {
 			let n = 0;
 
 			for (n = 0; n < squares.length; n++) {
@@ -175,7 +175,7 @@ function parseNotation (notation) {
 }
 
 function updateGameClient (gameClient) {
-	gameClient.validation.start(function (err, result) {
+	gameClient.validation.start((err, result) => {
 		if (err) {
 			throw new Error(err);
 		}
