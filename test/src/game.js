@@ -2,21 +2,21 @@
 
 import { Game } from '../../src/game';
 
-describe('Game', function() {
-	'use strict';
-
+describe('Game', () => {
 	// make sure there is no move history when game is created
-	it('should have no move history when game is created', function() {
+	it('should have no move history when game is created', () => {
 		let g = Game.create();
 
 		assert.strictEqual(g.moveHistory.length, 0);
 	});
 
 	// verify move history is tracked on game when a move is made on board
-	it('should have move history length of 2 after 2 moves are made', function() {
+	it('should have move history length of 2 after 2 moves are made', () => {
 		let
-			g = Game.create(),
-			b = g.board;
+			b,
+			g = Game.create();
+
+		b = g.board;
 
 		b.move(b.getSquare('d', 2), b.getSquare('d', 4));
 		b.move(b.getSquare('d', 7), b.getSquare('d', 5));
@@ -25,11 +25,14 @@ describe('Game', function() {
 	});
 
 	// ensure that when simulated moves are made on board, game history is not incremented
-	it('should have no move history when only simulated moves are made', function() {
+	it('should have no move history when only simulated moves are made', () => {
 		let
+			b,
 			g = Game.create(),
-			b = g.board,
-			r = b.move(b.getSquare('e', 2), b.getSquare('e', 4), true);
+			r;
+
+		b = g.board;
+		r = b.move(b.getSquare('e', 2), b.getSquare('e', 4), true);
 
 		assert.strictEqual(g.moveHistory.length, 0);
 
@@ -39,10 +42,12 @@ describe('Game', function() {
 	});
 
 	// ensure board position hash is accurate across moves
-	it('should have accurate hash code after each move stored in move history', function() {
+	it('should have accurate hash code after each move stored in move history', () => {
 		let
-			g = Game.create(),
-			b = g.board;
+			b,
+			g = Game.create();
+
+		b = g.board;
 
 		b.move(b.getSquare('d', 2), b.getSquare('d', 4));
 		b.move(b.getSquare('d', 7), b.getSquare('d', 5));
@@ -64,20 +69,24 @@ describe('Game', function() {
 		assert.strictEqual(g.moveHistory[5].hashCode, g.moveHistory[9].hashCode);
 	});
 
-	it('should properly have notation in move history after move when supplied', function () {
+	it('should properly have notation in move history after move when supplied', () => {
 		let
-			g = Game.create(),
-			b = g.board;
+			b,
+			g = Game.create();
+
+		b = g.board;
 
 		b.move('d2', 'd4', 'd4');
 		assert.strictEqual(g.moveHistory.length, 1);
 		assert.ok(g.moveHistory[0].algebraic === 'd4');
 	});
 
-	it('should not have notation in move history after move when omitted', function () {
+	it('should not have notation in move history after move when omitted', () => {
 		let
-			g = Game.create(),
-			b = g.board;
+			b,
+			g = Game.create();
+
+		b = g.board;
 
 		b.move('d2', 'd4');
 		assert.strictEqual(g.moveHistory.length, 1);
@@ -85,12 +94,15 @@ describe('Game', function() {
 	});
 
 	// ensure board position hash is accurate across games
-	it('should have consistent board hash across different game objects with same move histories', function() {
+	it('should have consistent board hash across different game objects with same move histories', () => {
 		let
+			b1,
+			b2,
 			g1 = Game.create(),
-			b1 = g1.board,
-			g2 = Game.create(),
-			b2 = g2.board;
+			g2 = Game.create();
+
+		b1 = g1.board;
+		b2 = g2.board;
 
 		b1.move(b1.getSquare('d', 2), b1.getSquare('d', 4));
 		b1.move(b1.getSquare('d', 7), b1.getSquare('d', 5));
@@ -103,10 +115,12 @@ describe('Game', function() {
 	});
 
 	// Issue #1 - Ensure no phantom pawns appear after sequence of moves
-	it('should not have phantom pawn appear after specific sequence of moves - Issue #1', function() {
+	it('should not have phantom pawn appear after specific sequence of moves - Issue #1', () => {
 		let
-			g = Game.create(),
-			b = g.board;
+			b,
+			g = Game.create();
+
+		b = g.board;
 
 		b.move(b.getSquare('e', 2), b.getSquare('e', 4));
 		b.move(b.getSquare('e', 7), b.getSquare('e', 5));

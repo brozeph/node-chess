@@ -1,43 +1,30 @@
-/*eslint no-invalid-this: 0*/
-import 'babel-polyfill';
+import { dest, series, src } from 'gulp';
+import babel from 'gulp-babel';
+import del from 'gulp-clean';
+import eslint from 'gulp-eslint';
+import sourcemaps from 'gulp-sourcemaps';
 
-const
-	babel = require('gulp-babel'),
-	coveralls = require('gulp-coveralls'),
-	del = require('del'),
-	eslint = require('gulp-eslint'),
-	gulp = require('gulp'),
-	sourcemaps = require('gulp-sourcemaps');
+function build () {
+	return src('src/**/*.js')
+		.pipe(sourcemaps.init())
+		.pipe(babel())
+		.pipe(sourcemaps.write('.'))
+		.pipe(dest('dist'));
+}
 
-module.exports = (() => {
-	gulp.task('build', ['clean-build'], () => {
-		return gulp
-			.src('src/**/*.js')
-			.pipe(sourcemaps.init())
-			.pipe(babel({
-				presets: ['es2015', 'stage-0']
-			}))
-			.pipe(sourcemaps.write('.'))
-			.pipe(gulp.dest('dist'));
-	});
+function clean () {
+	return src(['dist', 'reports'], { allowEmpty : true, read : false })
+		.pipe(del());
+}
 
-	gulp.task('clean-build', () => del('dist'));
+function lint () {
+	return src(['gulpfile.babel.js', 'src/**/*.js', 'test/**/*.js'])
+		.pipe(eslint())
+		.pipe(eslint.format())
+		.pipe(eslint.failAfterError());
+}
 
-	gulp.task('clean-reports', () => del('reports'));
-
-	gulp.task('coveralls', () => {
-		return gulp
-			.src('reports/lcov.info')
-			.pipe(coveralls());
-	});
-
-	gulp.task('default', ['build', 'lint']);
-
-	gulp.task('lint', () => {
-		return gulp
-			.src(['src/**/*.js', 'test/**/*.js', '!node_modules/**', '!reports/**'])
-			.pipe(eslint())
-			.pipe(eslint.format())
-			.pipe(eslint.failAfterError());
-	});
-})();
+exports.build = build;
+exports.clean = clean;
+exports.default = series(clean, lint, build);
+exports.lint = lint;

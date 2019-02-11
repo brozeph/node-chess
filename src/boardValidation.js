@@ -24,8 +24,8 @@
 	of what is possible anyway).
 */
 
-import { NeighborType } from './board';
 import { PieceType, SideType } from './piece';
+import { NeighborType } from './board';
 import { PieceValidation } from './pieceValidation';
 
 export class BoardValidation {
@@ -118,12 +118,12 @@ export class BoardValidation {
 
 	filterKingAttack (kingSquare, moves) {
 		let
+			filteredMoves = [],
 			i = 0,
 			isCheck = false,
 			n = 0,
 			r = null,
-			squares = [],
-			filteredMoves = [];
+			squares = [];
 
 		for (i = 0; i < moves.length; i++) {
 			squares = [];
@@ -149,8 +149,8 @@ export class BoardValidation {
 
 			if (squares && squares.length > 0) {
 				filteredMoves.push({
-					src : moves[i].src,
-					squares
+					squares,
+					src : moves[i].src
 				});
 			}
 		}
@@ -167,6 +167,8 @@ export class BoardValidation {
 		}
 
 		let
+			/* eslint no-invalid-this: 0 */
+			self = this,
 			setAttacked = function (c) {
 				return function (err, squares) {
 					if (!err) {
@@ -181,13 +183,13 @@ export class BoardValidation {
 
 					c.attacked = false;
 				};
-			},
-			/* eslint no-invalid-this: 0 */
-			self = this,
+			};
+
+		let
 			isAttacked = function (b, n) {
 				let
-					currentSquare = b.getNeighborSquare(sq, n),
-					context = {};
+					context = {},
+					currentSquare = b.getNeighborSquare(sq, n);
 
 				while (currentSquare) {
 					context = {
@@ -214,13 +216,15 @@ export class BoardValidation {
 			},
 			isAttackedByKnight = function (b, n) {
 				let
-					currentSquare = b.getNeighborSquare(sq, n),
-					context = {
-						attacked : false,
-						blocked : false,
-						piece : currentSquare ? currentSquare.piece : currentSquare,
-						square : currentSquare
-					};
+					context,
+					currentSquare = b.getNeighborSquare(sq, n);
+
+				context = {
+					attacked : false,
+					blocked : false,
+					piece : currentSquare ? currentSquare.piece : currentSquare,
+					square : currentSquare
+				};
 
 				if (currentSquare &&
 					currentSquare.piece &&
@@ -252,12 +256,10 @@ export class BoardValidation {
 				isAttackedByKnight(self.board, NeighborType.KnightLeftAbove)
 			].filter((result) => result.attacked);
 
-		// console.log('findAttackers result', result);
-
 		return result;
 	}
 
-	isSquareAttacked = function (sq) {
+	isSquareAttacked (sq) {
 		return this.findAttackers(sq).length !== 0;
 	}
 

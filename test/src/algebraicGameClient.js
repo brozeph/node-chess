@@ -1,13 +1,11 @@
 /* eslint no-magic-numbers:0 */
 
-import { AlgebraicGameClient } from '../../src/algebraicGameClient';
 import { Piece, PieceType, SideType } from '../../src/piece';
+import { AlgebraicGameClient } from '../../src/algebraicGameClient';
 
-describe('AlgebraicGameClient', function() {
-	'use strict';
-
+describe('AlgebraicGameClient', () => {
 	// test create and getStatus
-	it('should have proper status once board is created', function() {
+	it('should have proper status once board is created', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			s = gc.getStatus();
@@ -20,7 +18,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// test pawn move
-	it('should have proper board status after moving a piece', function() {
+	it('should have proper board status after moving a piece', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			s = null;
@@ -38,7 +36,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// test pawn capture enemy
-	it('should recognize piece capture', function() {
+	it('should recognize piece capture', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			r = null;
@@ -51,7 +49,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// test notation in history
-	it('should properly record notation in history', function() {
+	it('should properly record notation in history', () => {
 		let gc = AlgebraicGameClient.create();
 
 		gc.move('e4');
@@ -62,7 +60,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// test 2 face pieces with same square destination on different rank and file
-	it('should properly notate two Knights that can occupy same square for their respective moves', function() {
+	it('should properly notate two Knights that can occupy same square for their respective moves', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			s = null;
@@ -81,7 +79,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// test 2 face pieces with same square destination on different ranks
-	it('should properly notate two Rooks that can occupy same square from different ranks', function() {
+	it('should properly notate two Rooks that can occupy same square from different ranks', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			s = null;
@@ -102,7 +100,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// test 2 face pieces with same square destination on different files
-	it('should properly notate two Rooks that can occupy same square from different files', function() {
+	it('should properly notate two Rooks that can occupy same square from different files', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			s = null;
@@ -129,7 +127,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// test castle left
-	it('should properly notate white King castle left', function() {
+	it('should properly notate white King castle left', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			s = null;
@@ -144,7 +142,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// test castle left
-	it('should properly notate white King castle left as letters when PGN is true', function() {
+	it('should properly notate white King castle left as letters when PGN is true', () => {
 		let
 			gc = AlgebraicGameClient.create({ PGN : true }),
 			s = null;
@@ -159,7 +157,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// test castle right
-	it('should properly notate black King castle right', function() {
+	it('should properly notate black King castle right', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			s = null;
@@ -174,7 +172,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// test castle right
-	it('should properly notate black King castle right as letters when PGN is true', function() {
+	it('should properly notate black King castle right as letters when PGN is true', () => {
 		let
 			gc = AlgebraicGameClient.create({ PGN : true }),
 			s = null;
@@ -189,7 +187,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// validate parse notation with O-O-O
-	it('should properly recognize white King castle left notation', function() {
+	it('should properly recognize white King castle left notation', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			m = null;
@@ -205,7 +203,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// validate parse notation with O-O-O
-	it('should properly recognize white King castle left notation when PGN is true', function() {
+	it('should properly recognize white King castle left notation when PGN is true', () => {
 		let
 			gc = AlgebraicGameClient.create({ PGN : true }),
 			m = null;
@@ -221,7 +219,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// validate parse notation with O-O
-	it('should properly recognize black King castle right notation', function() {
+	it('should properly recognize black King castle right notation', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			m = null;
@@ -237,7 +235,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// validate parse notation with O-O
-	it('should properly recognize black King castle right notation when PGN is true', function() {
+	it('should properly recognize black King castle right notation when PGN is true', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			m = null;
@@ -254,7 +252,7 @@ describe('AlgebraicGameClient', function() {
 
 	// test pawn promotion
 	// adding for issue #6
-	it('should properly show valid White Pawn promotions', function() {
+	it('should properly show valid White Pawn promotions', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			r = null;
@@ -274,7 +272,7 @@ describe('AlgebraicGameClient', function() {
 		assert.isDefined(r.notatedMoves['a8Q'], 'pawn promotion to Queen');
 	});
 
-	it('should properly show valid Black Pawn promotions', function() {
+	it('should properly show valid Black Pawn promotions', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			r = null;
@@ -297,7 +295,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// test pawn promotion
-	it('should properly recognize White Pawn promotion to Rook', function() {
+	it('should properly recognize White Pawn promotion to Rook', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			m = null,
@@ -322,7 +320,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// test pawn promotion
-	it('should properly recognize Black Pawn promotion to Rook', function() {
+	it('should properly recognize Black Pawn promotion to Rook', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			m = null,
@@ -349,7 +347,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// test ambiguous notation
-	it('should throw exception when notation is too ambiguous to determine which piece to move', function() {
+	it('should throw exception when notation is too ambiguous to determine which piece to move', () => {
 		let gc = AlgebraicGameClient.create();
 
 		gc.move('a4');
@@ -359,25 +357,25 @@ describe('AlgebraicGameClient', function() {
 		gc.move('Ra3');
 		gc.move('Ra6');
 
-		assert.throws(function() {
+		assert.throws(() => {
 			gc.move('Rh3');
 		}); // could be Rhh3 or Rah3
 	});
 
 	// test invalid notation
-	it('should throw an exception when the notation provided is fail', function() {
+	it('should throw an exception when the notation provided is fail', () => {
 		let gc = AlgebraicGameClient.create();
 
-		assert.throws(function() {
+		assert.throws(() => {
 			gc.move('h6');
 		});
-		assert.throws(function() {
+		assert.throws(() => {
 			gc.move('z9');
 		});
 	});
 
 	// test overly specified notation
-	it('should properly parse overly verbose notation', function() {
+	it('should properly parse overly verbose notation', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			m = null;
@@ -391,7 +389,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// Issue #1 - Ensure no phantom pawns appear after sequence of moves in AlgebraicGameClient
-	it('should not have a random Pawn appear on the board after a specific sequence of moves (bug fix test)', function() {
+	it('should not have a random Pawn appear on the board after a specific sequence of moves (bug fix test)', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			s = gc.game.board.getSquare('c5');
@@ -425,7 +423,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// Issue #3 - Ensure no phantom pawns appear after sequence of moves
-	it ('should not have a random Black Pawn appear on the board (bug fix test)', function () {
+	it ('should not have a random Black Pawn appear on the board (bug fix test)', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			s = gc.game.board.getSquare('a6');
@@ -545,7 +543,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// Issue #4 - Ensure proper checkmate detection with Knight
-	it ('should properly detect checkmate', function () {
+	it ('should properly detect checkmate', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			status = null;
@@ -657,7 +655,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// Issue #8 - Ensure no extraneous Black Pawn
-	it ('should not have a random Black Pawn appear on the board (bug fix test)', function () {
+	it ('should not have a random Black Pawn appear on the board (bug fix test)', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			s = gc.game.board.getSquare('e6');
@@ -676,7 +674,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// Issue #15 - Ensure Pawn can move two spaces correctly on the first move
-	it ('should not block first move of two squares by Pawns incorrectly (bug fix test)', function () {
+	it ('should not block first move of two squares by Pawns incorrectly (bug fix test)', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			status;
@@ -692,7 +690,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// Issue #17 - Move pawn to promotion, other pieces of same color should not have promotion
-	it ('should properly notate future promotions after the first promotion (bug fix test)', function () {
+	it ('should properly notate future promotions after the first promotion (bug fix test)', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			r = null;
@@ -722,7 +720,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// Issue #18 - Missing Pawn promotion moves
-	it ('should properly notate future promotions after the first promotion (bug fix test)', function () {
+	it ('should properly notate future promotions after the first promotion (bug fix test)', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			r = null;
@@ -745,7 +743,7 @@ describe('AlgebraicGameClient', function() {
 	});
 
 	// Issue #23 - Show who is attacking the King
-	it ('should properly emit check and indicate attackers of the King', function () {
+	it ('should properly emit check and indicate attackers of the King', () => {
 		let
 			checkResult = null,
 			gc = AlgebraicGameClient.create(),

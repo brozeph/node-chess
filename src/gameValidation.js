@@ -65,8 +65,8 @@ export class GameValidation {
 				isCheck : false,
 				isCheckmate : false,
 				isFiftyMoveDraw : false,
-				isStalemate : false,
 				isRepetition : false,
+				isStalemate : false,
 				validMoves : []
 			},
 			setResult = function (v, result, isKingAttacked) {

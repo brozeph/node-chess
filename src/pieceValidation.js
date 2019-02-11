@@ -10,8 +10,8 @@
 	board in its current state.
 */
 
-import { NeighborType } from './board';
 import { PieceType, SideType } from './piece';
+import { NeighborType } from './board';
 
 export class PieceValidation {
 	constructor (board) {
@@ -59,37 +59,37 @@ export class PieceValidation {
 			return resolve(destinationSquares);
 		}));
 
-		let
-			opt = {
-				destSquares : [],
-				piece : src ? src.piece : null,
-				origin : src
-			},
-			findMoveOptions = function (b, r, n) {
-				let
-					block = false,
-					capture = false,
-					currentSquare = b.getNeighborSquare(opt.origin, n),
-					i = 0;
+		let opt = {
+			destSquares : [],
+			origin : src,
+			piece : src ? src.piece : null
+		};
 
-				while (currentSquare && i < r) {
-					block = currentSquare.piece !== null &&
-						(opt.piece.type === PieceType.Pawn ||
-							currentSquare.piece.side === opt.piece.side);
-					capture = (currentSquare.piece && !block);
+		const findMoveOptions = function (b, r, n) {
+			let
+				block = false,
+				capture = false,
+				currentSquare = b.getNeighborSquare(opt.origin, n),
+				i = 0;
 
-					if (!block) {
-						opt.destSquares.push(currentSquare);
-					}
+			while (currentSquare && i < r) {
+				block = currentSquare.piece !== null &&
+					(opt.piece.type === PieceType.Pawn ||
+						currentSquare.piece.side === opt.piece.side);
+				capture = (currentSquare.piece && !block);
 
-					if (capture || block) {
-						currentSquare = null;
-					} else {
-						currentSquare = b.getNeighborSquare(currentSquare, n);
-						i++;
-					}
+				if (!block) {
+					opt.destSquares.push(currentSquare);
 				}
-			};
+
+				if (capture || block) {
+					currentSquare = null;
+				} else {
+					currentSquare = b.getNeighborSquare(currentSquare, n);
+					i++;
+				}
+			}
+		};
 
 		if (!opt.piece || opt.piece.type !== this.type) {
 			return callback(new Error('piece is invalid'));
@@ -128,12 +128,12 @@ export class PieceValidation {
 
 			// apply additional validation logic
 			this.applySpecialValidation(opt);
-		} else {
-			return callback(new Error('board is invalid'));
+
+			// callback
+			return callback(null, opt.destSquares);
 		}
 
-		// callback
-		return callback(null, opt.destSquares);
+		return callback(new Error('board is invalid'));
 	}
 }
 
@@ -190,9 +190,9 @@ export class KnightValidation extends PieceValidation {
 			belowRight = this.board.getNeighborSquare(
 				opt.origin,
 				NeighborType.BelowRight),
-			squares = [],
 			i = 0,
-			p = null;
+			p = null,
+			squares = [];
 
 		if (aboveLeft) {
 			squares.push(this.board.getNeighborSquare(
@@ -260,6 +260,9 @@ export class PawnValidation extends PieceValidation {
 	applySpecialValidation (opt) {
 		// check for capture
 		let
+			i = 0,
+			p = null,
+			sq = null,
 			squares = [
 				this.board.getNeighborSquare(opt.origin,
 					opt.piece.side === SideType.White ?
@@ -268,10 +271,7 @@ export class PawnValidation extends PieceValidation {
 				this.board.getNeighborSquare(opt.origin,
 					opt.piece.side === SideType.White ?
 							NeighborType.AboveRight :
-							NeighborType.BelowRight)],
-			i = 0,
-			sq = null,
-			p = null;
+							NeighborType.BelowRight)];
 
 		// check for capture
 		for (i = 0; i < squares.length; i++) {
@@ -335,8 +335,8 @@ export class QueenValidation extends PieceValidation {
 		this.allowDiagonal = true;
 		this.allowForward = true;
 		this.allowHorizontal = true;
-		this.type = PieceType.Queen;
 		this.repeat = 8;
+		this.type = PieceType.Queen;
 	}
 }
 
@@ -348,8 +348,8 @@ export class RookValidation extends PieceValidation {
 		this.allowBackward = true;
 		this.allowForward = true;
 		this.allowHorizontal = true;
-		this.type = PieceType.Rook;
 		this.repeat = 8;
+		this.type = PieceType.Rook;
 	}
 }
 

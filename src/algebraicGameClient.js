@@ -1,7 +1,7 @@
+import { Piece, PieceType } from './piece';
 import { EventEmitter } from 'events';
 import { Game } from './game';
 import { GameValidation } from './gameValidation';
-import { Piece, PieceType } from './piece';
 
 // private methods
 function getNotationPrefix (src, dest, movesForPiece) {
@@ -17,9 +17,9 @@ function getNotationPrefix (src, dest, movesForPiece) {
 
 			return false;
 		},
-		i = 0,
 		file = '',
 		fileHash = {},
+		i = 0,
 		prefix = src.piece.notation,
 		rank = 0,
 		rankHash = {};
@@ -68,8 +68,8 @@ function notate (validMoves, gameClient) {
 		n = 0,
 		p = null,
 		prefix = '',
-		suffix = '',
-		sq = null;
+		sq = null,
+		suffix = '';
 
 	// iterate through each starting squares valid moves
 	for (i = 0; i < validMoves.length; i++) {
@@ -129,31 +129,31 @@ function notate (validMoves, gameClient) {
 			if (isPromotion) {
 				// Rook promotion
 				algebraicNotation[prefix + suffix + 'R'] = {
-					src : validMoves[i].src,
-					dest : sq
+					dest : sq,
+					src : validMoves[i].src
 				};
 
 				// Knight promotion
 				algebraicNotation[prefix + suffix + 'N'] = {
-					src : validMoves[i].src,
-					dest : sq
+					dest : sq,
+					src : validMoves[i].src
 				};
 
 				// Bishop promotion
 				algebraicNotation[prefix + suffix + 'B'] = {
-					src : validMoves[i].src,
-					dest : sq
+					dest : sq,
+					src : validMoves[i].src
 				};
 
 				// Queen promotion
 				algebraicNotation[prefix + suffix + 'Q'] = {
-					src : validMoves[i].src,
-					dest : sq
+					dest : sq,
+					src : validMoves[i].src
 				};
 			} else {
 				algebraicNotation[prefix + suffix] = {
-					src : validMoves[i].src,
-					dest : sq
+					dest : sq,
+					src : validMoves[i].src
 				};
 			}
 		}

@@ -7,9 +7,9 @@
 */
 
 import { Board } from './board';
+import crypto from 'crypto';
 import { EventEmitter } from 'events';
 import { SideType } from './piece';
-import crypto from 'crypto';
 
 function addToHistory (game) {
 	return function (ev) {

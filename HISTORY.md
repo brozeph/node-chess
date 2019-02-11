@@ -1,3 +1,9 @@
+0.3.4 / 2019-02-11
+==================
+
+	* Adjusting @babel dependencies and build process
+	* Multiple eslint warning fixes
+
 0.3.3 / 2018-06-05
 ==================
 
