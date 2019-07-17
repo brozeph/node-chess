@@ -1,7 +1,7 @@
 {
   "name": "chess",
   "description": "An algebraic notation driven chess engine that can validate board position and produce a list of viable moves (notated).",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "author": "Joshua Thomas (http://github.com/brozeph)",
   "engine": "node >= 6",
   "repository": {
@@ -36,28 +36,6 @@
     ],
     "sourceMap": false
   },
-  "dependencies": {
-    "@babel/runtime-corejs2": "^7.3.1"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.2.2",
-    "@babel/plugin-transform-runtime": "^7.2.0",
-    "@babel/preset-env": "^7.3.1",
-    "@babel/register": "^7.0.0",
-    "babel-eslint": "^10.0.1",
-    "babel-plugin-istanbul": "^5.1.0",
-    "chai": "^4.2.0",
-    "coveralls": "^3.0.2",
-    "eslint-plugin-babel": "^5.3.0",
-    "gulp": "^4.0.0",
-    "gulp-babel": "^8.0.0",
-    "gulp-clean": "^0.4.0",
-    "gulp-eslint": "^5.0.0",
-    "gulp-sourcemaps": "^2.6.4",
-    "mocha": "^5.2.0",
-    "nyc": "^13.2.0"
-  },
   "scripts": {
     "lint": "gulp lint",
     "posttest": "nyc report --reporter=text-lcov | coveralls",
@@ -65,5 +43,27 @@
     "pretest": "gulp clean && gulp lint",
     "test": "NODE_ENV=test nyc mocha ./test/src",
     "test:unit": "NODE_ENV=test nyc mocha ./test/src"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.0",
+    "@babel/core": "^7.5.4",
+    "@babel/plugin-transform-runtime": "^7.5.0",
+    "@babel/preset-env": "^7.5.4",
+    "@babel/register": "^7.4.4",
+    "babel-eslint": "^10.0.2",
+    "babel-plugin-istanbul": "^5.1.4",
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.5",
+    "eslint-plugin-babel": "^5.3.0",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-clean": "^0.4.0",
+    "gulp-eslint": "^6.0.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.1"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs2": "^7.5.4"
   }
 }
