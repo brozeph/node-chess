@@ -1,3 +1,6 @@
+src
+test
+
 # Compiled source #
 ###################
 *.com
@@ -6,8 +9,6 @@
 *.exe
 *.o
 *.so
-dist
-.nyc_output
 
 # Packages #
 ############
@@ -37,8 +38,14 @@ Thumbs.db
 
 # Everything else    #
 ######################
+.nyc_output
+.babelrc
+.coveralls.yml
+.gitignore
+.travis.yml
 .vscode
+gulpfile.babel.js
+lib-cov
 node-chess.tmproj #textmate project file
 node_modules
-lib-cov
 reports
