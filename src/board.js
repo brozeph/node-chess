@@ -82,6 +82,49 @@ export class Board extends EventEmitter {
 		return b;
 	}
 
+	static load (fen) {
+		const pieces = {
+			b: { arg: SideType.Black, method: 'createBishop' },
+			B: { arg: SideType.White, method: 'createBishop' },
+			k: { arg: SideType.Black, method: 'createKing' },
+			K: { arg: SideType.White, method: 'createKing' },
+			n: { arg: SideType.Black, method: 'createKnight' },
+			N: { arg: SideType.White, method: 'createKnight' },
+			p: { arg: SideType.Black, method: 'createPawn' },
+			P: { arg: SideType.White, method: 'createPawn' },
+			q: { arg: SideType.Black, method: 'createQueen' },
+			Q: { arg: SideType.White, method: 'createQueen' },
+			r: { arg: SideType.Black, method: 'createRook' },
+			R: { arg: SideType.White, method: 'createRook' }
+		};
+
+		const lines = fen.split('/')
+			.map((line, rank) => {
+				const arr = line.split('');
+				let file = 0;
+
+				return arr.reduce((acc, cur) => {
+					if (!isNaN(Number(cur))) {
+						for (let i = 0; i < Number(cur); i += 1) {
+							acc.push(Square.create('abcdefgh'[file], rank + 1));
+							file = file < 7 ? file + 1 : 0;
+						}
+					} else {
+						const square = Square.create('abcdefgh'[file], rank + 1);
+						square.piece = Piece[pieces[cur].method](pieces[cur].arg);
+						acc.push(square);
+						file = file < 7 ? file + 1 : 0;
+					}
+					return acc;
+				}, []);
+			});
+
+		return new Board(lines.reduce((acc, cur) => {
+			acc.push(...cur);
+			return acc;
+		}, []));
+	}
+
 	getNeighborSquare (sq, n) {
 		if (sq && n) {
 			// validate boundaries of board

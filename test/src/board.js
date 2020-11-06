@@ -12,6 +12,14 @@ describe('Board', () => {
 		});
 	});
 
+	describe('#load(FEN)', () => {
+		// ensure 64 squares
+		it('should return 64 squares', () => {
+			let b = Board.load('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR');
+			assert.strictEqual(b.squares.length, 64);
+		});
+	});
+
 	describe('#getSquare()', () => {
 		// ensure squares retrieved via getSquare are correct
 		it('should be square a1', () => {
