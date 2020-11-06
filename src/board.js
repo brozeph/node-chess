@@ -119,7 +119,10 @@ export class Board extends EventEmitter {
 				}, []);
 			});
 
-		return new Board(lines.flat());
+		return new Board(lines.reduce((acc, cur) => {
+			acc.push(...cur);
+			return acc;
+		}, []));
 	}
 
 	getNeighborSquare (sq, n) {
