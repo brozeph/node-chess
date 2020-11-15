@@ -49,7 +49,7 @@ export class BoardValidation {
 				}
 			},
 			interimMove = null,
-			/* eslint no-magic-numbers: 0 */
+			// eslint-disable-next-line no-magic-numbers
 			rank = this.game.getCurrentSide() === SideType.White ? 1 : 8,
 			squares = {
 				'a' : this.board.getSquare('a', rank),
