@@ -768,4 +768,123 @@ describe('AlgebraicGameClient', () => {
 		assert.isDefined(r.notatedMoves['gxf6'], 'should allow capture of attacking Knight');
 		assert.isDefined(r.notatedMoves['Nxf6'], 'should allow capture of attacking Knight');
 	});
+
+	// Issue #43 - Parser can't handle PGN notation for gxf3+
+	/*
+	[Event "Gibraltar Masters 2019"]
+	[Site "Caleta ENG"]
+	[Date "2019.01.22"]
+	[Round "1.110"]
+	[White "Bianco,V"]
+	[Black "Larino Nieto,D"]
+	[Result "0-1"]
+	[WhiteElo "2018"]
+	[BlackElo "2432"]
+	[ECO "C41"]
+
+	1.d4 d6 2.e4 Nf6 3.Nc3 e5 4.Nf3 Nbd7 5.Bc4 Nb6 6.dxe5 Nxc4 7.exf6 Qxf6 8.Bg5 Nxb2
+	9.Qd2 Qe6 10.Nd5 Qxe4+ 11.Kf1 Qc4+ 12.Kg1 Be6 13.Ne3 Qc5 14.Rb1 Na4 15.c4 Nb6
+	16.Qb2 h6 17.Bh4 Rg8 18.Nd4 g5 19.Nxe6 fxe6 20.Qf6 Qe5 21.Qxe5 dxe5 22.Bg3 O-O-O
+	23.Bxe5 Bc5 24.h4 g4 25.Kh2 Rd2 26.Kg3 Nd7 27.Bb2 Bd6+ 28.f4 gxf3+ 29.Kxf3 Rg3+
+	30.Ke4 Nc5+  0-1
+	//*/
+	it('should properly handle notation that is similar to gxf3+', () => {
+		let
+			gc = AlgebraicGameClient.create(),
+			status;
+
+		gc.move('d4');
+		gc.move('d6');
+
+		gc.move('e4');
+		gc.move('Nf6');
+
+		gc.move('Nc3');
+		gc.move('e5');
+
+		gc.move('Nf3');
+		gc.move('Nbd7');
+
+		gc.move('Bc4');
+		gc.move('Nb6');
+
+		gc.move('dxe5');
+		gc.move('Nxc4');
+
+		gc.move('exf6');
+		gc.move('Qxf6');
+
+		gc.move('Bg5');
+		gc.move('Nxb2');
+
+		gc.move('Qd2');
+		gc.move('Qe6');
+
+		gc.move('Nd5');
+		gc.move('Qxe4+');
+
+		gc.move('Kf1');
+		gc.move('Qc4+');
+
+		gc.move('Kg1');
+		gc.move('Be6');
+
+		gc.move('Ne3');
+		gc.move('Qc5');
+
+		gc.move('Rb1');
+		gc.move('Na4');
+
+		gc.move('c4');
+		gc.move('Nb6');
+
+		gc.move('Qb2');
+		gc.move('h6');
+
+		gc.move('Bh4');
+		gc.move('Rg8');
+
+		gc.move('Nd4');
+		gc.move('g5');
+
+		gc.move('Nxe6');
+		gc.move('fxe6');
+
+		gc.move('Qf6');
+		gc.move('Qe5');
+
+		gc.move('Qxe5');
+		gc.move('dxe5');
+
+		gc.move('Bg3');
+		gc.move('O-O-O');
+
+		gc.move('Bxe5');
+		gc.move('Bc5');
+
+		gc.move('h4');
+		gc.move('g4');
+
+		gc.move('Kh2');
+		gc.move('Rd2');
+
+		gc.move('Kg3');
+		gc.move('Nd7');
+
+		gc.move('Bb2');
+		gc.move('Bd6+');
+
+		gc.move('f4');
+		// #43 - test previoulsy failed here: unable to parse gxf3+ and reduced notation to gf3 to retry parse
+		gc.move('gxf3+');
+
+		gc.move('Kxf3');
+		gc.move('Rg3+');
+
+		gc.move('Ke4');
+		gc.move('Nc5+');
+
+		status = gc.getStatus();
+		assert.ok(status.isCheckmate, 'should properly parse gxf3+');
+	});
 });

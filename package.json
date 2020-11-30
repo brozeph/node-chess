@@ -1,7 +1,7 @@
 {
   "name": "chess",
   "description": "An algebraic notation driven chess engine that can validate board position and produce a list of viable moves (notated).",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "contributors": [
     {
       "name": "Joshua Thomas",
@@ -11,6 +11,10 @@
     {
       "name": "Denis Efremov",
       "url": "https://github.com/Piterden"
+    },
+    {
+      "name": "Fun Planet",
+      "url": "https://gist.github.com/dipamsen"
     }
   ],
   "engine": "node >= 6",
