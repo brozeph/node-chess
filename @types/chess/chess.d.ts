@@ -32,7 +32,7 @@ declare namespace Chess {
      */
     move(notation: string): PlayedMove
     getStatus(): AlgebraicGameStatus
-	}
+  }
 
   interface SimpleGameClient {
     /** Whether either of the side is under check */
@@ -57,7 +57,7 @@ declare namespace Chess {
      */
     move(notation: string): PlayedMove
     getStatus(): SimpleGameStatus
-	}
+  }
 
   interface AlgebraicGameStatus {
     /** Current board configuration */
@@ -72,7 +72,7 @@ declare namespace Chess {
     isStalemate: boolean
     /** Hash of next possible moves with key as notation and value as src-dest mapping */
     notatedMoves: Record<string, NotatedMove>
-	}
+  }
 
   interface SimpleGameStatus {
     /** Current board configuration */
@@ -85,11 +85,11 @@ declare namespace Chess {
     isRepetition: boolean
     /** Whether game has ended by stalemate */
     isStalemate: boolean
-	}
+  }
 
   type File = string
   type Rank = number
-	type ChessEvent = "check" | "checkmate"
+  type ChessEvent = "check" | "checkmate"
 
   interface PlayedMove {
     move: {
@@ -101,21 +101,21 @@ declare namespace Chess {
       prevSquare: Square
     }
     undo(): void
-	}
+  }
 
   interface Game {
     board: ChessBoard
     moveHistory: Move[]
-	}
+  }
 
   interface GameValidation {
     game: Game
-	}
+  }
 
   interface ChessBoard {
     squares: Square[]
     lastMovedPiece: Piece
-	}
+  }
 
   interface Move {
     algebraic: string
@@ -127,67 +127,67 @@ declare namespace Chess {
     postRank: Rank
     prevFile: File
     prevRank: Rank
-	}
+  }
 
   interface NotatedMove {
     dest: Square
     src: Square
-	}
+  }
 
   interface ValidMove {
     squares: Square[]
     src: Square
-	}
+  }
 
   interface Square {
     file: File
     piece: Piece?
     rank: Rank
-	}
+  }
 
   type Piece = Pawn | Knight | Bishop | Rook | Queen | King
 
-	interface Pawn {
+  interface Pawn {
     moveCount: number
     notation: ''
     side: Side
     type: 'pawn'
-	}
+  }
 
   interface Knight {
     moveCount: number
     notation: 'N'
     side: Side
     type: 'pawn'
-	}
+  }
 
   interface Bishop {
     moveCount: number
     notation: 'B'
     side: Side
     type: 'bishop'
-	}
+  }
 
   interface Rook {
     moveCount: number
     notation: 'R'
     side: Side
     type: 'rook'
-	}
+  }
 
   interface Queen {
     moveCount: number
     notation: 'Q'
     side: Side
     type: 'queen'
-	}
+  }
 
   interface King {
     moveCount: number
     notation: 'K'
     side: Side
     type: 'king'
-	}
+  }
 
   interface Side {
     name: "white" | "black"
