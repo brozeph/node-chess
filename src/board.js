@@ -98,7 +98,8 @@ export class Board extends EventEmitter {
 			R: { arg: SideType.White, method: 'createRook' }
 		};
 
-		const lines = fen.split('/')
+		const [board/* , turn, castling, enPassant, halfs, moves */] = fen.split(' ');
+		const lines = board.split('/')
 			.map((line, rank) => {
 				const arr = line.split('');
 				let file = 0;
@@ -193,13 +194,10 @@ export class Board extends EventEmitter {
 	}
 
 	getSquares (side) {
-		let
-			i = 0,
-			list = [];
+		const list = [];
 
-		for (i = 0; i < this.squares.length; i++) {
-			if (this.squares[i].piece &&
-					this.squares[i].piece.side === side) {
+		for (let i = 0; i < this.squares.length; i++) {
+			if (this.squares[i].piece && this.squares[i].piece.side === side) {
 				list.push(this.squares[i]);
 			}
 		}
@@ -208,25 +206,22 @@ export class Board extends EventEmitter {
 	}
 
 	move (src, dest, n) {
-		if (typeof src === 'string' &&
-				src.length === 2) {
+		if (typeof src === 'string' && src.length === 2) {
 			src = this.getSquare(src);
 		}
 
-		if (typeof dest === 'string' &&
-				dest.length === 2) {
+		if (typeof dest === 'string' && dest.length === 2) {
 			dest = this.getSquare(dest);
 		}
 
-		let simulate = false;
+		let simulate;
 
 		if (typeof n === 'boolean') {
 			simulate = n;
 			n = null;
 		}
 
-		if (src && src.file && src.rank &&
-				dest && dest.file && dest.rank) {
+		if (src && src.file && src.rank && dest && dest.file && dest.rank) {
 			let
 				move = {
 					algebraic : n,
