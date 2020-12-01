@@ -9,7 +9,7 @@ function getNotationPrefix (src, dest, movesForPiece) {
 		containsDest = (squares) => {
 			let n = 0;
 
-			for (n = 0; n < squares.length; n++) {
+			for (; n < squares.length; n++) {
 				if (squares[n] === dest) {
 					return true;
 				}
@@ -24,7 +24,7 @@ function getNotationPrefix (src, dest, movesForPiece) {
 		rank = 0,
 		rankHash = {};
 
-	for (i = 0; i < movesForPiece.length; i++) {
+	for (; i < movesForPiece.length; i++) {
 		if (containsDest(movesForPiece[i].squares)) {
 			file = movesForPiece[i].src.file;
 			rank = movesForPiece[i].src.rank;
@@ -50,7 +50,7 @@ function getValidMovesByPieceType (pieceType, validMoves) {
 		byPiece = [],
 		i = 0;
 
-	for (i = 0; i < validMoves.length; i++) {
+	for (; i < validMoves.length; i++) {
 		if (validMoves[i].src.piece.type === pieceType) {
 			byPiece.push(validMoves[i]);
 		}
@@ -72,7 +72,7 @@ function notate (validMoves, gameClient) {
 		suffix = '';
 
 	// iterate through each starting squares valid moves
-	for (i = 0; i < validMoves.length; i++) {
+	for (; i < validMoves.length; i++) {
 		p = validMoves[i].src.piece;
 
 		// iterate each potential move and build prefix and suffix for notation
@@ -163,11 +163,19 @@ function notate (validMoves, gameClient) {
 }
 
 function parseNotation (notation) {
-	let parseDest = '';
+	let
+		captureRegex = /^[a-h]x[a-h][1-8]$/,
+		parseDest = '';
 
 	// try and parse the notation
 	parseDest = notation.substring(notation.length - 2);
+
 	if (notation.length > 2) {
+		// check for preceding pawn capture style notation (i.e. a-h x)
+		if (captureRegex.test(notation)) {
+			return parseDest;
+		}
+
 		return notation.charAt(0) + parseDest;
 	}
 
@@ -252,12 +260,12 @@ export class AlgebraicGameClient extends EventEmitter {
 				.replace(/\=/g, '')
 				.replace(/\\/g, '');
 
-				// fix for issue #13 - if PGN is specified, should be letters not numbers
-				if (this.PGN) {
-					notation = notation.replace(/0/g, 'O');
-				} else {
-					notation = notation.replace(/O/g, '0');
-				}
+			// fix for issue #13 - if PGN is specified, should be letters not numbers
+			if (this.PGN) {
+				notation = notation.replace(/0/g, 'O');
+			} else {
+				notation = notation.replace(/O/g, '0');
+			}
 
 			// check for pawn promotion
 			if (notation.charAt(notation.length - 1).match(/[BNQR]/)) {
