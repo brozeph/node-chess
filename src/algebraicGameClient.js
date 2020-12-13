@@ -243,6 +243,28 @@ export class AlgebraicGameClient extends EventEmitter {
 		};
 	}
 
+	getFen () {
+		const fen = [];
+
+		for (let i = 0; i < this.game.board.squares.length; i += 1) {
+			const square = this.game.board.squares[i];
+
+			if (square.piece) {
+				fen.push(square.piece.side.name === 'white'
+					? (square.piece.notation || 'p').toUpperCase()
+					: (square.piece.notation || 'p').toLowerCase());
+			} else {
+				if (isNaN(Number(fen[fen.length - 1]))) {
+					fen.push(0);
+				} else {
+					fen[fen.length - 1] += 1;
+				}
+			}
+		}
+
+		return fen.join('');
+	}
+
 	move (notation, isFuzzy) {
 		let
 			move = null,
