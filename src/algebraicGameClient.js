@@ -249,20 +249,23 @@ export class AlgebraicGameClient extends EventEmitter {
 		for (let i = 0; i < this.game.board.squares.length; i += 1) {
 			const square = this.game.board.squares[i];
 
+			if (square.file === 'a' && square.rank > 1) {
+				fen.push('/');
+			}
+
 			if (square.piece) {
-				fen.push(square.piece.side.name === 'white'
-					? (square.piece.notation || 'p').toUpperCase()
-					: (square.piece.notation || 'p').toLowerCase());
+				const transform = `to${square.piece.side.name === 'white' ? 'Upp' : 'Low'}erCase`;
+				fen.push((square.piece.notation || 'p')[transform]());
 			} else {
 				if (isNaN(Number(fen[fen.length - 1]))) {
-					fen.push(0);
+					fen.push(1);
 				} else {
 					fen[fen.length - 1] += 1;
 				}
 			}
 		}
 
-		return fen.join('');
+		return fen.reverse().join('');
 	}
 
 	move (notation, isFuzzy) {
