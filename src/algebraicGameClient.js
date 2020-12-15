@@ -245,11 +245,20 @@ export class AlgebraicGameClient extends EventEmitter {
 
 	getFen () {
 		const fen = [];
+		const squares = this.game.board.squares
+			.reduce((acc, cur, idx) => {
+				const outerIdx = parseInt(idx / 8, 10);
+				acc[outerIdx] = acc[outerIdx] || [];
+				acc[outerIdx].push(cur);
+				return acc;
+			}, [])
+			.flatMap((row) => row.reverse())
+			.reverse();
 
-		for (let i = 0; i < this.game.board.squares.length; i += 1) {
-			const square = this.game.board.squares[i];
+		for (let i = 0; i < squares.length; i += 1) {
+			const square = squares[i];
 
-			if (square.file === 'a' && square.rank > 1) {
+			if (square.file === 'a' && square.rank < 8) {
 				fen.push('/');
 			}
 
@@ -265,7 +274,7 @@ export class AlgebraicGameClient extends EventEmitter {
 			}
 		}
 
-		return fen.reverse().join('');
+		return fen.join('');
 	}
 
 	move (notation, isFuzzy) {
