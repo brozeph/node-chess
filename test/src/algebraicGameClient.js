@@ -887,4 +887,15 @@ describe('AlgebraicGameClient', () => {
 		status = gc.getStatus();
 		assert.ok(status.isCheckmate, 'should properly parse gxf3+');
 	});
+
+	// getFen test
+	it ('should properly generate FEN of start position', () => {
+		let
+			fen = null,
+			gc = AlgebraicGameClient.create();
+
+		fen = gc.getFen();
+
+		assert.strictEqual(fen, 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR');
+	});
 });
