@@ -158,7 +158,7 @@ declare namespace Chess {
     moveCount: number
     notation: 'N'
     side: Side
-    type: 'pawn'
+    type: 'knight'
   }
 
   interface Bishop {
