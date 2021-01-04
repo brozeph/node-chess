@@ -33,7 +33,7 @@
   "scripts": {
     "lint": "gulp lint",
     "posttest": "nyc report --reporter=text-lcov | coveralls",
-    "prepublish": "gulp build",
+    "prepare": "gulp build",
     "pretest": "gulp clean && gulp lint",
     "test": "NODE_ENV=test nyc mocha --require test/common --recursive --reporter spec",
     "test:unit": "NODE_ENV=test nyc mocha --require test/common --recursive --reporter spec"
