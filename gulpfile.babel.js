@@ -1,30 +1,35 @@
-import { dest, series, src } from 'gulp';
 import babel from 'gulp-babel';
 import del from 'gulp-clean';
 import eslint from 'gulp-eslint';
+import gulp from 'gulp';
 import sourcemaps from 'gulp-sourcemaps';
 
 function build () {
-	return src('src/**/*.js')
-		.pipe(sourcemaps.init())
-		.pipe(babel())
-		.pipe(sourcemaps.write('.'))
-		.pipe(dest('dist'));
+  return gulp
+    .src('src/**/*.js')
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      presets: ['@babel/preset-env']
+    }))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('dist'));
 }
 
 function clean () {
-	return src(['dist', 'reports'], { allowEmpty : true, read : false })
-		.pipe(del());
+  return gulp
+    .src(['dist', 'reports'], { allowEmpty: true, read: false })
+    .pipe(del());
 }
 
 function lint () {
-	return src(['gulpfile.babel.js', 'src/**/*.js', 'test/**/*.js'])
-		.pipe(eslint())
-		.pipe(eslint.format())
-		.pipe(eslint.failAfterError());
+  return gulp
+    .src(['gulpfile.babel.js', 'src/**/*.js', 'test/**/*.js'])
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
 }
 
 exports.build = build;
 exports.clean = clean;
-exports.default = series(clean, lint, build);
+exports.default = gulp.series(clean, lint, build);
 exports.lint = lint;
