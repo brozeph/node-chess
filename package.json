@@ -1,7 +1,7 @@
 {
   "name": "chess",
   "description": "An algebraic notation driven chess engine that can validate board position and produce a list of viable moves (notated).",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "contributors": [
     {
       "name": "Joshua Thomas",
