@@ -1,6 +1,7 @@
 /* eslint no-magic-numbers:0 */
 import { Piece, PieceType, SideType } from '../../src/piece';
 import { AlgebraicGameClient } from '../../src/algebraicGameClient';
+import { assert } from 'chai';
 
 describe('AlgebraicGameClient', () => {
 	// test create and getStatus
@@ -886,6 +887,24 @@ describe('AlgebraicGameClient', () => {
 
 		status = gc.getStatus();
 		assert.ok(status.isCheckmate, 'should properly parse gxf3+');
+	});
+
+	// Issue #53
+	// Algebraic and PGN formatting of en Passant is not correct
+	it('should properly notate en Passant', () => {
+		let
+			gc = AlgebraicGameClient.create(),
+			status;
+
+		gc.move('e4');
+		gc.move('d5');
+		gc.move('e5');
+		gc.move('f5');
+
+		status = gc.getStatus();
+
+		assert.isUndefined(status.notatedMoves['f6'], 'should properly notate en Passant');
+		assert.isDefined(status.notatedMoves['exf6'], 'should properly notate en Passant');
 	});
 
 	// getFen test
