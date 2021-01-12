@@ -301,6 +301,15 @@ export class Board extends EventEmitter {
 			if (!simulate) {
 				p.moveCount++;
 				this.lastMovedPiece = p;
+
+				if (move.castle) {
+					this.emit('castle', move);
+				}
+
+				if (move.enPassant) {
+					this.emit('enPassant', move);
+				}
+
 				this.emit('move', move);
 			}
 
