@@ -1,5 +1,6 @@
 /* eslint no-magic-numbers:0 */
 
+import { assert } from 'chai';
 import { BoardValidation } from '../../src/boardValidation';
 import { Game } from '../../src/game';
 
@@ -331,7 +332,52 @@ describe('BoardValidation', () => {
 		// capture check event
 		g.on('check', (result) => (checkResult.push(result)));
 
-		// prepare board by eliminating two Pawns
+		// prepare board by eliminating a few pieces
+		b.getSquare('e', 2).piece = null;
+		b.getSquare('e', 7).piece = null;
+		b.getSquare('f', 8).piece = null;
+
+		// arrange double check scenario via reveal
+		b.move(b.getSquare('b', 1), b.getSquare('c', 3));
+		b.move(b.getSquare('a', 7), b.getSquare('a', 6));
+
+		b.move(b.getSquare('c', 3), b.getSquare('e', 4));
+		b.move(b.getSquare('a', 6), b.getSquare('a', 5));
+
+		// Queen preparing to put in check
+		b.move(b.getSquare('d', 1), b.getSquare('e', 2));
+		b.move(b.getSquare('a', 5), b.getSquare('a', 4));
+
+		// double-check (a checkmate... Queen and Knight both attacking)
+		b.move(b.getSquare('e', 4), b.getSquare('f', 6));
+
+		bv.start((err) => {
+			if (err) {
+				throw err;
+			}
+
+			assert.ok(checkResult);
+			// Should emit two events, not a single event
+			assert.strictEqual(checkResult.length, 2);
+		});
+	});
+
+	it('should properly trigger game to emit multiple checkmate events when King is placed in checkmate by multiple pieces', () => {
+		let
+			b,
+			bv,
+			checkmateResult = [],
+			checkResult = [],
+			g = Game.create();
+
+		b = g.board;
+		bv = BoardValidation.create(g);
+
+		// capture check event
+		g.on('check', (result) => checkResult.push(result));
+		g.on('checkmate', (result) => checkmateResult.push(result));
+
+		// prepare board by eliminating a couple pieces
 		b.getSquare('e', 2).piece = null;
 		b.getSquare('e', 7).piece = null;
 
@@ -355,8 +401,46 @@ describe('BoardValidation', () => {
 			}
 
 			assert.ok(checkResult);
-			// TODO: Should emit two events, not a single event with an array of attackers...
-			assert.strictEqual(checkResult.length, 2);
+			assert.ok(checkmateResult);
+
+			assert.strictEqual(checkResult.length, 0);
+			assert.strictEqual(checkmateResult.length, 2);
+		});
+	});
+
+	it('should properly trigger game to emit single checkmate event when King is placed in checkmate', () => {
+		let
+			b,
+			bv,
+			checkmateResult = [],
+			checkResult = [],
+			g = Game.create();
+
+		b = g.board;
+		bv = BoardValidation.create(g);
+
+		// capture check event
+		g.on('check', (result) => checkResult.push(result));
+		g.on('checkmate', (result) => checkmateResult.push(result));
+
+		// prepare board by eliminating a couple pieces
+		b.getSquare('e', 2).piece = null;
+		b.getSquare('f', 7).piece = null;
+		b.getSquare('g', 7).piece = null;
+
+		// Queen preparing to put in checkmate
+		b.move(b.getSquare('d', 1), b.getSquare('h', 5));
+
+		bv.start((err) => {
+			if (err) {
+				throw err;
+			}
+
+			assert.ok(checkResult);
+			assert.ok(checkmateResult);
+
+			assert.strictEqual(checkResult.length, 0);
+			assert.strictEqual(checkmateResult.length, 1);
 		});
 	});
 

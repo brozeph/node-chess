@@ -19,6 +19,8 @@ function addToHistory (game) {
 				ev.postSquare,
 				ev.capturedPiece,
 				ev.algebraic,
+				ev.castle,
+				ev.enPassant,
 				hashCode);
 
 		game.moveHistory.push(move);
@@ -108,9 +110,11 @@ export class Game extends EventEmitter {
 }
 
 export class Move {
-	constructor (originSquare, targetSquare, capturedPiece, notation, hash) {
+	constructor (originSquare, targetSquare, capturedPiece, notation, castle, enPassant, hash) {
 		this.algebraic = notation;
 		this.capturedPiece = capturedPiece;
+		this.castle = castle;
+		this.enPassant = enPassant;
 		this.hashCode = hash;
 		this.piece = targetSquare.piece;
 		this.promotion = false;
