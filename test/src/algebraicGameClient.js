@@ -63,6 +63,22 @@ describe('AlgebraicGameClient', () => {
 		assert.strictEqual(r.move.capturedPiece.type, PieceType.Pawn);
 	});
 
+	// test capture event
+	it('should properly emit a capture event', () => {
+		let
+			captureEvent = [],
+			gc = AlgebraicGameClient.create();
+
+		gc.on('capture', (ev) => captureEvent.push(ev));
+
+		gc.move('e4');
+		gc.move('d5');
+		gc.move('exd5');
+
+		assert.ok(captureEvent);
+		assert.strictEqual(captureEvent.length, 1);
+	});
+
 	// test notation in history
 	it('should properly record notation in history', () => {
 		let gc = AlgebraicGameClient.create();

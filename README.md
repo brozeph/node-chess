@@ -121,6 +121,10 @@ gameClient.on('promote', (square) => {
 });
 ```
 
+##### The `capture` Event
+
+The `capture` event is emitted when a piece has been captured during game play. The `capture` event data is the same as the [move](#the-gameclientmove-function) object that is provided as a response to [gameClient.move()](#the-gameclientmove-function).
+
 ##### The `check` Event
 
 The `check` event is emitted for each attack on a King that occurs on the board. In the event a single move results in multiple pieces putting a King in check, multiple `check` events will be emitted, one for each attack.

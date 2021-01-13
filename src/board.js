@@ -241,8 +241,10 @@ export class Board extends EventEmitter {
 						if (!m.enPassant) {
 							m.postSquare.piece = m.capturedPiece;
 						} else {
-							b.getSquare(m.postSquare.file,
-								m.prevSquare.rank).piece = m.capturedPiece;
+							b.getSquare(
+								m.postSquare.file,
+								m.prevSquare.rank
+							).piece = m.capturedPiece;
 
 							// there is no piece on the post square in the event of
 							// an en-passant, clear anything that me be present as
@@ -301,6 +303,10 @@ export class Board extends EventEmitter {
 			if (!simulate) {
 				p.moveCount++;
 				this.lastMovedPiece = p;
+
+				if (move.capturedPiece) {
+					this.emit('capture', move);
+				}
 
 				if (move.castle) {
 					this.emit('castle', move);

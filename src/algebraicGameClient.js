@@ -98,7 +98,7 @@ function notate (validMoves, gameClient) {
 
 			// en passant
 			// fix for #53
-			if (p.type === PieceType.Pawn && 
+			if (p.type === PieceType.Pawn &&
 				src.file !== sq.file &&
 				!sq.piece) {
 				prefix = [src.file, 'x'].join('');
@@ -229,9 +229,9 @@ export class AlgebraicGameClient extends EventEmitter {
 			this.game.on(ev, (data) => this.emit(ev, data));
 		});
 
-		['castle', 'enPassant', 'move', 'promote'].forEach((ev) => {
+		['capture', 'castle', 'enPassant', 'move', 'promote'].forEach((ev) => {
 			this.game.board.on(ev, (data) => this.emit(ev, data));
-		});	
+		});
 	}
 
 	static create (opts) {
