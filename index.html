@@ -174,18 +174,37 @@ let move = game.move('a4');
 						</dl>
 						<p>Here is the serialized output (with description) of the return object from <code>move()</code>:</p>
 <pre class="prettyprint">
-{ move :
-  { capturedPiece : null, // the captured piece (if capture occurred)
-    castle : false, // was the move a castle?
-    enPassant : false, // was the move en passant?
-    postSquare : { file: 'a', rank: 4, piece: {
-      moveCount: 1,
-      side: { name: 'white' },
-      type: 'pawn',
-      notation: ''
-    } },
-    prevSquare : { file: 'a', rank: 2, piece: null } },
-  undo : __function__ } // undo() can be used to back out the previous move
+{
+  move: {
+    // the captured piece (if capture occurred)
+    capturedPiece: null,
+    // was the move a castle?
+    castle: false,
+    // was the move en Passant?
+    enPassant: false,
+    // tje square a piece was moved to
+    postSquare: {
+      file: 'a',
+      rank: 4,
+      piece: {
+        moveCount: 1,
+        side: {
+          name: 'white'
+        },
+        type: 'pawn',
+        notation: 'R'
+      }
+    },
+    // the square that the piece came from
+    prevSquare: {
+      file: 'a',
+      rank: 2,
+      piece: null
+    }
+  },
+  // undo() can be used to back out the previous move
+  undo: __function__
+}
 </pre>
 					</div>
 				</div>
@@ -210,36 +229,127 @@ let move = game.move('a4');
 						</dl>
 						<p>Here is the serialized output (with description) of the return object from <code>getStatus()</code>:</p>
 <pre class="prettyprint">
-{ board: // this is the top level board
-  { squares: // an array of all squares on the board
-    [ { file: 'a', rank: 1, piece: { // the file, rank and piece on the square
-      moveCount: 0,
-      side: { name: 'white' },
-      type: 'rook',
-      notation: 'R'
-    } },
-    /* the rest of the squares... */
-    ]},
- isCheck: false, // is the King currently in check?
- isCheckmate: false, // is the King currently in checkmate?
- isRepetition: false, // has 3-fold repetition occurred?
- isStalemate: false, // is the board in stalemate?
- notatedMoves: // all possible moves (notated) with details for each move
-   { a3:
-    { src:
-     { file: 'a'
-       rank: 2,
-       piece:
-        { moveCount: 0,
-          side: {name: 'white' },
+{
+  // this is the top level board
+  board: {
+    // an array of all squares on the board
+    squares: [{
+        file: 'a',
+        rank: 1,
+        piece: {
+          moveCount: 0,
+          side: {
+            name: 'white'
+          },
+          type: 'rook',
+          notation: 'R'
+        }
+      },
+      /* the rest of the squares... */
+    ]
+  },
+  isCheck: false, // is the King currently in check?
+  isCheckmate: false, // is the King currently in checkmate?
+  isRepetition: false, // has 3-fold repetition occurred?
+  isStalemate: false, // is the board in stalemate?
+  // all possible moves (notated) with details for each move
+  notatedMoves: {
+    a3: {
+      src: {
+        file: 'a'
+        rank: 2,
+        piece: {
+          moveCount: 0,
+          side: {
+            name: 'white'
+          },
           type: 'pawn',
-          notation: '' } },
-      dest: { file: 'a', rank: 3, piece: null } },
-      /* the rest of the available moves... */
-    }
+          notation: 'R'
+        }
+      },
+      dest: {
+        file: 'a',
+        rank: 3,
+        piece: null
+      }
+    },
+    /* the rest of the available moves... */
+  }
 }
 </pre>
 					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<h4>game events</h4>
+					<p>The game emits various events throughout the course of play.</p>
+					<dl class="dl-horizontal">
+						<dt><code>capture</code></dt>
+							<dd>Whenever a piece is captured, the <code>move</code> object (as returned from the <code>move()</code>> function) is provided with this event.</dd>
+						<dt><code>castle</code></dt>
+							<dd>Whenever a King castle occurs, the <code>move</code> object (as returned from the <code>move()</code>> function) is provided with this event.</dd>
+						<dt><code>check</code></dt>
+							<dd>Whenever a King is placed in check, an Array of attack objects is returned (each attack object contains a field for <code>attackingSquare</code> and <code>kingSquare</code>).</dd>
+						<dt><code>checkmate</code></dt>
+            <dd>Whenever a King is placed in checkmate, an Array of attack objects is returned (each attack object contains a field for <code>attackingSquare</code> and <code>kingSquare</code>).</dd>
+						<dt><code>enPassant</code></dt>
+							<dd>When a pawn en Passant occurs, the <code>move</code> object (as returned from the <code>move()</code>> function) is provided with this event.</dd>
+						<dt><code>move</code></dt>
+							<dd>Whenever a piece is moved, the <code>move</code> object (as returned from the <code>move()</code>> function) is provided with this event.</dd>
+						<dt><code>promote</code></dt>
+							<dd>Whenever a piece is captured, a <code>square</code> object is provided with this event (the object contains fields for <code>rank</code>, <code>file</code>, and <code>piece</code>).</dd>
+					</dl>
+					<p>Here is an example of the events being consumed:</p>
+<pre class="prettyprint">
+  const chess = require('chess');
+
+  // create a game client
+  const gameClient = chess.create({ PGN : true });
+
+  // when a piece is captured
+  gameClient.on('capture', (move) => {
+    console.log('A piece has been captured!');
+    console.log(move);
+  });
+
+  // when a King is placed in check
+  gameClient.on('check', (attack) => {
+    console.log('The King is under attack!');
+    console.log(attack);
+  });
+
+  // when King is placed in checkmate
+  gameClient.on('checkmate', (attack) => {
+    console.log('The game has ended due to checkmate!');
+    console.log(attack);
+  });
+
+  // when a castle occurs
+  gameClient.on('castle', (move) => {
+    console.log('A castle has occured!');
+    console.log(move);
+  });
+
+  // when en Passant occurs
+  gameClient.on('enPassant', (move) => {
+    console.log('An en Passant has occured!');
+    console.log(move);
+  });
+
+  // when a move occurs on the board
+  gameClient.on('move', (move) => {
+    console.log('A piece was moved!');
+    console.log(move);
+    });
+
+  // when a Pawn promotion occurs
+  gameClient.on('promote', (square) => {
+    console.log('A Pawn has been promoted!');
+    console.log(square);
+  });
+</pre>
 				</div>
 			</div>
 
