@@ -84,6 +84,18 @@ const chess = require('chess');
 // create a game client
 const gameClient = chess.create({ PGN : true });
 
+// when a capture occurs
+gameClient.on('castle', (move) => {
+  console.log('A piece has been captured!');
+  console.log(move);
+});
+
+// when a castle occurs
+gameClient.on('castle', (move) => {
+  console.log('A castle has occured!');
+  console.log(move);
+});
+
 // when a King is placed in check
 gameClient.on('check', (attack) => {
   console.log('The King is under attack!');
@@ -94,12 +106,6 @@ gameClient.on('check', (attack) => {
 gameClient.on('checkmate', (attack) => {
   console.log('The game has ended due to checkmate!');
   console.log(attack);
-});
-
-// when a castle occurs
-gameClient.on('castle', (move) => {
-  console.log('A castle has occured!');
-  console.log(move);
 });
 
 // when en Passant occurs
