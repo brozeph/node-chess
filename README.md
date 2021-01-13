@@ -167,15 +167,15 @@ The `checkmate` event is emitted when checkmate has been detected on the board. 
 
 ##### The `castle` Event
 
-The `castle` event is emitted when a castle move occurs on the board. The `castle` event data is the [move](#move) object that is also returned when performing a [gameClient.move()](#the-gameclientmove-function).
+The `castle` event is emitted when a castle move occurs on the board. The `castle` event data is the [move](#the-gameclientmove-function) object that is also returned when performing a [gameClient.move()](#the-gameclientmove-function).
 
 ##### The `enPassant` Event
 
-When en Passant occurs, the `enPassant` event is emitted. The `enPassant` event data is the [move](#move) object that is also returned when performing a [gameClient.move()](#the-gameclientmove-function).
+When en Passant occurs, the `enPassant` event is emitted. The `enPassant` event data is the [move](#the-gameclientmove-function) object that is also returned when performing a [gameClient.move()](#the-gameclientmove-function).
 
 ##### The `move` Event
 
-Any time a move occurs on the board, the `move` event is emitted. The `enPassant` event data is the [move](#move) object that is also returned when performing a [gameClient.move()](#the-gameclientmove-function).
+Any time a move occurs on the board, the `move` event is emitted. The `enPassant` event data is the [move](#the-gameclientmove-function) object that is also returned when performing a [gameClient.move()](#the-gameclientmove-function).
 
 ##### The `promote` Event
 
