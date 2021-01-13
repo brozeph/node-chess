@@ -58,8 +58,14 @@ export class SimpleGameClient extends EventEmitter {
 		this.validMoves = [];
 		this.validation = GameValidation.create(this.game);
 
-		// bubble the game check event
-		this.game.on('check', (attackers) => (this.emit('check', attackers)));
+		// bubble the game and board events
+		['check', 'checkmate'].forEach((ev) => {
+			this.game.on(ev, (data) => this.emit(ev, data));
+		});
+
+		['castle', 'enPassant', 'move', 'promote'].forEach((ev) => {
+			this.game.board.on(ev, (data) => this.emit(ev, data));
+		});
 	}
 
 	static create () {

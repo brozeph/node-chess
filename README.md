@@ -28,14 +28,14 @@ npm install chess
 
 ### Create a new game
 
-```js
+```javascript
 const chess = require('chess');
 
 // create a game client
 const gameClient = chess.create();
 let move, status;
 
-// capture check and checkmate events
+// capture events
 gameClient.on('check', (attack) => {
   // get more details about the attack on the King
   console.log(attack);
@@ -56,7 +56,7 @@ status = gameClient.getStatus();
 
 To ensure the notation returned is safe for PGN, you must supply PGN as an option in the call to `create`:
 
-```js
+```javascript
 const chess = require('chess');
 
 // create a game client
@@ -74,12 +74,67 @@ move = gameClient.move('a4');
 status = gameClient.getStatus();
 ```
 
-#### The `check` Event
+#### Game Events
 
-From the above example, the attack object that is provided when the `check` event is emitted is as follows:
+The game client (both algebraic, simple) emit a number of events when scenarios occur on the board over the course of a match.
 
-```js
-{ attackingSquare : {
+```javascript
+const chess = require('chess');
+
+// create a game client
+const gameClient = chess.create({ PGN : true });
+
+// when a King is placed in check
+gameClient.on('check', (attack) => {
+  console.log('The King is under attack!');
+  console.log(attack);
+});
+
+// when King is placed in checkmate
+gameClient.on('checkmate', (attack) => {
+  console.log('The game has ended due to checkmate!');
+  console.log(attack);
+});
+
+// when a castle occurs
+gameClient.on('castle', (move) => {
+  console.log('A castle has occured!');
+  console.log(move);
+});
+
+// when en Passant occurs
+gameClient.on('enPassant', (move) => {
+  console.log('An en Passant has occured!');
+  console.log(move);
+});
+
+// when a move occurs on the board
+gameClient.on('move', (move) => {
+  console.log('A piece was moved!');
+  console.log(move);
+});
+
+// when a Pawn promotion occurs
+gameClient.on('promote', (square) => {
+  console.log('A Pawn has been promoted!');
+  console.log(square);
+});
+```
+
+##### The `check` Event
+
+The `check` event is emitted for each attack on a King that occurs on the board. In the event a single move results in multiple pieces putting a King in check, multiple `check` events will be emitted, one for each attack.
+
+###### The `attack` Object
+
+The attack object contains the attacking square and the King square. The properties of the attack object are:
+
+* attackingSquare - The square object from which the attacker originates which includes the piece conducting the attack
+* kingSquare - The square object representing the King that is under attack
+
+```javascript
+{
+  attackingSquare : {
     file: 'f',
     rank: 6,
     piece: {
@@ -106,22 +161,54 @@ From the above example, the attack object that is provided when the `check` even
 }
 ```
 
-##### The `attack` Object
+##### The `checkmate` Event
 
-The attack object contains the attacking square and the King square. The properties of the attack object are:
+The `checkmate` event is emitted when checkmate has been detected on the board. The `checkmate` event data is the same as the [attack](#attack) object that is provided for the `check` event.
 
-* attackingSquare - The square object from which the attacker originates which includes the piece conducting the attack
-* kingSquare - The square object representing the King that is under attack
+##### The `castle` Event
+
+The `castle` event is emitted when a castle move occurs on the board. The `castle` event data is the [move](#move) object that is also returned when performing a [gameClient.move()](#the-gameclientmove-function).
+
+##### The `enPassant` Event
+
+When en Passant occurs, the `enPassant` event is emitted. The `enPassant` event data is the [move](#move) object that is also returned when performing a [gameClient.move()](#the-gameclientmove-function).
+
+##### The `move` Event
+
+Any time a move occurs on the board, the `move` event is emitted. The `enPassant` event data is the [move](#move) object that is also returned when performing a [gameClient.move()](#the-gameclientmove-function).
+
+##### The `promote` Event
+
+When a Pawn promotion occurs, the `promote` event is emitted. The `promote` event data is the Square object upon which the newly promoted piece resides, which looks as follows:
+
+```javascript
+{
+  file: 'a',
+  piece: {
+    moveCount: 2,
+    notation: 'R',
+    side: {
+      name: 'white'
+    },
+    type: 'rook' },
+  rank: 8
+}
+```
 
 #### The `gameClient.move()` Function
 
 From the above example, the response object that is returned when calling chess.move() looks like the following:
 
-```js
-{ move: {
-    capturedPiece: null, // the captured piece (if capture occurred)
-    castle: false, // was the move a castle?
-    enPassant: false, // was the move en passant?
+```javascript
+{
+  move: {
+    // the captured piece (if capture occurred)
+    capturedPiece: null,
+    // was the move a castle?
+    castle: false,
+    // was the move en Passant?
+    enPassant: false,
+    // tje square a piece was moved to
     postSquare: {
       file: 'a',
       rank: 4,
@@ -134,14 +221,16 @@ From the above example, the response object that is returned when calling chess.
         notation: 'R'
       }
     },
+    // the square that the piece came from
     prevSquare: {
       file: 'a',
       rank: 2,
       piece: null
     }
   },
+  // undo() can be used to back out the previous move
   undo: __function__
-} // undo() can be used to back out the previous move
+}
 ```
 
 ##### The `move` Object
@@ -158,7 +247,7 @@ The move object contains a collection of properties and an undo function pointer
 
 To back out the move:
 
-```js
+```javascript
 move.undo();
 ```
 
@@ -166,34 +255,53 @@ move.undo();
 
 The status object is as follows (abbreviated in parts to improve readability):
 
-```js
-{ board: // this is the top level board
-  { squares: // an array of all squares on the board
-    [ { file: 'a', rank: 1, piece: { // the file, rank and piece on the square
-      moveCount: 0,
-      side: { name: 'white' },
-      type: 'rook',
-      notation: 'R'
-    } },
-    /* the rest of the squares... */
-    ]},
-    isCheck: false, // is the King currently in check?
-    isCheckmate: false, // is the King currently in checkmate?
-    isRepetition: false, // has 3-fold repetition occurred?
-    isStalemate: false, // is the board in stalemate?
-    notatedMoves: // all possible moves (notated) with details for each move
-      { a3:
-      { src:
-        { file: 'a'
-          rank: 2,
-          piece:
-          { moveCount: 0,
-          side: {name: 'white' },
+```javascript
+{
+  // this is the top level board
+  board: {
+    // an array of all squares on the board
+    squares: [{
+        file: 'a',
+        rank: 1,
+        piece: {
+          moveCount: 0,
+          side: {
+            name: 'white'
+          },
+          type: 'rook',
+          notation: 'R'
+        }
+      },
+      /* the rest of the squares... */
+    ]
+  },
+  isCheck: false, // is the King currently in check?
+  isCheckmate: false, // is the King currently in checkmate?
+  isRepetition: false, // has 3-fold repetition occurred?
+  isStalemate: false, // is the board in stalemate?
+  // all possible moves (notated) with details for each move
+  notatedMoves: {
+    a3: {
+      src: {
+        file: 'a'
+        rank: 2,
+        piece: {
+          moveCount: 0,
+          side: {
+            name: 'white'
+          },
           type: 'pawn',
-          notation: 'R' } },
-      dest: { file: 'a', rank: 3, piece: null } },
+          notation: 'R'
+        }
+      },
+      dest: {
+        file: 'a',
+        rank: 3,
+        piece: null
+      }
+    },
     /* the rest of the available moves... */
-    }
+  }
 }
 ```
 
@@ -217,13 +325,14 @@ Each object within the notatedMoves hash represents a possible move. The key to 
 
 The following code is an example of how to iterate the available notated moves for the game.
 
-```js
+```javascript
 const chess = require('chess');
 const gameClient = chess.create();
 
-let i = 0,
-    key = '',
-    status = gameClient.getStatus();
+let
+  i = 0,
+  key = '',
+  status = gameClient.getStatus();
 
 Object.keys(status.notatedMoves).map((key, index) => {
   console.log(status.notatedMoves[key]);
@@ -235,7 +344,7 @@ Object.keys(status.notatedMoves).map((key, index) => {
 
 The following usage of the code is playing out the 3rd game in the series between Fischer and Petrosian in Buenos Aires, 1971. The game ended a draw due to 3 fold repetition.
 
-```js
+```javascript
 const chess = require('chess');
 const util = require('util');
 
@@ -350,170 +459,172 @@ console.log(util.inspect(gameClient.getStatus(), false, 7));
 
 The above code produces the following output:
 
-```js
-{ board:
-    { squares:
-      [ { file: 'a', rank: 1, piece: null },
-        { file: 'b', rank: 1, piece: null },
-        { file: 'c', rank: 1, piece: null },
-        { file: 'd', rank: 1, piece: null },
-        { file: 'e', rank: 1, piece: null },
-        { file: 'f', rank: 1, piece: null },
-        { file: 'g', rank: 1, piece: null },
-        { file: 'h',
-          rank: 1,
-          piece:
-            { moveCount: 2,
-              side: { name: 'white' },
-              type: 'king',
-              notation: 'K' } },
-        { file: 'a',
-          rank: 2,
-          piece:
-            { moveCount: 0,
-              side: { name: 'white' },
-              type: 'pawn',
-              notation: '' } },
-        { file: 'b', rank: 2, piece: null },
-        { file: 'c',
-          rank: 2,
-          piece:
-            { moveCount: 0,
-              side: { name: 'white' },
-              type: 'pawn',
-              notation: '' } },
-        { file: 'd', rank: 2, piece: null },
-        { file: 'e',
-          rank: 2,
-          piece:
-            { moveCount: 6,
-              side: { name: 'white' },
-              type: 'queen',
-              notation: 'Q' } },
-        { file: 'f',
-          rank: 2,
-          piece:
-            { moveCount: 0,
-              side: { name: 'white' },
-              type: 'pawn',
-              notation: '' } },
-        { file: 'g', rank: 2, piece: null },
-        { file: 'h', rank: 2, piece: null },
-        { file: 'a', rank: 3, piece: null },
-        { file: 'b', rank: 3, piece: null },
-        { file: 'c', rank: 3, piece: null },
-        { file: 'd', rank: 3, piece: null },
-        { file: 'e', rank: 3, piece: null },
-        { file: 'f', rank: 3, piece: null },
-        { file: 'g', rank: 3, piece: null },
-        { file: 'h',
-          rank: 3,
-          piece:
-            { moveCount: 1,
-              side: { name: 'white' },
-              type: 'pawn',
-              notation: '' } },
-        { file: 'a', rank: 4, piece: null },
-        { file: 'b', rank: 4, piece: null },
-        { file: 'c', rank: 4, piece: null },
-        { file: 'd', rank: 4, piece: null },
-        { file: 'e', rank: 4, piece: null },
-        { file: 'f',
-          rank: 4,
-          piece:
-            { moveCount: 4,
-              side: { name: 'white' },
-              type: 'rook',
-              notation: 'R' } },
-        { file: 'g', rank: 4, piece: null },
-        { file: 'h', rank: 4, piece: null },
-        { file: 'a', rank: 5, piece: null },
-        { file: 'b', rank: 5, piece: null },
-        { file: 'c', rank: 5, piece: null },
-        { file: 'd',
-          rank: 5,
-          piece:
-            { moveCount: 4,
-              side: { name: 'black' },
-              type: 'rook',
-              notation: 'R' } },
-        { file: 'e', rank: 5, piece: null },
-        { file: 'f',
-          rank: 5,
-          piece:
-            { moveCount: 3,
-              side: { name: 'white' },
-              type: 'pawn',
-              notation: '' } },
-        { file: 'g', rank: 5, piece: null },
-        { file: 'h', rank: 5, piece: null },
-        { file: 'a', rank: 6, piece: null },
-        { file: 'b', rank: 6, piece: null },
-        { file: 'c',
-          rank: 6,
-          piece:
-            { moveCount: 1,
-              side: { name: 'black' },
-              type: 'pawn',
-              notation: '' } },
-        { file: 'd', rank: 6, piece: null },
-        { file: 'e', rank: 6, piece: null },
-        { file: 'f',
-          rank: 6,
-          piece:
-            { moveCount: 3,
-              side: { name: 'black' },
-              type: 'queen',
-              notation: 'Q' } },
-        { file: 'g', rank: 6, piece: null },
-        { file: 'h',
-          rank: 6,
-          piece:
-            { moveCount: 1,
-              side: { name: 'black' },
-              type: 'pawn',
-              notation: '' } },
-        { file: 'a',
-          rank: 7,
-          piece:
-            { moveCount: 0,
-              side: { name: 'black' },
-              type: 'pawn',
-              notation: '' } },
-        { file: 'b',
-          rank: 7,
-          piece:
-            { moveCount: 0,
-              side: { name: 'black' },
-              type: 'pawn',
-              notation: '' } },
-        { file: 'c', rank: 7, piece: null },
-        { file: 'd', rank: 7, piece: null },
-        { file: 'e', rank: 7, piece: null },
-        { file: 'f',
-          rank: 7,
-          piece:
-            { moveCount: 0,
-              side: { name: 'black' },
-              type: 'pawn',
-              notation: '' } },
-        { file: 'g', rank: 7, piece: null },
-        { file: 'h',
-          rank: 7,
-          piece:
-            { moveCount: 2,
-              side: { name: 'black' },
-              type: 'king',
-              notation: 'K' } },
-        { file: 'a', rank: 8, piece: null },
-        { file: 'b', rank: 8, piece: null },
-        { file: 'c', rank: 8, piece: null },
-        { file: 'd', rank: 8, piece: null },
-        { file: 'e', rank: 8, piece: null },
-        { file: 'f', rank: 8, piece: null },
-        { file: 'g', rank: 8, piece: null },
-        { file: 'h', rank: 8, piece: null } ],
-      _events: { move: [Function] } },
+```javascript
+{
+  board: {
+    squares: [
+      { file: 'a', rank: 1, piece: null },
+      { file: 'b', rank: 1, piece: null },
+      { file: 'c', rank: 1, piece: null },
+      { file: 'd', rank: 1, piece: null },
+      { file: 'e', rank: 1, piece: null },
+      { file: 'f', rank: 1, piece: null },
+      { file: 'g', rank: 1, piece: null },
+      { file: 'h',
+        rank: 1,
+        piece:
+          { moveCount: 2,
+            side: { name: 'white' },
+            type: 'king',
+            notation: 'K' } },
+      { file: 'a',
+        rank: 2,
+        piece:
+          { moveCount: 0,
+            side: { name: 'white' },
+            type: 'pawn',
+            notation: '' } },
+      { file: 'b', rank: 2, piece: null },
+      { file: 'c',
+        rank: 2,
+        piece:
+          { moveCount: 0,
+            side: { name: 'white' },
+            type: 'pawn',
+            notation: '' } },
+      { file: 'd', rank: 2, piece: null },
+      { file: 'e',
+        rank: 2,
+        piece:
+          { moveCount: 6,
+            side: { name: 'white' },
+            type: 'queen',
+            notation: 'Q' } },
+      { file: 'f',
+        rank: 2,
+        piece:
+          { moveCount: 0,
+            side: { name: 'white' },
+            type: 'pawn',
+            notation: '' } },
+      { file: 'g', rank: 2, piece: null },
+      { file: 'h', rank: 2, piece: null },
+      { file: 'a', rank: 3, piece: null },
+      { file: 'b', rank: 3, piece: null },
+      { file: 'c', rank: 3, piece: null },
+      { file: 'd', rank: 3, piece: null },
+      { file: 'e', rank: 3, piece: null },
+      { file: 'f', rank: 3, piece: null },
+      { file: 'g', rank: 3, piece: null },
+      { file: 'h',
+        rank: 3,
+        piece:
+          { moveCount: 1,
+            side: { name: 'white' },
+            type: 'pawn',
+            notation: '' } },
+      { file: 'a', rank: 4, piece: null },
+      { file: 'b', rank: 4, piece: null },
+      { file: 'c', rank: 4, piece: null },
+      { file: 'd', rank: 4, piece: null },
+      { file: 'e', rank: 4, piece: null },
+      { file: 'f',
+        rank: 4,
+        piece:
+          { moveCount: 4,
+            side: { name: 'white' },
+            type: 'rook',
+            notation: 'R' } },
+      { file: 'g', rank: 4, piece: null },
+      { file: 'h', rank: 4, piece: null },
+      { file: 'a', rank: 5, piece: null },
+      { file: 'b', rank: 5, piece: null },
+      { file: 'c', rank: 5, piece: null },
+      { file: 'd',
+        rank: 5,
+        piece:
+          { moveCount: 4,
+            side: { name: 'black' },
+            type: 'rook',
+            notation: 'R' } },
+      { file: 'e', rank: 5, piece: null },
+      { file: 'f',
+        rank: 5,
+        piece:
+          { moveCount: 3,
+            side: { name: 'white' },
+            type: 'pawn',
+            notation: '' } },
+      { file: 'g', rank: 5, piece: null },
+      { file: 'h', rank: 5, piece: null },
+      { file: 'a', rank: 6, piece: null },
+      { file: 'b', rank: 6, piece: null },
+      { file: 'c',
+        rank: 6,
+        piece:
+          { moveCount: 1,
+            side: { name: 'black' },
+            type: 'pawn',
+            notation: '' } },
+      { file: 'd', rank: 6, piece: null },
+      { file: 'e', rank: 6, piece: null },
+      { file: 'f',
+        rank: 6,
+        piece:
+          { moveCount: 3,
+            side: { name: 'black' },
+            type: 'queen',
+            notation: 'Q' } },
+      { file: 'g', rank: 6, piece: null },
+      { file: 'h',
+        rank: 6,
+        piece:
+          { moveCount: 1,
+            side: { name: 'black' },
+            type: 'pawn',
+            notation: '' } },
+      { file: 'a',
+        rank: 7,
+        piece:
+          { moveCount: 0,
+            side: { name: 'black' },
+            type: 'pawn',
+            notation: '' } },
+      { file: 'b',
+        rank: 7,
+        piece:
+          { moveCount: 0,
+            side: { name: 'black' },
+            type: 'pawn',
+            notation: '' } },
+      { file: 'c', rank: 7, piece: null },
+      { file: 'd', rank: 7, piece: null },
+      { file: 'e', rank: 7, piece: null },
+      { file: 'f',
+        rank: 7,
+        piece:
+          { moveCount: 0,
+            side: { name: 'black' },
+            type: 'pawn',
+            notation: '' } },
+      { file: 'g', rank: 7, piece: null },
+      { file: 'h',
+        rank: 7,
+        piece:
+          { moveCount: 2,
+            side: { name: 'black' },
+            type: 'king',
+            notation: 'K' } },
+      { file: 'a', rank: 8, piece: null },
+      { file: 'b', rank: 8, piece: null },
+      { file: 'c', rank: 8, piece: null },
+      { file: 'd', rank: 8, piece: null },
+      { file: 'e', rank: 8, piece: null },
+      { file: 'f', rank: 8, piece: null },
+      { file: 'g', rank: 8, piece: null },
+      { file: 'h', rank: 8, piece: null }
+    ],
+  },
   isCheck: false,
   isCheckmate: false,
   isRepetition: true,
