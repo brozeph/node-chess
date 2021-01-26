@@ -30,6 +30,7 @@
     "algebraic notation"
   ],
   "main": "./dist/main.js",
+  "types": "@types/chess/chess.d.ts",
   "scripts": {
     "lint": "gulp lint",
     "posttest": "nyc report --reporter=text-lcov | coveralls",
