@@ -314,6 +314,16 @@ export class BoardValidation {
 
 			// find any pieces attacking the king
 			this.findAttackers(kingSquare).forEach((attacker) => {
+				if (!validMoves.length) {
+					this.game.emit(
+						'checkmate', {
+							attackingSquare : attacker.square,
+							kingSquare
+						});
+
+					return;
+				}
+
 				this.game.emit(
 					'check', {
 						attackingSquare : attacker.square,

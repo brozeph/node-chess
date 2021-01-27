@@ -1,6 +1,7 @@
 /* eslint no-magic-numbers:0 */
 import { Piece, PieceType, SideType } from '../../src/piece';
 import { AlgebraicGameClient } from '../../src/algebraicGameClient';
+import { assert } from 'chai';
 
 describe('AlgebraicGameClient', () => {
 	// test create and getStatus
@@ -14,6 +15,21 @@ describe('AlgebraicGameClient', () => {
 		assert.strictEqual(s.isRepetition, false);
 		assert.strictEqual(s.isStalemate, false);
 		assert.strictEqual(Object.keys(s.notatedMoves).length, 20);
+	});
+
+	// test move event
+	it('should trigger event when moving a piece', () => {
+		let
+			gc = AlgebraicGameClient.create(),
+			moveEvent = [];
+
+		gc.on('move', (ev) => moveEvent.push(ev));
+
+		gc.move('b4');
+		gc.move('e6');
+
+		assert.ok(moveEvent);
+		assert.strictEqual(moveEvent.length, 2);
 	});
 
 	// test pawn move
@@ -45,6 +61,22 @@ describe('AlgebraicGameClient', () => {
 		r = gc.move('exd5');
 
 		assert.strictEqual(r.move.capturedPiece.type, PieceType.Pawn);
+	});
+
+	// test capture event
+	it('should properly emit a capture event', () => {
+		let
+			captureEvent = [],
+			gc = AlgebraicGameClient.create();
+
+		gc.on('capture', (ev) => captureEvent.push(ev));
+
+		gc.move('e4');
+		gc.move('d5');
+		gc.move('exd5');
+
+		assert.ok(captureEvent);
+		assert.strictEqual(captureEvent.length, 1);
 	});
 
 	// test notation in history
@@ -126,10 +158,13 @@ describe('AlgebraicGameClient', () => {
 	});
 
 	// test castle left
-	it('should properly notate white King castle left', () => {
+	it('should properly notate white King castle left and trigger event', () => {
 		let
+			castleEvent = [],
 			gc = AlgebraicGameClient.create(),
 			s = null;
+
+		gc.on('castle', (ev) => castleEvent.push(ev));
 
 		gc.game.board.getSquare('b1').piece = null;
 		gc.game.board.getSquare('c1').piece = null;
@@ -138,13 +173,23 @@ describe('AlgebraicGameClient', () => {
 		s = gc.getStatus(true);
 
 		assert.ok(typeof s.notatedMoves['0-0-0'] !== 'undefined', '0-0-0');
+
+		// perform castle move
+		gc.move('0-0-0');
+
+		// validate event
+		assert.ok(castleEvent);
+		assert.strictEqual(castleEvent.length, 1);
 	});
 
 	// test castle left
 	it('should properly notate white King castle left as letters when PGN is true', () => {
 		let
+			castleEvent = [],
 			gc = AlgebraicGameClient.create({ PGN : true }),
 			s = null;
+
+		gc.on('castle', (ev) => castleEvent.push(ev));
 
 		gc.game.board.getSquare('b1').piece = null;
 		gc.game.board.getSquare('c1').piece = null;
@@ -153,13 +198,23 @@ describe('AlgebraicGameClient', () => {
 		s = gc.getStatus(true);
 
 		assert.ok(typeof s.notatedMoves['O-O-O'] !== 'undefined', 'O-O-O');
+
+		// perform castle move
+		gc.move('O-O-O');
+
+		// validate event
+		assert.ok(castleEvent);
+		assert.strictEqual(castleEvent.length, 1);
 	});
 
 	// test castle right
-	it('should properly notate black King castle right', () => {
+	it('should properly notate black King castle right and trigger event', () => {
 		let
+			castleEvent = [],
 			gc = AlgebraicGameClient.create(),
 			s = null;
+
+		gc.on('castle', (ev) => castleEvent.push(ev));
 
 		gc.game.board.getSquare('f8').piece = null;
 		gc.game.board.getSquare('g8').piece = null;
@@ -168,13 +223,23 @@ describe('AlgebraicGameClient', () => {
 		s = gc.getStatus();
 
 		assert.ok(typeof s.notatedMoves['0-0'] !== 'undefined', '0-0');
+
+		// perform castle move
+		gc.move('0-0');
+
+		// validate event
+		assert.ok(castleEvent);
+		assert.strictEqual(castleEvent.length, 1);
 	});
 
 	// test castle right
 	it('should properly notate black King castle right as letters when PGN is true', () => {
 		let
+			castleEvent = [],
 			gc = AlgebraicGameClient.create({ PGN : true }),
 			s = null;
+
+		gc.on('castle', (ev) => castleEvent.push(ev));
 
 		gc.game.board.getSquare('f8').piece = null;
 		gc.game.board.getSquare('g8').piece = null;
@@ -183,6 +248,13 @@ describe('AlgebraicGameClient', () => {
 		s = gc.getStatus();
 
 		assert.ok(typeof s.notatedMoves['O-O'] !== 'undefined', 'O-O');
+
+		// perform castle move
+		gc.move('O-O');
+
+		// validate event
+		assert.ok(castleEvent);
+		assert.strictEqual(castleEvent.length, 1);
 	});
 
 	// validate parse notation with O-O-O
@@ -343,6 +415,30 @@ describe('AlgebraicGameClient', () => {
 		assert.strictEqual(r.isCheckmate, true);
 		assert.strictEqual(gc.game.moveHistory[0].promotion, false);
 		assert.strictEqual(gc.game.moveHistory[1].promotion, true);
+	});
+
+	// test pawn promotion event
+	it('should properly fire Pawn promotion event', () => {
+		let
+			gc = AlgebraicGameClient.create(),
+			promoteEvent = [];
+
+		gc.on('promote', (ev) => promoteEvent.push(ev));
+
+		gc.game.board.getSquare('a7').piece = null;
+		gc.game.board.getSquare('a8').piece = null;
+		gc.game.board.getSquare('b8').piece = null;
+		gc.game.board.getSquare('c8').piece = null;
+		gc.game.board.getSquare('d8').piece = null;
+		gc.game.board.getSquare('a2').piece = null;
+		gc.game.board.getSquare('a7').piece = Piece.createPawn(SideType.White);
+		gc.game.board.getSquare('a7').piece.moveCount = 1;
+
+		gc.getStatus(true);
+		gc.move('a8R');
+
+		assert.strictEqual(gc.game.moveHistory[0].promotion, true);
+		assert.strictEqual(promoteEvent.length, 1);
 	});
 
 	// test ambiguous notation
@@ -886,6 +982,33 @@ describe('AlgebraicGameClient', () => {
 
 		status = gc.getStatus();
 		assert.ok(status.isCheckmate, 'should properly parse gxf3+');
+	});
+
+	// Issue #53
+	// Algebraic and PGN formatting of en Passant is not correct
+	it('should properly notate en Passant and trigger event', () => {
+		let
+			enPassantEvent = [],
+			gc = AlgebraicGameClient.create(),
+			status;
+
+		gc.on('enPassant', (ev) => enPassantEvent.push(ev));
+
+		gc.move('e4');
+		gc.move('d5');
+		gc.move('e5');
+		gc.move('f5');
+
+		status = gc.getStatus();
+
+		assert.isUndefined(status.notatedMoves['f6'], 'should properly notate en Passant');
+		assert.isDefined(status.notatedMoves['exf6'], 'should properly notate en Passant');
+
+		// make the en Passant move
+		gc.move('exf6');
+
+		assert.ok(enPassantEvent);
+		assert.strictEqual(enPassantEvent.length, 1);
 	});
 
 	// getFen test

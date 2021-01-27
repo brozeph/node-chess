@@ -69,11 +69,13 @@ function notate (validMoves, gameClient) {
 		p = null,
 		prefix = '',
 		sq = null,
+		src = null,
 		suffix = '';
 
 	// iterate through each starting squares valid moves
 	for (; i < validMoves.length; i++) {
-		p = validMoves[i].src.piece;
+		src = validMoves[i].src;
+		p = src.piece;
 
 		// iterate each potential move and build prefix and suffix for notation
 		for (n = 0; n < validMoves[i].squares.length; n++) {
@@ -91,7 +93,15 @@ function notate (validMoves, gameClient) {
 
 			// squares with pawns
 			if (sq.piece && p.type === PieceType.Pawn) {
-				prefix = validMoves[i].src.file;
+				prefix = src.file;
+			}
+
+			// en passant
+			// fix for #53
+			if (p.type === PieceType.Pawn &&
+				src.file !== sq.file &&
+				!sq.piece) {
+				prefix = [src.file, 'x'].join('');
 			}
 
 			// squares with Bishop, Knight, Queen or Rook pieces
@@ -103,25 +113,25 @@ function notate (validMoves, gameClient) {
 				// can more than 1 land on the specified square?
 				movesForPiece = getValidMovesByPieceType(p.type, validMoves);
 				if (movesForPiece.length > 1) {
-					prefix = getNotationPrefix(validMoves[i].src, sq, movesForPiece);
+					prefix = getNotationPrefix(src, sq, movesForPiece);
 				} else {
-					prefix = validMoves[i].src.piece.notation;
+					prefix = src.piece.notation;
 				}
 			}
 
 			// squares with a King piece
 			if (p.type === PieceType.King) {
 				// look for castle left and castle right
-				if (validMoves[i].src.file === 'e' && sq.file === 'g') {
+				if (src.file === 'e' && sq.file === 'g') {
 					// fix for issue #13 - if PGN is specified should be letters, not numbers
 					prefix = gameClient.PGN ? 'O-O' : '0-0';
 					suffix = '';
-				} else if (validMoves[i].src.file === 'e' && sq.file === 'c') {
+				} else if (src.file === 'e' && sq.file === 'c') {
 					// fix for issue #13 - if PGN is specified should be letters, not numbers
 					prefix = gameClient.PGN ? 'O-O-O' : '0-0-0';
 					suffix = '';
 				} else {
-					prefix = validMoves[i].src.piece.notation;
+					prefix = src.piece.notation;
 				}
 			}
 
@@ -130,30 +140,30 @@ function notate (validMoves, gameClient) {
 				// Rook promotion
 				algebraicNotation[prefix + suffix + 'R'] = {
 					dest : sq,
-					src : validMoves[i].src
+					src
 				};
 
 				// Knight promotion
 				algebraicNotation[prefix + suffix + 'N'] = {
 					dest : sq,
-					src : validMoves[i].src
+					src
 				};
 
 				// Bishop promotion
 				algebraicNotation[prefix + suffix + 'B'] = {
 					dest : sq,
-					src : validMoves[i].src
+					src
 				};
 
 				// Queen promotion
 				algebraicNotation[prefix + suffix + 'Q'] = {
 					dest : sq,
-					src : validMoves[i].src
+					src
 				};
 			} else {
 				algebraicNotation[prefix + suffix] = {
 					dest : sq,
-					src : validMoves[i].src
+					src
 				};
 			}
 		}
@@ -214,8 +224,14 @@ export class AlgebraicGameClient extends EventEmitter {
 		this.validMoves = [];
 		this.validation = GameValidation.create(this.game);
 
-		// bubble the game check event
-		this.game.on('check', (attackers) => (this.emit('check', attackers)));
+		// bubble the game and board events
+		['check', 'checkmate'].forEach((ev) => {
+			this.game.on(ev, (data) => this.emit(ev, data));
+		});
+
+		['capture', 'castle', 'enPassant', 'move', 'promote'].forEach((ev) => {
+			this.game.board.on(ev, (data) => this.emit(ev, data));
+		});
 	}
 
 	static create (opts) {

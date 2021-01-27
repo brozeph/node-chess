@@ -7,12 +7,12 @@
   globals:
     assert: true
     chai: true
-  parser: "babel-eslint"
+  parser: "@babel/eslint-parser"
   parserOptions:
     ecmaVersion: 6
     sourceType: "module"
   plugins:
-    - "babel"
+    - "@babel"
   rules:
     array-bracket-spacing:
       - 2
@@ -23,10 +23,6 @@
       - 2
       - before: true
         after: true
-    babel/new-cap: 2
-    babel/object-curly-spacing:
-      - 2
-      - "always"
     block-spacing:
       - 2
       - "always"
@@ -54,6 +50,7 @@
         after: false
     guard-for-in: 2
     handle-callback-err: 2
+    new-cap: 2
     no-await-in-loop: 2
     no-caller: 2
     no-case-declarations: 2
@@ -142,6 +139,9 @@
     no-useless-concat: 2
     no-void: 2
     no-with: 2
+    object-curly-spacing:
+      - 2
+      - "always"
     object-shorthand: 2
     quotes:
       - 2

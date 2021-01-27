@@ -117,7 +117,14 @@ declare namespace Chess {
     name: 'white' | 'black'
   }
 
-  interface Piece {
+  interface IPiece {
+    type: string
+    notation: string
+    moveCount: number
+    side: Side
+  }
+
+  class AbstractPiece implements IPiece {
     type: string
     notation: string
     moveCount: number
@@ -126,32 +133,32 @@ declare namespace Chess {
 
   type Piece = Pawn | Knight | Bishop | Rook | Queen | King
 
-  class Pawn implements Piece {
+  class Pawn extends AbstractPiece {
     notation: ''
     type: 'pawn'
   }
 
-  class Knight implements Piece {
+  class Knight extends AbstractPiece {
     notation: 'N'
     type: 'knight'
   }
 
-  class Bishop implements Piece {
+  class Bishop extends AbstractPiece {
     notation: 'B'
     type: 'bishop'
   }
 
-  class Rook implements Piece {
+  class Rook extends AbstractPiece {
     notation: 'R'
     type: 'rook'
   }
 
-  class Queen implements Piece {
+  class Queen extends AbstractPiece {
     notation: 'Q'
     type: 'queen'
   }
 
-  class King implements Piece {
+  class King extends AbstractPiece {
     notation: 'K'
     type: 'king'
   }
