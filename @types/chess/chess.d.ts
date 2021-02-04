@@ -5,9 +5,7 @@ declare namespace Chess {
   export function create(opts?: { PGN: boolean }): AlgebraicGameClient
   export function createSimple(): SimpleGameClient
 
-  interface AlgebraicGameClient {
-    /** The Game object, which includes the board and move history. */
-    game: Game
+  interface GameStatus {
     /** Whether either of the side is under check */
     isCheck: boolean
     /** Whether either of the side is checkmated */
@@ -16,80 +14,50 @@ declare namespace Chess {
     isRepetition: boolean
     /** Whether game has ended by stalemate */
     isStalemate: boolean
+  }
+
+  interface SimpleGameStatus extends GameStatus {
+    /** Current board configuration */
+    board: ChessBoard
+  }
+
+  interface AlgebraicGameStatus extends SimpleGameStatus {
+    /** Hash of next possible moves with key as notation and value as src-dest mapping */
+    notatedMoves: Record<string, NotatedMove>
+  }
+
+  interface GameClient extends GameStatus {
+    /** The Game object, which includes the board and move history. */
+    game: Game
+    /** An array of pieces (src) which can move to the different squares. */
+    validMoves: ValidMove[]
+    /** Game Validation Object */
+    validation: GameValidation
+    /** Add event listeners */
+    on(event: ChessEvent, cbk: () => void): void
+    /**
+     * Make a move on the board
+     * @param notation Notation of move in PGN format
+     */
+    move(notation: string): PlayedMove
+    getStatus(): AlgebraicGameStatus | SimpleGameStatus
+  }
+
+  interface SimpleGameClient extends GameClient {
+    getStatus(): SimpleGameStatus
+  }
+
+  interface AlgebraicGameClient extends GameClient {
     /** Hash of next possible moves with key as notation and value as src-dest mapping */
     notatedMoves: Record<string, NotatedMove>
     /** Whether notation is safe for PGN or not */
     PGN: boolean
-    /** An array of pieces (src) which can move to the different squares. */
-    validMoves: ValidMove[]
-    /** Game Validation Object */
-    validation: GameValidation
-    /** Add event listeners */
-    on(event: ChessEvent, cbk: () => void): void
-    /**
-     * Make a move on the board
-     * @param notation Notation of move in PGN format
-     */
-    move(notation: string): PlayedMove
     getStatus(): AlgebraicGameStatus
-  }
-
-  interface SimpleGameClient {
-    /** Whether either of the side is under check */
-    isCheck: boolean
-    /** Whether either of the side is checkmated */
-    isCheckMate: boolean
-    /** Whether game has ended by threefold repetition */
-    isRepetition: boolean
-    /** Whether game has ended by stalemate */
-    isStalemate: boolean
-    /** The Game Object, which includes the board and move history. */
-    game: Game
-    /** An array of pieces (src) which can move to the different squares. */
-    validMoves: ValidMove[]
-    /** Game Validation Object */
-    validation: GameValidation
-    /** Add event listeners */
-    on(event: ChessEvent, cbk: () => void): void
-    /**
-     * Make a move on the board
-     * @param notation Notation of move in PGN format
-     */
-    move(notation: string): PlayedMove
-    getStatus(): SimpleGameStatus
-  }
-
-  interface AlgebraicGameStatus {
-    /** Current board configuration */
-    board: ChessBoard
-    /** Whether either of the side is under check */
-    isCheck: boolean
-    /** Whether either of the side is checkmated */
-    isCheckMate: boolean
-    /** Whether game has ended by threefold repetition */
-    isRepetition: boolean
-    /** Whether game has ended by stalemate */
-    isStalemate: boolean
-    /** Hash of next possible moves with key as notation and value as src-dest mapping */
-    notatedMoves: Record<string, NotatedMove>
-  }
-
-  interface SimpleGameStatus {
-    /** Current board configuration */
-    board: ChessBoard
-    /** Whether either of the side is under check */
-    isCheck: boolean
-    /** Whether either of the side is checkmated */
-    isCheckMate: boolean
-    /** Whether game has ended by threefold repetition */
-    isRepetition: boolean
-    /** Whether game has ended by stalemate */
-    isStalemate: boolean
   }
 
   type File = string
   type Rank = number
-  type ChessEvent = "check" | "checkmate"
+  type ChessEvent = 'check' | 'checkmate'
 
   interface PlayedMove {
     move: {
@@ -145,52 +113,54 @@ declare namespace Chess {
     rank: Rank
   }
 
+  interface Side {
+    name: 'white' | 'black'
+  }
+
+  interface IPiece {
+    type: string
+    notation: string
+    moveCount: number
+    side: Side
+  }
+
+  class AbstractPiece implements IPiece {
+    type: string
+    notation: string
+    moveCount: number
+    side: Side
+  }
+
   type Piece = Pawn | Knight | Bishop | Rook | Queen | King
 
-  interface Pawn {
-    moveCount: number
+  class Pawn extends AbstractPiece {
     notation: ''
-    side: Side
     type: 'pawn'
   }
 
-  interface Knight {
-    moveCount: number
+  class Knight extends AbstractPiece {
     notation: 'N'
-    side: Side
     type: 'knight'
   }
 
-  interface Bishop {
-    moveCount: number
+  class Bishop extends AbstractPiece {
     notation: 'B'
-    side: Side
     type: 'bishop'
   }
 
-  interface Rook {
-    moveCount: number
+  class Rook extends AbstractPiece {
     notation: 'R'
-    side: Side
     type: 'rook'
   }
 
-  interface Queen {
-    moveCount: number
+  class Queen extends AbstractPiece {
     notation: 'Q'
-    side: Side
     type: 'queen'
   }
 
-  interface King {
-    moveCount: number
+  class King extends AbstractPiece {
     notation: 'K'
-    side: Side
     type: 'king'
-  }
-
-  interface Side {
-    name: "white" | "black"
   }
 }
 
