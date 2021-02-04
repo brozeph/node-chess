@@ -85,7 +85,7 @@ const chess = require('chess');
 const gameClient = chess.create({ PGN : true });
 
 // when a capture occurs
-gameClient.on('castle', (move) => {
+gameClient.on('capture', (move) => {
   console.log('A piece has been captured!');
   console.log(move);
 });
