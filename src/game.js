@@ -87,7 +87,7 @@ export class Game extends EventEmitter {
 	static load (moveHistory) {
 		let
 			board = Board.create(),
-			game = new Game(),
+			game = new Game(board),
 			i = 0;
 
 		// handle move and promotion events correctly
