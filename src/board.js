@@ -107,11 +107,11 @@ export class Board extends EventEmitter {
 				return arr.reduce((acc, cur) => {
 					if (!isNaN(Number(cur))) {
 						for (let i = 0; i < Number(cur); i += 1) {
-							acc.push(Square.create('abcdefgh'[file], rank + 1));
+							acc.push(Square.create('abcdefgh'[file], 8 - rank));
 							file = file < 7 ? file + 1 : 0;
 						}
 					} else {
-						const square = Square.create('abcdefgh'[file], rank + 1);
+						const square = Square.create('abcdefgh'[file], 8 - rank);
 						square.piece = Piece[pieces[cur].method](pieces[cur].arg);
 						acc.push(square);
 						file = file < 7 ? file + 1 : 0;
