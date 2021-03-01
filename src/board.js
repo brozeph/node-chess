@@ -238,7 +238,7 @@ export class Board extends EventEmitter {
 						if (!simulate) {
 							// ensure no harm can be done if called multiple times
 							if (m.undone) {
-								throw new Error('cannot undo a move multiple times')
+								throw new Error('cannot undo a move multiple times');
 							}
 
 							m.undone = true;
