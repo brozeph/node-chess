@@ -24,6 +24,22 @@ describe('Game', () => {
 		assert.strictEqual(g.moveHistory.length, 2);
 	});
 
+	// verify move history is updated on game when an undo occurs on board
+	it('should have move history length of 1 after 2 moves and undo', () => {
+		let
+			b,
+			g = Game.create(),
+			m;
+
+		b = g.board;
+
+		b.move(b.getSquare('d', 2), b.getSquare('d', 4));
+		m = b.move(b.getSquare('d', 7), b.getSquare('d', 5));
+		m.undo();
+
+		assert.strictEqual(g.moveHistory.length, 1);
+	});
+
 	// ensure that when simulated moves are made on board, game history is not incremented
 	it('should have no move history when only simulated moves are made', () => {
 		let

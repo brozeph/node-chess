@@ -39,6 +39,12 @@ function denotePromotionInHistory (game) {
 	};
 }
 
+function removeFromHistory (game) {
+	return () => {
+		game.moveHistory.pop();
+	};
+}
+
 export class Game extends EventEmitter {
 	constructor (board) {
 		super();
@@ -55,6 +61,7 @@ export class Game extends EventEmitter {
 		// handle move and promotion events correctly
 		board.on('move', addToHistory(game));
 		board.on('promote', denotePromotionInHistory(game));
+		board.on('undo', removeFromHistory(game));
 
 		return game;
 	}

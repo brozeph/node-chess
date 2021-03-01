@@ -355,11 +355,26 @@ describe('Board', () => {
 			assert.strictEqual(b.getSquare('e', 2).piece.type, PieceType.Pawn);
 		});
 
-		it('should emit an event when calling undo', () => {
+		it('should not emit an event when calling undo and move is simulated', () => {
 			let
 				b = Board.create(),
 				mv,
 				r = b.move(b.getSquare('e', 2), b.getSquare('e', 4), true);
+
+			b.on('undo', (m) => {
+				mv = m;
+			});
+
+			r.undo();
+
+			assert.ok(typeof mv === 'undefined');
+		});
+
+		it('should emit an event when calling undo', () => {
+			let
+				b = Board.create(),
+				mv,
+				r = b.move(b.getSquare('e', 2), b.getSquare('e', 4));
 
 			b.on('undo', (m) => {
 				mv = m;
@@ -374,7 +389,7 @@ describe('Board', () => {
 			let
 				b = Board.create(),
 				mv,
-				r = b.move(b.getSquare('e', 2), b.getSquare('e', 4), true);
+				r = b.move(b.getSquare('e', 2), b.getSquare('e', 4));
 
 			b.on('undo', (m) => {
 				mv = m;

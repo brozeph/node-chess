@@ -235,15 +235,17 @@ export class Board extends EventEmitter {
 				sq = null,
 				undo = (b, m) => {
 					return () => {
-						// ensure no harm can be done if called multiple times
-						if (m.undone) {
-							throw new Error('cannot undo a move multiple times')
+						if (!simulate) {
+							// ensure no harm can be done if called multiple times
+							if (m.undone) {
+								throw new Error('cannot undo a move multiple times')
+							}
+
+							m.undone = true;
+
+							// emit an undo event
+							b.emit('undo', m);
 						}
-
-						m.undone = true;
-
-						// emit an undo event
-						b.emit('undo', m);
 
 						m.prevSquare.piece = m.postSquare.piece;
 						m.postSquare.piece = m.capturedPiece;
