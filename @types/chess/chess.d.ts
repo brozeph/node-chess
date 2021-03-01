@@ -62,7 +62,7 @@ declare namespace Chess {
   interface PlayedMove {
     move: {
       algebraic: string
-      capturedPiece: Piece?
+      capturedPiece: Piece
       castle: boolean
       enPassant: boolean
       postSquare: Square
@@ -87,7 +87,7 @@ declare namespace Chess {
 
   interface Move {
     algebraic: string
-    capturedPiece: Piece?
+    capturedPiece: Piece
     hashCode: string
     piece: Piece
     promotion: boolean
@@ -109,7 +109,7 @@ declare namespace Chess {
 
   interface Square {
     file: File
-    piece: Piece?
+    piece: Piece
     rank: Rank
   }
 
