@@ -125,6 +125,12 @@ gameClient.on('promote', (square) => {
   console.log('A Pawn has been promoted!');
   console.log(square);
 });
+
+// when an undo function is called on a move
+gameClient.on('undo', (move) => {
+  console.log('A previous move was undone!');
+  console.log(move);
+});
 ```
 
 ##### The `capture` Event
@@ -204,6 +210,10 @@ When a Pawn promotion occurs, the `promote` event is emitted. The `promote` even
   rank: 8
 }
 ```
+
+##### The `undo` Event
+
+The `undo` event is emitted when a previous move that occured on the board is reversed using the `undo` method. The `undo` event data is the same [move](#the-gameclientmove-function) object that is also returned when performing a [gameClient.move()](#the-gameclientmove-function).
 
 #### The `gameClient.move()` Function
 
