@@ -355,6 +355,57 @@ describe('Board', () => {
 			assert.strictEqual(b.getSquare('e', 2).piece.type, PieceType.Pawn);
 		});
 
+		it('should not emit an event when calling undo and move is simulated', () => {
+			let
+				b = Board.create(),
+				mv,
+				r = b.move(b.getSquare('e', 2), b.getSquare('e', 4), true);
+
+			b.on('undo', (m) => {
+				mv = m;
+			});
+
+			r.undo();
+
+			assert.ok(typeof mv === 'undefined');
+		});
+
+		it('should emit an event when calling undo', () => {
+			let
+				b = Board.create(),
+				mv,
+				r = b.move(b.getSquare('e', 2), b.getSquare('e', 4));
+
+			b.on('undo', (m) => {
+				mv = m;
+			});
+
+			r.undo();
+
+			assert.ok(mv);
+		});
+
+		it('should only allow undo to be called once', () => {
+			let
+				b = Board.create(),
+				mv,
+				r = b.move(b.getSquare('e', 2), b.getSquare('e', 4));
+
+			b.on('undo', (m) => {
+				mv = m;
+			});
+
+			r.undo();
+
+			assert.throws(() => {
+				mv.undo();
+			});
+
+			assert.throws(() => {
+				r.undo();
+			});
+		});
+
 		// validate board.move for en-passant and proper capture of opposing pawn
 		it('should support en-passant', () => {
 			let b = Board.create();
