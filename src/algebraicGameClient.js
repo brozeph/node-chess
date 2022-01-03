@@ -259,6 +259,10 @@ export class AlgebraicGameClient extends EventEmitter {
 		};
 	}
 
+	getFen () {
+		return this.game.board.getFen();
+	}
+
 	move (notation, isFuzzy) {
 		let
 			move = null,
