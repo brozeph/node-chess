@@ -1,7 +1,7 @@
 /* eslint no-magic-numbers:0 */
 import { Piece, PieceType, SideType } from '../../src/piece';
 import { AlgebraicGameClient } from '../../src/algebraicGameClient';
-import { assert, should } from 'chai';
+import { assert } from 'chai';
 
 describe('AlgebraicGameClient', () => {
 	// test create and getStatus
@@ -1024,7 +1024,7 @@ describe('AlgebraicGameClient', () => {
 
 	// Issue #71 - move.undo() does not properly update game statusß
 	it('should properly return game client to the correct state when calling undo', () => {
-		let client = AlgebraicGameClient.create()
+		let client = AlgebraicGameClient.create();
 
 		client.move('e4');
 		client.move('c5').undo();
