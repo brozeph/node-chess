@@ -518,7 +518,7 @@ describe('AlgebraicGameClient', () => {
 	});
 
 	// Issue #3 - Ensure no phantom pawns appear after sequence of moves
-	it ('should not have a random Black Pawn appear on the board (bug fix test)', () => {
+	it('should not have a random Black Pawn appear on the board (bug fix test)', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			s = gc.game.board.getSquare('a6');
@@ -638,7 +638,7 @@ describe('AlgebraicGameClient', () => {
 	});
 
 	// Issue #4 - Ensure proper checkmate detection with Knight
-	it ('should properly detect checkmate', () => {
+	it('should properly detect checkmate', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			status = null;
@@ -750,7 +750,7 @@ describe('AlgebraicGameClient', () => {
 	});
 
 	// Issue #8 - Ensure no extraneous Black Pawn
-	it ('should not have a random Black Pawn appear on the board (bug fix test)', () => {
+	it('should not have a random Black Pawn appear on the board (bug fix test)', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			s = gc.game.board.getSquare('e6');
@@ -769,7 +769,7 @@ describe('AlgebraicGameClient', () => {
 	});
 
 	// Issue #15 - Ensure Pawn can move two spaces correctly on the first move
-	it ('should not block first move of two squares by Pawns incorrectly (bug fix test)', () => {
+	it('should not block first move of two squares by Pawns incorrectly (bug fix test)', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			status;
@@ -785,7 +785,7 @@ describe('AlgebraicGameClient', () => {
 	});
 
 	// Issue #17 - Move pawn to promotion, other pieces of same color should not have promotion
-	it ('should properly notate future promotions after the first promotion (bug fix test)', () => {
+	it('should properly notate future promotions after the first promotion (bug fix test)', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			r = null;
@@ -815,7 +815,7 @@ describe('AlgebraicGameClient', () => {
 	});
 
 	// Issue #18 - Missing Pawn promotion moves
-	it ('should properly notate future promotions after the first promotion (bug fix test)', () => {
+	it('should properly notate future promotions after the first promotion (bug fix test)', () => {
 		let
 			gc = AlgebraicGameClient.create(),
 			r = null;
@@ -838,7 +838,7 @@ describe('AlgebraicGameClient', () => {
 	});
 
 	// Issue #23 - Show who is attacking the King
-	it ('should properly emit check and indicate attackers of the King', () => {
+	it('should properly emit check and indicate attackers of the King', () => {
 		let
 			checkResult = null,
 			gc = AlgebraicGameClient.create(),
@@ -1012,7 +1012,7 @@ describe('AlgebraicGameClient', () => {
 	});
 
 	// getFen test
-	it ('should properly generate FEN of start position', () => {
+	it('should properly generate FEN of start position', () => {
 		let
 			fen = null,
 			gc = AlgebraicGameClient.create();
@@ -1020,5 +1020,17 @@ describe('AlgebraicGameClient', () => {
 		fen = gc.getFen();
 
 		assert.strictEqual(fen, 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR');
+	});
+
+	// Issue #71 - move.undo() does not properly update game statusß
+	it('should properly return game client to the correct state when calling undo', () => {
+		let client = AlgebraicGameClient.create();
+
+		client.move('e4');
+		client.move('c5').undo();
+
+		let sts = client.getStatus();
+		assert.ok((sts.board.lastMovedPiece.side.name === 'white'), 'previously moved piece should reflect the piece before the last move occurred');
+		assert.ok(sts.notatedMoves['c5'], 'available moves should include move that was undone');
 	});
 });

@@ -91,9 +91,9 @@ export class GameValidation {
 
 			// find valid moves
 			return v.start(setResult(this, result, v.isSquareAttacked(kingSquare)));
-		} else {
-			return callback(new Error('game is invalid'));
 		}
+		
+		return callback(new Error('game is invalid'));
 	}
 }
 
