@@ -274,19 +274,19 @@ export class Board extends EventEmitter {
 							if (m.undone) {
 								throw new Error('cannot undo a move multiple times');
 							}
-
-							m.undone = true;
-
-							// emit an undo event
-							b.emit('undo', m);
 						}
 
+						// backout move by returning the squares to their state prior to the move
 						m.prevSquare.piece = m.postSquare.piece;
 						m.postSquare.piece = m.capturedPiece;
 
+						// handle standard scenario
 						if (!m.enPassant) {
 							m.postSquare.piece = m.capturedPiece;
-						} else {
+						}
+
+						// handle en-passant scenario
+						if (m.enPassant) {
 							b.getSquare(
 								m.postSquare.file,
 								m.prevSquare.rank
@@ -298,16 +298,29 @@ export class Board extends EventEmitter {
 							m.postSquare.piece = null;
 						}
 
+						// handle castle scenario
 						if (m.castle) {
 							sq = b.getSquare(
 								move.postSquare.file === 'g' ? 'f' : 'd',
-								move.postSquare.rank
-							);
+								move.postSquare.rank);
+								
 							b.getSquare(
 								move.postSquare.file === 'g' ? 'h' : 'a',
 								move.postSquare.rank
 							).piece = sq.piece;
 							sq.piece = null;
+						}
+
+						// if not a simulation, reset the move count
+						if (!simulate) {
+							// correct the moveCount for the piece
+							m.prevSquare.piece.moveCount = m.prevSquare.piece.moveCount - 1;
+
+							// indicate move has been undone
+							m.undone = true;
+
+							// emit an undo event
+							b.emit('undo', m);
 						}
 					};
 				};
@@ -367,7 +380,7 @@ export class Board extends EventEmitter {
 
 			return {
 				move,
-				undo : undo(this, move, simulate)
+				undo : undo(this, move)
 			};
 		}
 	}

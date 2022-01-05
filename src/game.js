@@ -42,6 +42,12 @@ function denotePromotionInHistory (game) {
 function removeFromHistory (game) {
 	return () => {
 		game.moveHistory.pop();
+
+		// find the previous move piece
+		let m = game.moveHistory[game.moveHistory.length - 1];
+
+		// update last moved piece
+		game.board.lastMovedPiece = m.piece;
 	};
 }
 

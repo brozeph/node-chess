@@ -229,8 +229,14 @@ export class AlgebraicGameClient extends EventEmitter {
 			this.game.on(ev, (data) => this.emit(ev, data));
 		});
 
-		['capture', 'castle', 'enPassant', 'move', 'promote'].forEach((ev) => {
+		['capture', 'castle', 'enPassant', 'move', 'promote', 'undo'].forEach((ev) => {
 			this.game.board.on(ev, (data) => this.emit(ev, data));
+		});
+
+		let self = this;
+		this.on('undo', () => {
+			// force an update
+			self.getStatus(true);
 		});
 	}
 
