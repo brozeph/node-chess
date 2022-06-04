@@ -47,7 +47,9 @@ function removeFromHistory (game) {
 		let m = game.moveHistory[game.moveHistory.length - 1];
 
 		// update last moved piece
-		game.board.lastMovedPiece = m.piece;
+		if (m) {
+			game.board.lastMovedPiece = m.piece;
+		}
 	};
 }
 
