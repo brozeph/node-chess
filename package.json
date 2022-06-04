@@ -36,8 +36,8 @@
     "lint": "gulp lint",
     "posttest": "c8 report --reporter=text-lcov > ./coverage/lcov.info",
     "pretest": "gulp clean && gulp lint",
-    "test": "NODE_ENV=test c8 mocha ./test/src",
-    "test:unit": "NODE_ENV=test mocha ./test/src"
+    "test": "c8 mocha ./test/src",
+    "test:unit": "mocha ./test/src"
   },
   "devDependencies": {
     "c8": "^7.11.3",
