@@ -332,10 +332,6 @@ export class AlgebraicGameClient extends EventEmitter {
 
 					if (p) {
 						this.game.board.promote(move.move.postSquare, p);
-						/*
-						p.moveCount = move.move.postSquare.piece.moveCount;
-						move.move.postSquare.piece = p;
-						//*/
 					}
 				}
 
