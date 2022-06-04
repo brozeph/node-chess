@@ -1033,4 +1033,15 @@ describe('AlgebraicGameClient', () => {
 		assert.ok((sts.board.lastMovedPiece.side.name === 'white'), 'previously moved piece should reflect the piece before the last move occurred');
 		assert.ok(sts.notatedMoves['c5'], 'available moves should include move that was undone');
 	});
+
+	// Issue #77 - move.undo() fails on first move
+	it('should properly undo the first move without error', () => {
+		let client = AlgebraicGameClient.create();
+
+		client.move('e4').undo();
+
+		let sts = client.getStatus();
+
+		assert.ok(sts.notatedMoves['e4'], 'available moves should include move that was undone');
+	});
 });
