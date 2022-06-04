@@ -1,6 +1,7 @@
 /* eslint no-magic-numbers:0 */
-import { Piece, PieceType, SideType } from '../../src/piece';
-import { AlgebraicGameClient } from '../../src/algebraicGameClient';
+import { Piece, PieceType, SideType } from '../../src/piece.js';
+import { AlgebraicGameClient } from '../../src/algebraicGameClient.js';
+
 import { assert } from 'chai';
 
 describe('AlgebraicGameClient', () => {

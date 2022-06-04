@@ -4,8 +4,8 @@
 	scope validation include Check, Checkmate, 3-fold position
 	repetition and pawn promotion.
 */
-import { BoardValidation } from './boardValidation';
-import { PieceType } from './piece';
+import { BoardValidation } from './boardValidation.js';
+import { PieceType } from './piece.js';
 
 export class GameValidation {
 	constructor (game) {

@@ -1,8 +1,8 @@
 /* eslint no-magic-numbers:0 */
-
-import { Board } from '../../src/board';
-import { PieceType } from '../../src/piece';
-import { PieceValidation } from '../../src/pieceValidation';
+import { assert } from 'chai';
+import { Board } from '../../src/board.js';
+import { PieceType } from '../../src/piece.js';
+import { PieceValidation } from '../../src/pieceValidation.js';
 
 describe('PieceValidation', () => {
 	function checkForSquare (f, r, s) {

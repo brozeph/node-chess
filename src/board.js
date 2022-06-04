@@ -2,9 +2,9 @@
 	The Board is the representation of the current position of the pieces on
 	the squares it contains.
 */
-import { Piece, PieceType, SideType } from './piece';
+import { Piece, PieceType, SideType } from './piece.js';
 import { EventEmitter } from 'events';
-import { Square } from './square';
+import { Square } from './square.js';
 
 // types
 export var NeighborType = {
@@ -83,6 +83,7 @@ export class Board extends EventEmitter {
 	}
 
 	static load (fen) {
+		/* eslint sort-keys: 0 */
 		const pieces = {
 			b: { arg: SideType.Black, method: 'createBishop' },
 			B: { arg: SideType.White, method: 'createBishop' },

@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
-import { Game } from './game';
-import { GameValidation } from './gameValidation';
-import { Piece } from './piece';
+import { Game } from './game.js';
+import { GameValidation } from './gameValidation.js';
+import { Piece } from './piece.js';
 
 // private methods
 function isMoveValid (src, dest, validMoves) {

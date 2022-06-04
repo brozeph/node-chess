@@ -1,7 +1,7 @@
-import { Piece, PieceType } from './piece';
+import { Piece, PieceType } from './piece.js';
 import { EventEmitter } from 'events';
-import { Game } from './game';
-import { GameValidation } from './gameValidation';
+import { Game } from './game.js';
+import { GameValidation } from './gameValidation.js';
 
 // private methods
 function getNotationPrefix (src, dest, movesForPiece) {

@@ -1,7 +1,7 @@
 {
   "name": "chess",
   "description": "An algebraic notation driven chess engine that can validate board position and produce a list of viable moves (notated).",
-  "version": "0.6.1",
+  "version": "1.0.0",
   "contributors": [
     {
       "name": "Joshua Thomas",
@@ -17,7 +17,8 @@
       "url": "https://gist.github.com/dipamsen"
     }
   ],
-  "engine": "node >= 6",
+  "type": "module",
+  "engine": "node >= 16.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/brozeph/node-chess.git"
@@ -29,36 +30,24 @@
     "chess",
     "algebraic notation"
   ],
-  "main": "./dist/main.js",
+  "main": "./src/main.js",
   "types": "@types/chess/chess.d.ts",
   "scripts": {
     "lint": "gulp lint",
-    "posttest": "nyc report --reporter=text-lcov | coveralls",
-    "prepare": "gulp build",
+    "posttest": "c8 report --reporter=text-lcov > ./coverage/lcov.info",
     "pretest": "gulp clean && gulp lint",
-    "test": "NODE_ENV=test nyc mocha --require test/common --recursive --reporter spec",
-    "test:unit": "NODE_ENV=test nyc mocha --require test/common --recursive --reporter spec"
+    "test": "NODE_ENV=test c8 mocha ./test/src",
+    "test:unit": "NODE_ENV=test mocha ./test/src"
   },
   "devDependencies": {
-    "@babel/cli": "^7.17.10",
-    "@babel/core": "^7.18.2",
-    "@babel/eslint-parser": "^7.18.2",
-    "@babel/eslint-plugin": "^7.17.7",
-    "@babel/plugin-transform-runtime": "^7.18.2",
-    "@babel/preset-env": "^7.18.2",
-    "@babel/register": "^7.17.7",
+    "c8": "^7.11.3",
     "chai": "^4.3.6",
     "coveralls": "^3.1.1",
     "eslint": "^8.17.0",
     "gulp": "^4.0.2",
-    "gulp-babel": "^8.0.0",
     "gulp-clean": "^0.4.0",
     "gulp-eslint": "^6.0.0",
     "gulp-sourcemaps": "^3.0.0",
-    "mocha": "^10.0.0",
-    "nyc": "^15.1.0"
-  },
-  "dependencies": {
-    "@babel/runtime-corejs3": "^7.18.3"
+    "mocha": "^10.0.0"
   }
 }
