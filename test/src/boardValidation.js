@@ -1,8 +1,7 @@
 /* eslint no-magic-numbers:0 */
-
 import { assert } from 'chai';
-import { BoardValidation } from '../../src/boardValidation';
-import { Game } from '../../src/game';
+import { BoardValidation } from '../../src/boardValidation.js';
+import { Game } from '../../src/game.js';
 
 describe('BoardValidation', () => {
 	let getValidSquares = (sq, validMoves) => {

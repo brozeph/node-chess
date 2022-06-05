@@ -42,3 +42,4 @@ node-chess.tmproj #textmate project file
 node_modules
 lib-cov
 reports
+coverage

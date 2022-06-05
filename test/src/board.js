@@ -1,7 +1,8 @@
 /* eslint no-magic-numbers:0 */
+import { Board, NeighborType } from '../../src/board.js';
+import { PieceType, SideType } from '../../src/piece.js';
 
-import { Board, NeighborType } from '../../src/board';
-import { PieceType, SideType } from '../../src/piece';
+import { assert } from 'chai';
 
 describe('Board', () => {
 	describe('#create()', () => {

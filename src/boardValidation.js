@@ -23,9 +23,9 @@
 	to call PieceValidation (and doing so wouldn't give an accurate picture
 	of what is possible anyway).
 */
-import { PieceType, SideType } from './piece';
-import { NeighborType } from './board';
-import { PieceValidation } from './pieceValidation';
+import { PieceType, SideType } from './piece.js';
+import { NeighborType } from './board.js';
+import { PieceValidation } from './pieceValidation.js';
 
 export class BoardValidation {
 	constructor (game) {

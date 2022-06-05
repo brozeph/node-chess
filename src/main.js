@@ -1,5 +1,5 @@
-import { AlgebraicGameClient } from './algebraicGameClient';
-import { SimpleGameClient } from './simpleGameClient';
+import { AlgebraicGameClient } from './algebraicGameClient.js';
+import { SimpleGameClient } from './simpleGameClient.js';
 
 // exports
 module.exports = {

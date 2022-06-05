@@ -9,8 +9,8 @@
 	component handles the overall evaluation of what moves are possible for the
 	board in its current state.
 */
-import { PieceType, SideType } from './piece';
-import { NeighborType } from './board';
+import { PieceType, SideType } from './piece.js';
+import { NeighborType } from './board.js';
 
 export class PieceValidation {
 	constructor (board) {

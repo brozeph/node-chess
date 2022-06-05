@@ -1,6 +1,6 @@
 /* eslint no-magic-numbers:0 */
-
-import { Game } from '../../src/game';
+import { assert } from 'chai';
+import { Game } from '../../src/game.js';
 
 describe('Game', () => {
 	// make sure there is no move history when game is created

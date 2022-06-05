@@ -5,10 +5,10 @@
 	degree of information regarding the opponents and keys that
 	could be used for storage, etc.
 */
-import { Board } from './board';
+import { Board } from './board.js';
 import crypto from 'crypto';
 import { EventEmitter } from 'events';
-import { SideType } from './piece';
+import { SideType } from './piece.js';
 
 function addToHistory (game) {
 	return (ev) => {

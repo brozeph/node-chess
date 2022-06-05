@@ -1,7 +1,7 @@
 /* eslint no-magic-numbers:0 */
-
-import { Game } from '../../src/game';
-import { GameValidation } from '../../src/gameValidation';
+import { assert } from 'chai';
+import { Game } from '../../src/game.js';
+import { GameValidation } from '../../src/gameValidation.js';
 
 describe('GameValidation', () => {
 	// validate check

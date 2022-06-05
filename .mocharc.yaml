@@ -1,3 +1,0 @@
-require:
-  - '@babel/plugin-transform-runtime'
-  - '@babel/register'

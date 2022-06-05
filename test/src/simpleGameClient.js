@@ -1,7 +1,7 @@
 /* eslint no-magic-numbers:0 */
-
-import { Piece, PieceType, SideType } from '../../src/piece';
-import { SimpleGameClient } from '../../src/simpleGameClient';
+import { Piece, PieceType, SideType } from '../../src/piece.js';
+import { assert } from 'chai';
+import { SimpleGameClient } from '../../src/simpleGameClient.js';
 
 describe('SimpleGameClient', () => {
 	// test create and getStatus
