@@ -29,7 +29,7 @@ npm install chess
 ### Create a new game
 
 ```javascript
-const chess = require('chess');
+import chess from 'chess';
 
 // create a game client
 const gameClient = chess.create();
@@ -57,7 +57,7 @@ status = gameClient.getStatus();
 To ensure the notation returned is safe for PGN, you must supply PGN as an option in the call to `create`:
 
 ```javascript
-const chess = require('chess');
+import chess from 'chess';
 
 // create a game client
 const gameClient = chess.create({ PGN : true });
@@ -79,7 +79,7 @@ status = gameClient.getStatus();
 The game client (both algebraic, simple) emit a number of events when scenarios occur on the board over the course of a match.
 
 ```javascript
-const chess = require('chess');
+import chess from 'chess';
 
 // create a game client
 const gameClient = chess.create({ PGN : true });
@@ -346,7 +346,7 @@ Each object within the notatedMoves hash represents a possible move. The key to 
 The following code is an example of how to iterate the available notated moves for the game.
 
 ```javascript
-const chess = require('chess');
+import chess from 'chess';
 const gameClient = chess.create();
 
 let
@@ -365,7 +365,7 @@ Object.keys(status.notatedMoves).map((key, index) => {
 The following usage of the code is playing out the 3rd game in the series between Fischer and Petrosian in Buenos Aires, 1971. The game ended a draw due to 3 fold repetition.
 
 ```javascript
-const chess = require('chess');
+import chess from 'chess';
 const util = require('util');
 
 const gameClient = chess.create();
