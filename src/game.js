@@ -6,7 +6,7 @@
 	could be used for storage, etc.
 */
 import { Board } from './board.js';
-import crypto from 'crypto';
+import { createHash } from 'crypto-browserify';
 import { EventEmitter } from 'events';
 import { SideType } from './piece.js';
 
@@ -83,7 +83,7 @@ export class Game extends EventEmitter {
 	getHashCode () {
 		let
 			i = 0,
-			sum = crypto.createHash('md5');
+			sum = createHash('md5');
 
 		for (i = 0; i < this.board.squares.length; i++) {
 			if (this.board.squares[i].piece !== null) {
