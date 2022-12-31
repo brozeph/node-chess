@@ -53,6 +53,7 @@ declare namespace Chess {
     /** Whether notation is safe for PGN or not */
     PGN: boolean
     getStatus(): AlgebraicGameStatus
+    getFen(): string
   }
 
   type File = string
