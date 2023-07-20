@@ -5,9 +5,10 @@
 	degree of information regarding the opponents and keys that
 	could be used for storage, etc.
 */
+import base64 from 'crypto-js/enc-base64.js'
 import { Board } from './board.js';
-import crypto from 'crypto';
 import { EventEmitter } from 'events';
+import md5 from 'crypto-js/md5.js';
 import { SideType } from './piece.js';
 
 function addToHistory (game) {
@@ -81,22 +82,24 @@ export class Game extends EventEmitter {
 	}
 
 	getHashCode () {
-		let
+		let 
 			i = 0,
-			sum = crypto.createHash('md5');
+			sum = '';
 
 		for (i = 0; i < this.board.squares.length; i++) {
 			if (this.board.squares[i].piece !== null) {
-				sum.update(this.board.squares[i].file +
-					this.board.squares[i].rank +
-					(this.board.squares[i].piece.side === SideType.White ? 'w' : 'b') +
-					this.board.squares[i].piece.notation +
-					(i < (this.board.squares.length - 1) ? '-' : ''));
+				sum += [
+					this.board.squares[i].file,
+					this.board.squares[i].rank,
+					(this.board.squares[i].piece.side === SideType.White ? 'w' : 'b'),
+					this.board.squares[i].piece.notation,
+					(i < (this.board.squares.length - 1) ? '-' : '')].join('');
 			}
 		}
 
 		// generate hash code for board
-		return sum.digest('base64');
+		let digest = md5(sum);
+		return base64.stringify(digest);
 	}
 
 	static load (moveHistory) {
