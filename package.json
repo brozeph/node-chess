@@ -21,6 +21,9 @@
       "url": "https://githb.com/ldanilek"
     }
   ],
+  "exports": {
+    "import": "./src/main.js"
+  },
   "type": "module",
   "engine": "node >= 16.0",
   "repository": {
