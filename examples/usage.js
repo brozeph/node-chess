@@ -1,4 +1,4 @@
-import chess from 'chess';
+import chess from '../src/main.js';
 
 // create a game client
 const gameClient = chess.create({ PGN : true });
