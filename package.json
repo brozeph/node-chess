@@ -22,7 +22,10 @@
     }
   ],
   "exports": {
-    "import": "./src/main.js"
+    "import": {
+      "types": "./@types/chess/chess.d.ts",
+      "default": "./src/main.js"
+    }
   },
   "type": "module",
   "engine": "node >= 16.0",
