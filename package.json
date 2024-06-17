@@ -1,7 +1,7 @@
 {
   "name": "chess",
   "description": "An algebraic notation driven chess engine that can validate board position and produce a list of viable moves (notated).",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "contributors": [
     {
       "name": "Joshua Thomas",
@@ -19,6 +19,10 @@
     {
       "name": "Lee Danilek",
       "url": "https://githb.com/ldanilek"
+    },
+    {
+      "name": "Ayush Thakur",
+      "url": "https://githb.com/ayshthkr"
     }
   ],
   "exports": {
@@ -49,14 +53,14 @@
     "test": "c8 mocha ./test/src",
     "test:unit": "mocha ./test/src"
   },
-  "devDependencies": {
-    "c8": "^8.0.0",
-    "chai": "^4.3.7",
-    "coveralls": "^3.1.1",
-    "eslint": "^8.45.0",
-    "mocha": "^10.2.0"
-  },
   "dependencies": {
-    "crypto-js": "^4.1.1"
+    "crypto-js": "^4.2.0"
+  },
+  "devDependencies": {
+    "c8": "^10.1.2",
+    "chai": "^5.1.1",
+    "coveralls": "^3.1.1",
+    "eslint": "^9.5.0",
+    "mocha": "^10.4.0"
   }
 }
