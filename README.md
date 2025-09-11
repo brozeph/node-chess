@@ -30,6 +30,8 @@ npm install chess
 
 ```javascript
 import chess from 'chess';
+// or, with CommonJS
+// const chess = require('chess');
 
 // create a game client
 const gameClient = chess.create();
@@ -59,6 +61,8 @@ To ensure the notation returned is safe for PGN, you must supply PGN as an optio
 ```javascript
 import chess from 'chess';
 
+// const chess = require('chess');
+
 // create a game client
 const gameClient = chess.create({ PGN : true });
 let move, status;
@@ -80,6 +84,8 @@ The game client (both algebraic, simple) emit a number of events when scenarios 
 
 ```javascript
 import chess from 'chess';
+
+// const chess = require('chess');
 
 // create a game client
 const gameClient = chess.create({ PGN : true });
@@ -347,6 +353,7 @@ The following code is an example of how to iterate the available notated moves f
 
 ```javascript
 import chess from 'chess';
+// const chess = require('chess');
 const gameClient = chess.create();
 
 let
@@ -367,6 +374,8 @@ The following usage of the code is playing out the 3rd game in the series betwee
 ```javascript
 import chess from 'chess';
 const util = require('util');
+
+// const chess = require('chess');
 
 const gameClient = chess.create();
 
