@@ -1,5 +1,5 @@
 /* eslint no-magic-numbers:0 */
-import { assert } from 'chai';
+import { assert, describe, it } from 'vitest';
 import { Game } from '../../src/game.js';
 
 describe('Game', () => {

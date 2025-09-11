@@ -1,8 +1,7 @@
 /* eslint no-magic-numbers:0 */
+import { assert, describe, it } from 'vitest';
 import { Piece, PieceType, SideType } from '../../src/piece.js';
 import { AlgebraicGameClient } from '../../src/algebraicGameClient.js';
-
-import { assert } from 'chai';
 
 describe('AlgebraicGameClient', () => {
 	// test create and getStatus
