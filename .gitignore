@@ -8,6 +8,7 @@
 *.so
 dist
 .nyc_output
+cjs
 
 # Packages #
 ############

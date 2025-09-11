@@ -26,10 +26,8 @@
     }
   ],
   "exports": {
-    "import": {
-      "types": "./@types/chess/chess.d.ts",
-      "default": "./src/main.js"
-    }
+    "import": "./src/main.js",
+    "require": "./cjs/main.cjs"
   },
   "type": "module",
   "engine": "node >= 16.0",
@@ -44,14 +42,16 @@
     "chess",
     "algebraic notation"
   ],
-  "main": "./src/main.js",
+  "main": "./cjs/main.cjs",
   "types": "@types/chess/chess.d.ts",
   "scripts": {
     "lint": "npx eslint ./src/** ./test/**",
     "posttest": "c8 report --reporter=text-lcov > ./coverage/lcov.info",
     "pretest": "npx eslint ./src/** ./test/**",
     "test": "c8 mocha ./test/src",
-    "test:unit": "mocha ./test/src"
+    "test:unit": "mocha ./test/src",
+    "build": "esbuild src/main.js --bundle --platform=node --format=cjs --outfile=cjs/main.cjs",
+    "prepack": "npm run build"
   },
   "dependencies": {
     "crypto-js": "^4.2.0"
@@ -61,6 +61,7 @@
     "chai": "^6.0.1",
     "coveralls": "^3.1.1",
     "eslint": "^9.35.0",
-    "mocha": "^11.7.2"
+    "mocha": "^11.7.2",
+    "esbuild": "^0.23.0"
   }
 }
