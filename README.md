@@ -2,7 +2,7 @@
 
 `node-chess` is an algebraic notation driven chess engine that can validate board position and produce a list of viable moves (notated).
 
-[![Build Status](https://secure.travis-ci.org/brozeph/node-chess.png?branch=main)](http://travis-ci.org/brozeph/node-chess?branch=main) [![Coverage Status](https://coveralls.io/repos/brozeph/node-chess/badge.png?branch=main)](https://coveralls.io/r/brozeph/node-chess?branch=main)
+[![Coverage Status](https://coveralls.io/repos/brozeph/node-chess/badge.png?branch=main)](https://coveralls.io/r/brozeph/node-chess?branch=main)
 
 ## Features
 
