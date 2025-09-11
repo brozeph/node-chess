@@ -4,6 +4,7 @@
 declare namespace Chess {
   export function create(opts?: { PGN: boolean }): AlgebraicGameClient
   export function createSimple(): SimpleGameClient
+  export function fromFEN(fen: string, opts?: { PGN: boolean }): AlgebraicGameClient
 
   interface GameStatus {
     /** Whether either of the side is under check */

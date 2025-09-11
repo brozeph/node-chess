@@ -1,7 +1,11 @@
-import { Piece, PieceType } from './piece.js';
+/* eslint sort-imports: 0 */
 import { EventEmitter } from 'events';
+import { Board } from './board.js';
 import { Game } from './game.js';
 import { GameValidation } from './gameValidation.js';
+import { Piece } from './piece.js';
+import { PieceType } from './piece.js';
+import { SideType } from './piece.js';
 
 // private methods
 function getNotationPrefix (src, dest, movesForPiece) {
@@ -245,6 +249,52 @@ export class AlgebraicGameClient extends EventEmitter {
 			game = Game.create(),
 			gameClient = new AlgebraicGameClient(game, opts);
 
+		updateGameClient(gameClient);
+
+		return gameClient;
+	}
+
+	static fromFEN (fen, opts) {
+		if (!fen || typeof fen !== 'string') {
+			throw new Error('FEN must be a non-empty string');
+		}
+
+		// create a standard game so listeners/history are wired
+		let 
+			game = Game.create(),
+			loadedBoard = Board.load(fen);
+
+		// copy piece placement from loaded board to preserve board indexing and listeners
+		for (let i = 0; i < game.board.squares.length; i++) {
+			game.board.squares[i].piece = null;
+		}
+
+		for (let i = 0; i < loadedBoard.squares.length; i++) {
+			let sq = loadedBoard.squares[i];
+			if (sq.piece) {
+				let target = game.board.getSquare(sq.file, sq.rank);
+				target.piece = sq.piece;
+			}
+		}
+
+		game.board.lastMovedPiece = null;
+
+		// derive side to move from FEN (default to White if missing)
+		let parts = fen.split(' ');
+		let active = parts[1] || 'w';
+		let baseSide = active === 'b' ? SideType.Black : SideType.White;
+
+		// override getCurrentSide to honor FEN and alternate thereafter
+		let whiteFirst = baseSide === SideType.White;
+
+		/* eslint no-param-reassign: 0 */
+		game.getCurrentSide = function getCurrentSideAfterFENLoad () {
+			return (this.moveHistory.length % 2 === 0) ?
+				(whiteFirst ? SideType.White : SideType.Black) :
+				(whiteFirst ? SideType.Black : SideType.White);
+		};
+
+		const gameClient = new AlgebraicGameClient(game, opts);
 		updateGameClient(gameClient);
 
 		return gameClient;

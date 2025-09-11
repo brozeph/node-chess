@@ -7,6 +7,7 @@
 ## Features
 
 * Accepts moves in algebraic notation
+* Loads board position from FEN (Forsyth-Edwards Notation)
 * Lists valid moves in algebraic notation
 * Fuzzy algebraic notation parsing
 * En Passant validation
@@ -54,7 +55,30 @@ move = gameClient.move('a4');
 status = gameClient.getStatus();
 ```
 
-#### PGN (Portable Game Format) Algebraic Game Client
+### Load a game from FEN
+
+```javascript
+import chess from 'chess';
+// or, with CommonJS
+// const chess = require('chess');
+
+// load a game client from FEN
+const fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1';
+const gameClient = chess.fromFEN(fen);
+let move, status;
+
+// look at the status and valid moves
+status = gameClient.getStatus();
+
+// make a move
+move = gameClient.move('a4');
+
+// look at the status again after the move to see
+// the opposing side's available moves
+status = gameClient.getStatus();
+```
+
+### PGN (Portable Game Format) Algebraic Game Client
 
 To ensure the notation returned is safe for PGN, you must supply PGN as an option in the call to `create`:
 
@@ -78,7 +102,7 @@ move = gameClient.move('a4');
 status = gameClient.getStatus();
 ```
 
-#### Game Events
+### Game Events
 
 The game client (both algebraic, simple) emit a number of events when scenarios occur on the board over the course of a match.
 
@@ -139,15 +163,15 @@ gameClient.on('undo', (move) => {
 });
 ```
 
-##### The `capture` Event
+#### The `capture` Event
 
 The `capture` event is emitted when a piece has been captured during game play. The `capture` event data is the same as the [move](#the-gameclientmove-function) object that is provided as a response to [gameClient.move()](#the-gameclientmove-function).
 
-##### The `check` Event
+#### The `check` Event
 
 The `check` event is emitted for each attack on a King that occurs on the board. In the event a single move results in multiple pieces putting a King in check, multiple `check` events will be emitted, one for each attack.
 
-###### The `attack` Object
+##### The `attack` Object
 
 The attack object contains the attacking square and the King square. The properties of the attack object are:
 
@@ -183,23 +207,23 @@ The attack object contains the attacking square and the King square. The propert
 }
 ```
 
-##### The `checkmate` Event
+#### The `checkmate` Event
 
 The `checkmate` event is emitted when checkmate has been detected on the board. The `checkmate` event data is the same as the [attack](#attack) object that is provided for the `check` event.
 
-##### The `castle` Event
+#### The `castle` Event
 
 The `castle` event is emitted when a castle move occurs on the board. The `castle` event data is the [move](#the-gameclientmove-function) object that is also returned when performing a [gameClient.move()](#the-gameclientmove-function).
 
-##### The `enPassant` Event
+#### The `enPassant` Event
 
 When en Passant occurs, the `enPassant` event is emitted. The `enPassant` event data is the [move](#the-gameclientmove-function) object that is also returned when performing a [gameClient.move()](#the-gameclientmove-function).
 
-##### The `move` Event
+#### The `move` Event
 
 Any time a move occurs on the board, the `move` event is emitted. The `enPassant` event data is the [move](#the-gameclientmove-function) object that is also returned when performing a [gameClient.move()](#the-gameclientmove-function).
 
-##### The `promote` Event
+#### The `promote` Event
 
 When a Pawn promotion occurs, the `promote` event is emitted. The `promote` event data is the Square object upon which the newly promoted piece resides, which looks as follows:
 
@@ -217,11 +241,11 @@ When a Pawn promotion occurs, the `promote` event is emitted. The `promote` even
 }
 ```
 
-##### The `undo` Event
+#### The `undo` Event
 
 The `undo` event is emitted when a previous move that occured on the board is reversed using the `undo` method. The `undo` event data is the same [move](#the-gameclientmove-function) object that is also returned when performing a [gameClient.move()](#the-gameclientmove-function).
 
-#### The `gameClient.move()` Function
+### The `gameClient.move()` Function
 
 From the above example, the response object that is returned when calling chess.move() looks like the following:
 
@@ -259,7 +283,7 @@ From the above example, the response object that is returned when calling chess.
 }
 ```
 
-##### The `move` Object
+#### The `move` Object
 
 The move object contains a collection of properties and an undo function pointer. The five properties of the move object are:
 
@@ -277,7 +301,7 @@ To back out the move:
 move.undo();
 ```
 
-#### The `gameClient.getStatus()` Function
+### The `gameClient.getStatus()` Function
 
 The status object is as follows (abbreviated in parts to improve readability):
 
@@ -331,7 +355,7 @@ The status object is as follows (abbreviated in parts to improve readability):
 }
 ```
 
-##### The `status` Object
+#### The `status` Object
 
 The status object returned via the getStatus() function call contains several Object properties:
 

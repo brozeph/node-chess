@@ -1023,6 +1023,25 @@ describe('AlgebraicGameClient', () => {
 		assert.strictEqual(fen, 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR');
 	});
 
+	// fromFEN test
+	it('should create from FEN and respect side to move', () => {
+		let 
+			fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1',
+			gc = AlgebraicGameClient.fromFEN(fen);
+
+		// board layout should match
+		assert.strictEqual(gc.getFen(), 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR');
+
+		// since it's black to move, a white move should be invalid
+		assert.throws(() => gc.move('e4'));
+
+		// a black move should be allowed
+		let m = gc.move('e5');
+		assert.strictEqual(m.move.postSquare.file, 'e');
+		assert.strictEqual(m.move.postSquare.rank, 5);
+		assert.strictEqual(m.move.postSquare.piece.side, SideType.Black);
+	});
+
 	// Issue #71 - move.undo() does not properly update game statusß
 	it('should properly return game client to the correct state when calling undo', () => {
 		let client = AlgebraicGameClient.create();
