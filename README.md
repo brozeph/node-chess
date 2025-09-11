@@ -209,7 +209,7 @@ The attack object contains the attacking square and the King square. The propert
 
 #### The `checkmate` Event
 
-The `checkmate` event is emitted when checkmate has been detected on the board. The `checkmate` event data is the same as the [attack](#attack) object that is provided for the `check` event.
+The `checkmate` event is emitted when checkmate has been detected on the board. The `checkmate` event data is the same as the [attack](#the-attack-object) object that is provided for the `check` event.
 
 #### The `castle` Event
 
