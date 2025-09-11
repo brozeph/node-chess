@@ -1,5 +1,5 @@
 /* eslint no-magic-numbers:0 */
-import { assert } from 'chai';
+import { assert, describe, it } from 'vitest';
 import { Board } from '../../src/board.js';
 import { PieceType } from '../../src/piece.js';
 import { PieceValidation } from '../../src/pieceValidation.js';

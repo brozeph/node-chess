@@ -1,6 +1,6 @@
 /* eslint no-magic-numbers:0 */
+import { assert, describe, it } from 'vitest';
 import { Piece, PieceType, SideType } from '../../src/piece.js';
-import { assert } from 'chai';
 import { SimpleGameClient } from '../../src/simpleGameClient.js';
 
 describe('SimpleGameClient', () => {

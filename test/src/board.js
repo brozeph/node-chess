@@ -1,8 +1,7 @@
 /* eslint no-magic-numbers:0 */
+import { assert, describe, it } from 'vitest';
 import { Board, NeighborType } from '../../src/board.js';
 import { PieceType, SideType } from '../../src/piece.js';
-
-import { assert } from 'chai';
 
 describe('Board', () => {
 	describe('#create()', () => {
