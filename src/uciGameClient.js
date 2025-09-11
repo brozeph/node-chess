@@ -6,32 +6,6 @@ import { Piece } from './piece.js';
 import { PieceType } from './piece.js';
 
 // private helpers
-function isMoveValid(src, dest, validMoves) {
-  let 
-    i = 0,
-    matches = (expr, sq) => (
-      (typeof expr === 'string' && (sq.file + sq.rank) === expr)
-      || (expr && expr.file && expr.rank && 
-          sq.file === expr.file && sq.rank === expr.rank)
-    ),
-    squares = [];
-  
-  for (i = 0; i < validMoves.length; i++) {
-    if (matches(src, validMoves[i].src)) {
-      squares = validMoves[i].squares;
-    }
-  }
-
-  if (squares && squares.length > 0) {
-    for (i = 0; i < squares.length; i++) {
-      if (matches(dest, squares[i])) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
 
 function parseUCI(uci) {
   if (typeof uci !== 'string') {
@@ -175,12 +149,15 @@ export class UCIGameClient extends EventEmitter {
 
   move(uci) {
     let 
+      canonical = null,
       dest = null,
       move = null,
       parsed = parseUCI(uci),
       promo = null,
+      requiresPromotion = false,
       side = null,
-      src = null;
+      src = null, 
+      srcSquare = null;
 
     if (!parsed) {
       throw new Error(`UCI is invalid (${uci})`);
@@ -189,18 +166,37 @@ export class UCIGameClient extends EventEmitter {
     // destructure the parsed UCI move
     ({ src, dest, promo } = parsed);
 
+    // normalize UCI key to compare with generated map
+    canonical = promo
+      ? `${src.file}${src.rank}${dest.file}${dest.rank}${promo.toLowerCase()}`
+      : `${src.file}${src.rank}${dest.file}${dest.rank}`;
+
+    // ensure move exactly matches a generated UCI move
+    if (!this.uciMoves || !this.uciMoves[canonical]) {
+      throw new Error(`Move is invalid (${uci})`);
+    }
+
     // determine the current side
     side = this.game.getCurrentSide();
 
-    // ensure the move is valid
-    if (!isMoveValid(src, dest, this.validMoves)) {
-      throw new Error(`Move is invalid (${src.file}${src.rank} to ${dest.file}${dest.rank})`);
+    // additional safety: enforce promotion semantics
+    srcSquare = this.game.board.getSquare(src.file, src.rank);
+    requiresPromotion =
+      srcSquare && srcSquare.piece && srcSquare.piece.type === PieceType.Pawn &&
+      (dest.rank === 8 || dest.rank === 1);
+
+    if (requiresPromotion && !promo) {
+      throw new Error(`Promotion required for move (${uci})`);
+    }
+
+    if (promo && !requiresPromotion) {
+      throw new Error(`Promotion flag not allowed for move (${uci})`);
     }
 
     // make the move
     move = this.game.board.move(`${src.file}${src.rank}`, `${dest.file}${dest.rank}`);
     if (move) {
-      // apply pawn promotion if applicable
+      // apply pawn promotion if applicable (already validated above)
       if (promo) {
         let piece;
         switch (promo) {
