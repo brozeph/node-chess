@@ -85,4 +85,20 @@ describe('UCIGameClient', () => {
     assert.throws(() => gc.move('e9e4'));
     assert.throws(() => gc.move('abcd'));
   });
+
+  it('should expose capture history via getCaptureHistory()', () => {
+    const gc = UCIGameClient.create();
+
+    gc.move('e2e4');
+    gc.move('d7d5');
+    const cap = gc.move('e4d5');
+
+    const h1 = gc.getCaptureHistory();
+    assert.strictEqual(h1.length, 1);
+    assert.strictEqual(h1[0].type, PieceType.Pawn);
+
+    cap.undo();
+    const h2 = gc.getCaptureHistory();
+    assert.strictEqual(h2.length, 0);
+  });
 });

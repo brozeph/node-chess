@@ -5,6 +5,7 @@ declare namespace Chess {
   export function create(opts?: { PGN: boolean }): AlgebraicGameClient
   export function createSimple(): SimpleGameClient
   export function fromFEN(fen: string, opts?: { PGN: boolean }): AlgebraicGameClient
+  export function createUCI(): UCIGameClient
 
   interface GameStatus {
     /** Whether either of the side is under check */
@@ -27,6 +28,11 @@ declare namespace Chess {
     notatedMoves: Record<string, NotatedMove>
   }
 
+  interface UCIGameStatus extends SimpleGameStatus {
+    /** Hash of next possible moves with key as UCI string and value as src-dest mapping */
+    uciMoves: Record<string, NotatedMove>
+  }
+
   interface GameClient extends GameStatus {
     /** The Game object, which includes the board and move history. */
     game: Game
@@ -42,6 +48,8 @@ declare namespace Chess {
      */
     move(notation: string): PlayedMove
     getStatus(): AlgebraicGameStatus | SimpleGameStatus
+    /** Returns the list of captured pieces in order */
+    getCaptureHistory(): Piece[]
   }
 
   interface SimpleGameClient extends GameClient {
@@ -55,6 +63,18 @@ declare namespace Chess {
     PGN: boolean
     getStatus(): AlgebraicGameStatus
     getFen(): string
+  }
+
+  interface UCIGameClient extends GameStatus {
+    game: Game
+    validMoves: ValidMove[]
+    validation: GameValidation
+    on(event: ChessEvent, cbk: () => void): void
+    /** Make a move on the board using UCI notation */
+    move(uci: string): PlayedMove
+    getStatus(): UCIGameStatus
+    /** Returns the list of captured pieces in order */
+    getCaptureHistory(): Piece[]
   }
 
   type File = string
@@ -75,6 +95,7 @@ declare namespace Chess {
 
   interface Game {
     board: ChessBoard
+    captureHistory: Piece[]
     moveHistory: Move[]
   }
 

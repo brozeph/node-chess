@@ -319,6 +319,10 @@ export class AlgebraicGameClient extends EventEmitter {
 		return this.game.board.getFen();
 	}
 
+	getCaptureHistory () {
+		return this.game.captureHistory;
+	}
+
 	move (notation, isFuzzy) {
 		let
 			move = null,

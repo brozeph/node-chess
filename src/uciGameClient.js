@@ -147,6 +147,10 @@ export class UCIGameClient extends EventEmitter {
     };
   }
 
+  getCaptureHistory() {
+    return this.game.captureHistory;
+  }
+
   move(uci) {
     let 
       canonical = null,

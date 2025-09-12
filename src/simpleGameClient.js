@@ -140,6 +140,10 @@ export class SimpleGameClient extends EventEmitter {
 
 	throw new Error(`Move is invalid (${ src } to ${ dest })`);
 	}
+
+	getCaptureHistory () {
+		return this.game.captureHistory;
+	}
 }
 
 export default { SimpleGameClient };
