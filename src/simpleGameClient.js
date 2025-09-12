@@ -9,7 +9,7 @@ function isMoveValid (src, dest, validMoves) {
 		i = 0,
 		isFound = (expr, sq) => {
 			return ((typeof expr === 'string' && sq.file + sq.rank === expr) ||
-				(expr.rank && expr.file &&
+				(expr && expr.rank && expr.file &&
 					sq.file === expr.file && sq.rank === expr.rank));
 		},
 		squares = [];

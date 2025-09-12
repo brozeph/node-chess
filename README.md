@@ -8,6 +8,7 @@
 
 * Accepts moves in algebraic notation
 * Loads board position from FEN (Forsyth-Edwards Notation)
+* Supports UCI (Universal Chess Interface) coordinate format
 * Lists valid moves in algebraic notation
 * Fuzzy algebraic notation parsing
 * En Passant validation
@@ -100,6 +101,30 @@ move = gameClient.move('a4');
 // look at the status again after the move to see
 // the opposing side's available moves
 status = gameClient.getStatus();
+```
+
+### Universal Chess Interface (UCI) Game Client
+
+The library also supports the Universal Chess Interface (UCI) coordinate format for moves and for listing valid moves.
+
+```javascript
+import chess from 'chess';
+
+// Create a UCI-based game client
+const uci = chess.createUCI();
+
+// Inspect current status and valid UCI moves
+let status = uci.getStatus();
+// status.uciMoves is a map of all legal UCI moves from the position
+console.log(Object.keys(status.uciMoves)); // e.g., [ 'e2e4', 'g1f3', ... ]
+
+// Make UCI moves
+uci.move('e2e4'); // white
+uci.move('e7e5'); // black
+
+// Promotions are encoded with a trailing piece letter: q, r, b, n
+// For example, promote a pawn to a queen
+// uci.move('a7a8q');
 ```
 
 ### Game Events
