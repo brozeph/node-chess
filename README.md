@@ -127,6 +127,30 @@ uci.move('e7e5'); // black
 // uci.move('a7a8q');
 ```
 
+### Capture History
+
+Each game client exposes a simple way to retrieve captured pieces in order of capture.
+
+```javascript
+import chess from 'chess';
+
+// Works with any client: create(), createSimple(), or createUCI()
+const gc = chess.create();
+
+gc.move('e4');
+gc.move('d5');
+const capture = gc.move('exd5');
+
+// Retrieve captured pieces (latest at the end)
+const captured = gc.getCaptureHistory();
+console.log(captured.length); // 1
+console.log(captured[0].type); // 'pawn'
+
+// Undo also rolls back capture history
+capture.undo();
+console.log(gc.getCaptureHistory().length); // 0
+```
+
 ### Game Events
 
 The game client (both algebraic, simple) emit a number of events when scenarios occur on the board over the course of a match.
