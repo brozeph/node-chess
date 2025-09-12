@@ -59,6 +59,7 @@ export class Game extends EventEmitter {
 		super();
 
 		this.board = board;
+		this.captureHistory = [];
 		this.moveHistory = [];
 	}
 
@@ -68,9 +69,22 @@ export class Game extends EventEmitter {
 			game = new Game(board);
 
 		// handle move and promotion events correctly
-		board.on('move', addToHistory(game));
+		board.on('move', (ev) => {
+			addToHistory(game)(ev);
+			if (ev && ev.capturedPiece) {
+				game.captureHistory.push(ev.capturedPiece);
+			}
+		});
+
 		board.on('promote', denotePromotionInHistory(game));
-		board.on('undo', removeFromHistory(game));
+		
+		board.on('undo', (ev) => {
+			removeFromHistory(game)(ev);
+			if (ev && ev.capturedPiece && game.captureHistory.length > 0) {
+				// last move was a capture, remove it from capture history
+				game.captureHistory.pop();
+			}
+		});
 
 		return game;
 	}
@@ -109,7 +123,13 @@ export class Game extends EventEmitter {
 			i = 0;
 
 		// handle move and promotion events correctly
-		board.on('move', addToHistory(game));
+		board.on('move', (ev) => {
+			addToHistory(game)(ev);
+			if (ev && ev.capturedPiece) {
+				game.captureHistory.push(ev.capturedPiece);
+			}
+		});
+
 		board.on('promote', denotePromotionInHistory(game));
 
 		// apply move history

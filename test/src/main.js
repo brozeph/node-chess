@@ -1,6 +1,6 @@
 /* eslint no-magic-numbers:0 */
 import { assert, describe, it } from 'vitest';
-import chess, { create, createSimple } from '../../src/main.js';
+import chess, { create, createSimple, createUCI } from '../../src/main.js';
 import { AlgebraicGameClient } from '../../src/algebraicGameClient.js';
 import { SimpleGameClient } from '../../src/simpleGameClient.js';
 
@@ -27,5 +27,9 @@ describe('main entry', () => {
     assert.ok(chess.create() instanceof AlgebraicGameClient);
     assert.ok(chess.createSimple() instanceof SimpleGameClient);
   });
-});
 
+  it('named and default export should expose createUCI', () => {
+    assert.strictEqual(typeof createUCI, 'function');
+    assert.strictEqual(typeof chess.createUCI, 'function');
+  });
+});

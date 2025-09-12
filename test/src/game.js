@@ -1,5 +1,6 @@
 /* eslint no-magic-numbers:0 */
 import { assert, describe, it } from 'vitest';
+import { PieceType, SideType } from '../../src/piece.js';
 import { Game } from '../../src/game.js';
 
 describe('Game', () => {
@@ -159,4 +160,67 @@ describe('Game', () => {
 	});
 
 	// ensure load from moveHistory results in board in appropriate state
+});
+
+describe('Game capture history', () => {
+	it('should track captures and undo correctly', () => {
+		const g = Game.create();
+		const b = g.board;
+
+		// e2e4, d7d5, e4xd5
+		b.move(b.getSquare('e', 2), b.getSquare('e', 4));
+		b.move(b.getSquare('d', 7), b.getSquare('d', 5));
+		const cap = b.move(b.getSquare('e', 4), b.getSquare('d', 5));
+
+		// verify capture tracked
+		if (g.captureHistory.length !== 1) {
+			throw new Error('captureHistory should contain one capture');
+		}
+
+		const c = g.captureHistory[0];
+		
+		if (!c || c.type !== PieceType.Pawn || c.side !== SideType.Black) {
+			throw new Error('captureHistory should contain captured black pawn');
+		}
+
+		// undo and verify capture removed
+		cap.undo();
+		if (g.captureHistory.length !== 0) {
+			throw new Error('captureHistory should be empty after undo');
+		}
+	});
+
+	it('should track multiple captures in order', () => {
+		const g = Game.create();
+		const b = g.board;
+
+		// e2e4, d7d5, e4xd5 (capture 1)
+		b.move(b.getSquare('e', 2), b.getSquare('e', 4));
+		b.move(b.getSquare('d', 7), b.getSquare('d', 5));
+		b.move(b.getSquare('e', 4), b.getSquare('d', 5));
+
+		// c7c5, d5xc5 (capture 2)
+		b.move(b.getSquare('c', 7), b.getSquare('c', 5));
+		const cap2 = b.move(b.getSquare('d', 5), b.getSquare('c', 5));
+
+		if (g.captureHistory.length !== 2) {
+			throw new Error('captureHistory should contain two captures');
+		}
+
+		const [c1, c2] = g.captureHistory;
+		
+		if (!c1 || c1.type !== PieceType.Pawn || c1.side !== SideType.Black) {
+			throw new Error('first capture should be black pawn from d5');
+		}
+		
+		if (!c2 || c2.type !== PieceType.Pawn || c2.side !== SideType.Black) {
+			throw new Error('second capture should be black pawn from c5');
+		}
+
+		// undo last capture reduces capture history by 1
+		cap2.undo();
+		if (g.captureHistory.length !== 1) {
+			throw new Error('captureHistory should have one capture after undoing the last capture');
+		}
+	});
 });

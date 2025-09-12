@@ -101,4 +101,75 @@ describe('SimpleGameClient', () => {
 		assert.isDefined(checkResult);
 		assert.strictEqual(checkResult.attackingSquare.piece.type, PieceType.Knight);
 	});
+
+	// getCaptureHistory: track captures and undo
+	it('should expose capture history via getCaptureHistory()', () => {
+		const gc = SimpleGameClient.create();
+		gc.move('e2', 'e4');
+		gc.move('d7', 'd5');
+		const cap = gc.move('e4', 'd5');
+
+		const h1 = gc.getCaptureHistory();
+		assert.strictEqual(h1.length, 1);
+		assert.strictEqual(h1[0].type, PieceType.Pawn);
+
+		cap.undo();
+		const h2 = gc.getCaptureHistory();
+		assert.strictEqual(h2.length, 0);
+	});
+
+	it('should emit castle event when castling by coordinates', () => {
+		const gc = SimpleGameClient.create();
+		const castleEvents = [];
+		gc.on('castle', (ev) => castleEvents.push(ev));
+
+		// clear path for white castle short (e1 -> g1)
+		gc.game.board.getSquare('f1').piece = null;
+		gc.game.board.getSquare('g1').piece = null;
+
+		// force update to compute valid moves with cleared path
+		gc.getStatus(true);
+		gc.move('e1', 'g1');
+
+		assert.strictEqual(castleEvents.length, 1);
+	});
+
+	it('should handle en passant and emit event', () => {
+		const gc = SimpleGameClient.create();
+		const enPassantEvents = [];
+		gc.on('enPassant', (ev) => enPassantEvents.push(ev));
+
+		// Setup: e2e4, a7a6, e4e5, d7d5, e5d6 e.p.
+		gc.move('e2', 'e4');
+		gc.move('a7', 'a6');
+		gc.move('e4', 'e5');
+		gc.move('d7', 'd5');
+
+		const m = gc.move('e5', 'd6');
+		assert.ok(m.move.enPassant);
+		assert.strictEqual(enPassantEvents.length, 1);
+	});
+
+	it('should handle pawn promotion and emit event', () => {
+		const gc = SimpleGameClient.create();
+		const promoteEvents = [];
+		gc.on('promote', (ev) => promoteEvents.push(ev));
+
+		// Setup white pawn on a7 ready to promote, clear a8 and block pieces
+		gc.game.board.getSquare('a7').piece = null;
+		gc.game.board.getSquare('a8').piece = null;
+		gc.game.board.getSquare('b8').piece = null;
+		gc.game.board.getSquare('c8').piece = null;
+		gc.game.board.getSquare('d8').piece = null;
+		gc.game.board.getSquare('a2').piece = null;
+		gc.game.board.getSquare('a7').piece = Piece.createPawn(SideType.White);
+		gc.game.board.getSquare('a7').piece.moveCount = 1;
+
+		gc.getStatus(true);
+		const m = gc.move('a7', 'a8', 'Q');
+
+		assert.strictEqual(m.move.postSquare.piece.type, PieceType.Queen);
+		assert.strictEqual(promoteEvents.length, 1);
+		assert.strictEqual(gc.game.moveHistory[0].promotion, true);
+	});
 });

@@ -90,6 +90,23 @@ describe('AlgebraicGameClient', () => {
 		assert.strictEqual(gc.game.moveHistory[2].algebraic, 'exd5');
 	});
 
+	// getCaptureHistory: track captures and undo
+	it('should expose capture history via getCaptureHistory()', () => {
+		let gc = AlgebraicGameClient.create();
+
+		gc.move('e4');
+		gc.move('d5');
+		const cap = gc.move('exd5');
+
+		const h1 = gc.getCaptureHistory();
+		assert.strictEqual(h1.length, 1);
+		assert.strictEqual(h1[0].type, PieceType.Pawn);
+
+		cap.undo();
+		const h2 = gc.getCaptureHistory();
+		assert.strictEqual(h2.length, 0);
+	});
+
 	// test 2 face pieces with same square destination on different rank and file
 	it('should properly notate two Knights that can occupy same square for their respective moves', () => {
 		let
