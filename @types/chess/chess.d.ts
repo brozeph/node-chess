@@ -121,7 +121,7 @@ declare namespace Chess {
   }
 
   interface NotatedMove {
-    dest: Squarethis.captureHistory = [];
+    dest: Square
     src: Square
   }
 
