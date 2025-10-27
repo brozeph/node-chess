@@ -26,8 +26,11 @@
     }
   ],
   "exports": {
-    "import": "./src/main.js",
-    "require": "./cjs/main.cjs"
+    ".": {
+      "import": "./src/main.js",
+      "require": "./cjs/main.cjs",
+      "types": "./@types/chess/chess.d.ts"
+    }
   },
   "type": "module",
   "engine": "node >= 16.0",
