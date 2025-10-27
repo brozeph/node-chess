@@ -1,7 +1,7 @@
 {
   "name": "chess",
   "description": "An algebraic notation driven chess engine that can validate board position and produce a list of viable moves (notated).",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "contributors": [
     {
       "name": "Joshua Thomas",
@@ -23,13 +23,17 @@
     {
       "name": "Ayush Thakur",
       "url": "https://githb.com/ayshthkr"
+    },
+    {
+      "name": "Lewis",
+      "url": "https://github.com/ctjlewis"
     }
   ],
   "exports": {
     ".": {
+      "types": "./@types/chess/chess.d.ts",
       "import": "./src/main.js",
-      "require": "./cjs/main.cjs",
-      "types": "./@types/chess/chess.d.ts"
+      "require": "./cjs/main.cjs"
     }
   },
   "type": "module",
@@ -59,10 +63,10 @@
     "crypto-js": "^4.2.0"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^2.1.9",
+    "@vitest/coverage-v8": "^4.0.4",
     "coveralls": "^3.1.1",
-    "esbuild": "^0.25.9",
-    "eslint": "^9.35.0",
-    "vitest": "^2.1.9"
+    "esbuild": "^0.25.11",
+    "eslint": "^9.38.0",
+    "vitest": "^4.0.4"
   }
 }
